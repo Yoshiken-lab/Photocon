@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+@theme {
+  --color-brand-50: #FFF5F2;
+  --color-brand-100: #FFE8E0;
+  --color-brand-200: #FFD4C4;
+  --color-brand: #E84D1C;
+  --color-brand-600: #D63E0F;
+  --color-text-main: #4A4A4A;
+  --color-text-light: #888888;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.font-maru {
+  font-family: 'Kiwi Maru', serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
