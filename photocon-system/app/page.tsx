@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Camera, ImagePlus, Instagram, Heart, Sun, Gift, ArrowRight, Menu } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
+import { EventsSection } from '@/components/EventsSection'
 
 interface EntryWithCategory {
   id: string
@@ -14,6 +15,18 @@ interface EntryWithCategory {
 
 interface SearchParams {
   sort?: 'latest' | 'popular'
+}
+
+interface Contest {
+  id: string
+  name: string
+  description: string | null
+  theme: string | null
+  emoji: string | null
+  image_url: string | null
+  start_date: string
+  end_date: string
+  status: string
 }
 
 export default async function Home({
@@ -40,6 +53,20 @@ export default async function Home({
 
   const entries = data as EntryWithCategory[] | null
 
+  // コンテストデータを取得
+  const { data: contestsData } = await supabase
+    .from('contests')
+    .select('*')
+    .in('status', ['active', 'upcoming', 'ended'])
+    .order('start_date', { ascending: false })
+
+  const contests = contestsData as Contest[] | null
+
+  // ステータス別に分類
+  const activeContests = contests?.filter(c => c.status === 'active') || []
+  const upcomingContests = contests?.filter(c => c.status === 'upcoming') || []
+  const endedContests = contests?.filter(c => c.status === 'ended') || []
+
   return (
     <>
       {/* トップバナー */}
@@ -61,6 +88,7 @@ export default async function Home({
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-gray-500">
             <Link href="#about" className="hover:text-brand transition-colors py-2">はじめての方へ</Link>
+            <Link href="#events" className="hover:text-brand transition-colors py-2">イベント</Link>
             <Link href="#gallery" className="hover:text-brand transition-colors py-2">みんなの作品</Link>
             <Link href="/admin" className="ml-2 px-6 py-2.5 bg-brand text-white rounded-full hover:bg-brand-600 transition-all duration-300 text-xs font-bold tracking-wide shadow-md hover:shadow-brand/30 hover:-translate-y-0.5">
               管理画面
@@ -171,6 +199,13 @@ export default async function Home({
             </div>
           </div>
         </section>
+
+        {/* Events Section */}
+        <EventsSection
+          activeContests={activeContests}
+          upcomingContests={upcomingContests}
+          endedContests={endedContests}
+        />
 
         {/* Gallery Section */}
         <section id="gallery" className="py-20 px-4 bg-brand-50 scroll-mt-32">

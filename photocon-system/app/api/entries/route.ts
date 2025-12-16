@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
     // 3. entriesテーブルに登録
     const caption = title ? `${title}\n\n${description}` : description || null
 
+    const now = new Date().toISOString()
     const entryData: EntryInsert = {
       contest_id: contestId,
       instagram_media_id: `manual-${Date.now()}`,
@@ -72,7 +73,8 @@ export async function POST(request: NextRequest) {
       email: email,
       caption: caption,
       status: 'pending',
-      instagram_timestamp: new Date().toISOString(),
+      instagram_timestamp: now,
+      collected_at: now,
     }
 
     const { error: insertError } = await supabase
