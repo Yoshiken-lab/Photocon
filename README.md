@@ -22,24 +22,31 @@ photocon/
 
 ## ローカル環境での起動方法
 
+### クイックスタート（両方のサーバーを起動）
+
+LPでイベント情報を表示するには、**2つのサーバーを起動する必要があります**。
+
+| 用途 | コマンド | ポート |
+|------|---------|--------|
+| LP用サーバー | `cd C:\Users\admin\Documents\06-Python\photocon && python -m http.server 8888` | 8888 |
+| API/管理画面 | `cd C:\Users\admin\Documents\06-Python\photocon\photocon-system && npm run dev` | 3000 |
+
+> **注意**: ポート8000や8080はWindowsのIISが使用している場合があるため、LP用には8888を推奨
+
+---
+
 ### 1. ランディングページ（LP）
 
-シンプルなHTMLファイルなので、以下のいずれかの方法で表示できます。
-
-#### 方法A: Pythonサーバー
+#### Pythonサーバーで起動
 
 ```bash
-cd photocon
-python -m http.server 8000
+cd C:\Users\admin\Documents\06-Python\photocon
+python -m http.server 8888
 ```
 
-アクセス: **http://localhost:8000/photo-con.html**
+アクセス: **http://localhost:8888/photo-con.html**
 
-#### 方法B: ファイルを直接開く
-
-`photo-con.html` をブラウザにドラッグ＆ドロップ、またはダブルクリック
-
-#### 方法C: VSCode Live Server
+#### VSCode Live Serverで起動
 
 1. VSCodeで「Live Server」拡張機能をインストール
 2. `photo-con.html` を右クリック → 「Open with Live Server」
@@ -51,7 +58,7 @@ python -m http.server 8000
 #### 初回セットアップ
 
 ```bash
-cd photocon-system
+cd C:\Users\admin\Documents\06-Python\photocon\photocon-system
 npm install
 ```
 
@@ -69,6 +76,7 @@ INSTAGRAM_ACCESS_TOKEN=your_instagram_token
 #### 開発サーバーの起動
 
 ```bash
+cd C:\Users\admin\Documents\06-Python\photocon\photocon-system
 npm run dev
 ```
 
@@ -76,6 +84,7 @@ npm run dev
 
 | ページ | URL |
 |--------|-----|
+| **ランディングページ** | http://localhost:8888/photo-con.html |
 | トップページ | http://localhost:3000 |
 | ギャラリー | http://localhost:3000/gallery |
 | ランキング | http://localhost:3000/ranking |
@@ -110,7 +119,7 @@ npm run dev
 ### ランディングページ
 - コンテスト紹介
 - 参加方法の説明（3ステップ）
-- ギャラリープレビュー
+- 開催中・今後予定・過去のイベント表示
 - 応募CTA
 
 ### 管理システム

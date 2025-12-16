@@ -14,6 +14,8 @@ type Contest = {
   hashtags: string[] | null
   start_date: string
   end_date: string
+  voting_start: string | null
+  voting_end: string | null
   status: string
   categories: { id: string; name: string; hashtag: string }[] | null
 }
@@ -24,6 +26,17 @@ type Props = {
 
 export default function ContestsClient({ contests }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [editingContest, setEditingContest] = useState<Contest | null>(null)
+
+  const handleEdit = (contest: Contest) => {
+    setEditingContest(contest)
+    setIsFormOpen(true)
+  }
+
+  const handleClose = () => {
+    setIsFormOpen(false)
+    setEditingContest(null)
+  }
 
   return (
     <div className="space-y-6">
@@ -112,7 +125,12 @@ export default function ContestsClient({ contests }: Props) {
                     </div>
                   </div>
 
-                  <button className="text-sm text-brand hover:underline">編集</button>
+                  <button
+                    onClick={() => handleEdit(contest)}
+                    className="text-sm text-brand hover:underline"
+                  >
+                    編集
+                  </button>
                 </div>
               </div>
             </div>
@@ -142,7 +160,7 @@ export default function ContestsClient({ contests }: Props) {
         )}
       </div>
 
-      <ContestForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+      <ContestForm isOpen={isFormOpen} onClose={handleClose} contest={editingContest} />
     </div>
   )
 }

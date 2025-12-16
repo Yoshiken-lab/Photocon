@@ -2,16 +2,38 @@
 
 import { useState } from 'react'
 import { X, Calendar, Image, Smile, Type, FileText, Hash } from 'lucide-react'
-import { createContest } from './actions'
+import { createContest, updateContest } from './actions'
+
+type Contest = {
+  id: string
+  name: string
+  description: string | null
+  theme: string | null
+  emoji: string | null
+  image_url: string | null
+  hashtags: string[] | null
+  start_date: string
+  end_date: string
+  voting_start: string | null
+  voting_end: string | null
+  status: string
+}
 
 type ContestFormProps = {
   isOpen: boolean
   onClose: () => void
+  contest?: Contest | null
 }
 
-export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
+export default function ContestForm({ isOpen, onClose, contest }: ContestFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const isEditing = !!contest
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return ''
+    return dateString.split('T')[0]
+  }
 
   if (!isOpen) return null
 
@@ -20,7 +42,9 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
     setError(null)
 
     try {
-      const result = await createContest(formData)
+      const result = isEditing
+        ? await updateContest(contest!.id, formData)
+        : await createContest(formData)
       if (result.error) {
         setError(result.error)
       } else {
@@ -40,7 +64,9 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
 
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">新規コンテスト作成</h2>
+          <h2 className="text-xl font-bold text-gray-800">
+            {isEditing ? 'コンテスト編集' : '新規コンテスト作成'}
+          </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -66,6 +92,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
                 type="text"
                 name="name"
                 required
+                defaultValue={contest?.name || ''}
                 placeholder="例：クリスマスフォトコンテスト"
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
@@ -79,6 +106,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <textarea
                 name="description"
                 rows={3}
+                defaultValue={contest?.description || ''}
                 placeholder="コンテストの説明を入力..."
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all resize-none"
               />
@@ -92,6 +120,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="text"
                 name="theme"
+                defaultValue={contest?.theme || ''}
                 placeholder="例：家族の笑顔"
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
@@ -105,6 +134,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="text"
                 name="emoji"
+                defaultValue={contest?.emoji || ''}
                 placeholder="例：🎄"
                 maxLength={10}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all text-2xl"
@@ -119,6 +149,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="text"
                 name="hashtags"
+                defaultValue={contest?.hashtags?.join(', ') || ''}
                 placeholder="例：#クリスマス,#家族写真"
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
@@ -133,6 +164,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="url"
                 name="image_url"
+                defaultValue={contest?.image_url || ''}
                 placeholder="https://example.com/image.jpg"
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
@@ -147,6 +179,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
                 type="date"
                 name="start_date"
                 required
+                defaultValue={formatDate(contest?.start_date || null)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
             </div>
@@ -160,6 +193,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
                 type="date"
                 name="end_date"
                 required
+                defaultValue={formatDate(contest?.end_date || null)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
             </div>
@@ -172,6 +206,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="date"
                 name="voting_start"
+                defaultValue={formatDate(contest?.voting_start || null)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
             </div>
@@ -184,6 +219,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               <input
                 type="date"
                 name="voting_end"
+                defaultValue={formatDate(contest?.voting_end || null)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               />
             </div>
@@ -194,6 +230,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               </label>
               <select
                 name="status"
+                defaultValue={contest?.status || 'draft'}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
               >
                 <option value="draft">下書き</option>
@@ -218,7 +255,7 @@ export default function ContestForm({ isOpen, onClose }: ContestFormProps) {
               disabled={isSubmitting}
               className="px-6 py-3 bg-brand text-white rounded-xl font-medium hover:bg-brand-600 transition-colors disabled:opacity-50"
             >
-              {isSubmitting ? '作成中...' : '作成する'}
+              {isSubmitting ? (isEditing ? '更新中...' : '作成中...') : (isEditing ? '更新する' : '作成する')}
             </button>
           </div>
         </form>
