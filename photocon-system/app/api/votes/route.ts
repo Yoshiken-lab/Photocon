@@ -88,6 +88,54 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// 投票取消
+export async function DELETE(request: NextRequest) {
+  try {
+    const { entryId } = await request.json()
+
+    if (!entryId) {
+      return NextResponse.json({ error: 'entryId is required' }, { status: 400 })
+    }
+
+    const supabase = createAdminClient()
+
+    // 投票者識別子生成（IPアドレス + エントリーIDのハッシュ）
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown'
+
+    const voterIdentifier = createHash('sha256')
+      .update(`${ip}-${entryId}`)
+      .digest('hex')
+
+    // 投票を削除
+    const { error: deleteError } = await supabase
+      .from('votes')
+      .delete()
+      .eq('entry_id', entryId)
+      .eq('voter_identifier', voterIdentifier)
+
+    if (deleteError) {
+      throw deleteError
+    }
+
+    // 投票数取得
+    const { count } = await supabase
+      .from('votes')
+      .select('*', { count: 'exact', head: true })
+      .eq('entry_id', entryId)
+
+    return NextResponse.json({
+      success: true,
+      voteCount: count || 0,
+      message: '投票を取り消しました'
+    })
+
+  } catch (error) {
+    console.error('Vote delete error:', error)
+    return NextResponse.json({ error: '投票の取消に失敗しました' }, { status: 500 })
+  }
+}
+
 // 投票数取得
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
