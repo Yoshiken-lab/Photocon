@@ -67,7 +67,7 @@
             
             <nav class="hidden md:flex items-center gap-6 text-sm font-bold text-gray-500">
                 <a href="#about" class="hover:text-brand transition-colors py-2">はじめての方へ</a>
-                <a href="#gallery" class="hover:text-brand transition-colors py-2">みんなの作品</a>
+                <a href="#entry" class="hover:text-brand transition-colors py-2">イベント</a>
                 <a href="#login" class="ml-2 px-6 py-2.5 bg-brand text-white rounded-full hover:bg-brand-600 transition-all duration-300 text-xs font-bold tracking-wide shadow-md hover:shadow-brand/30 hover:-translate-y-0.5">
                     ログイン
                 </a>
@@ -174,86 +174,90 @@
             </div>
         </section>
 
-        <section id="gallery" class="py-20 px-4 bg-brand-50">
+        <!-- イベントセクション -->
+        <section id="entry" class="py-20 px-4 bg-white">
             <div class="max-w-6xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-                    <div>
-                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-800 font-maru flex items-center gap-3">
-                            <i data-lucide="sun" class="text-brand w-6 h-6"></i>
-                            みんなのアルバム
-                        </h2>
+
+                <!-- 開催中イベント（ヒーロー） -->
+                <div id="active-events-container" class="mb-16">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-brand"></span>
+                        </span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-maru">開催中のイベント</h2>
                     </div>
-                    
-                    <div class="flex flex-wrap gap-2 text-sm">
-                        <button class="px-4 py-2 bg-brand text-white rounded-full font-bold shadow-sm">すべて</button>
-                        <button class="px-4 py-2 bg-white text-gray-500 hover:text-brand rounded-full font-bold shadow-sm transition-colors">運動会</button>
-                        <button class="px-4 py-2 bg-white text-gray-500 hover:text-brand rounded-full font-bold shadow-sm transition-colors">遠足</button>
-                        <button class="px-4 py-2 bg-white text-gray-500 hover:text-brand rounded-full font-bold shadow-sm transition-colors">日常</button>
+
+                    <div id="active-events" class="space-y-6">
+                        <!-- 動的に読み込まれます -->
+                        <div class="text-center py-12 text-gray-400">
+                            <div class="animate-pulse">読み込み中...</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-                    <div class="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <img src="https://images.unsplash.com/photo-1537655780520-1e392ead81f2?w=600&q=80" alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent pt-12">
-                            <div class="flex items-center justify-between text-white">
-                                <span class="text-xs font-bold">@mama_photo</span>
-                                <div class="flex items-center gap-1 text-xs bg-white/20 backdrop-blur px-2 py-1 rounded-full">
-                                    <i data-lucide="heart" class="w-3 h-3 fill-white"></i> 128
+                <!-- 今後の予定（折りたたみ式タイムライン） -->
+                <div id="upcoming-events-container" class="mb-16 hidden">
+                    <button id="upcoming-toggle" class="w-full flex items-center justify-between p-4 bg-brand-50 hover:bg-brand-100 rounded-2xl transition-colors group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-brand shadow-sm">
+                                <i data-lucide="calendar-range" class="w-5 h-5"></i>
+                            </div>
+                            <div class="text-left">
+                                <h3 class="font-bold text-gray-800 font-maru">今後の予定</h3>
+                                <p id="upcoming-count" class="text-xs text-gray-500">0件のイベントが予定されています</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-brand font-bold text-sm">
+                            <span id="upcoming-toggle-text">開く</span>
+                            <i data-lucide="chevron-down" id="upcoming-toggle-icon" class="w-5 h-5 transition-transform"></i>
+                        </div>
+                    </button>
+
+                    <div id="upcoming-content" class="hidden mt-4">
+                        <!-- PC: 横タイムライン -->
+                        <div class="hidden md:block bg-white rounded-2xl p-8 shadow-lg border border-brand-50">
+                            <div class="relative">
+                                <div class="absolute top-6 left-0 right-0 h-1 bg-brand-100 rounded-full"></div>
+                                <div id="upcoming-timeline-pc" class="relative flex justify-between">
+                                    <!-- 動的に読み込まれます -->
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <img src="https://images.unsplash.com/photo-1543357115-92e512b27e80?w=600&q=80" alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute top-3 left-3">
-                             <span class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">お弁当部門</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent pt-12">
-                            <div class="flex items-center justify-between text-white">
-                                <span class="text-xs font-bold">@yummy_obento</span>
-                                <div class="flex items-center gap-1 text-xs bg-white/20 backdrop-blur px-2 py-1 rounded-full">
-                                    <i data-lucide="heart" class="w-3 h-3 fill-white"></i> 89
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <img src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=600&q=80" alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent pt-12">
-                            <div class="flex items-center justify-between text-white">
-                                <span class="text-xs font-bold">@run_run</span>
-                                <div class="flex items-center gap-1 text-xs bg-white/20 backdrop-blur px-2 py-1 rounded-full">
-                                    <i data-lucide="heart" class="w-3 h-3 fill-white"></i> 245
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <img src="https://images.unsplash.com/photo-1596464716127-f9a0639b5bf7?w=600&q=80" alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent pt-12">
-                            <div class="flex items-center justify-between text-white">
-                                <span class="text-xs font-bold">@smile_kids</span>
-                                <div class="flex items-center gap-1 text-xs bg-white/20 backdrop-blur px-2 py-1 rounded-full">
-                                    <i data-lucide="heart" class="w-3 h-3 fill-white"></i> 156
+                        <!-- スマホ: 縦タイムライン -->
+                        <div class="md:hidden bg-white rounded-2xl p-6 shadow-lg border border-brand-50">
+                            <div class="relative pl-8">
+                                <div class="absolute top-0 bottom-0 left-[14px] w-1 bg-brand-100 rounded-full"></div>
+                                <div id="upcoming-timeline-mobile">
+                                    <!-- 動的に読み込まれます -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-10 text-center">
-                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-brand hover:bg-white px-6 py-3 rounded-full hover:shadow-md transition-all">
-                        もっと作品を見る <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </a>
+
+                <!-- 過去のイベント（横スクロール） -->
+                <div id="ended-events-container" class="hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 font-maru flex items-center gap-2">
+                            <i data-lucide="archive" class="w-5 h-5 text-gray-400"></i>
+                            過去のイベント
+                        </h3>
+                        <a href="#" class="text-sm text-brand font-bold hover:underline flex items-center gap-1">
+                            すべて見る <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+
+                    <div id="ended-events" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+                        <!-- 動的に読み込まれます -->
+                    </div>
                 </div>
+
             </div>
         </section>
 
-        <section class="py-20 px-4">
+        <section class="py-20 px-4 bg-brand-50">
             <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden shadow-xl border-4 border-brand-50">
                 <div class="absolute top-0 left-0 w-full h-full opacity-[0.03]" style="background-image: radial-gradient(#E84D1C 2px, transparent 2px); background-size: 20px 20px;"></div>
 
@@ -261,7 +265,7 @@
                     <div class="w-16 h-16 bg-brand-100 text-brand rounded-full flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="gift" class="w-8 h-8"></i>
                     </div>
-                    
+
                     <h2 class="text-2xl md:text-4xl font-bold text-gray-800 font-maru">
                         自慢の一枚、待ってます
                     </h2>
@@ -300,6 +304,206 @@
 
     <script>
         lucide.createIcons();
+
+        // API URL（開発環境）
+        const API_BASE_URL = 'http://localhost:3000';
+
+        // 日付フォーマット
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.getMonth() + 1}/${date.getDate()}`;
+        }
+
+        function formatMonth(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.getFullYear()}年${date.getMonth() + 1}月`;
+        }
+
+        // 残り日数計算
+        function getDaysLeft(endDateStr) {
+            const now = new Date();
+            const endDate = new Date(endDateStr);
+            const diff = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+            return diff > 0 ? diff : 0;
+        }
+
+        // 開催中イベントのHTML生成
+        function renderActiveEvent(contest) {
+            const defaultImage = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80';
+            const daysLeft = getDaysLeft(contest.end_date);
+
+            return `
+                <div class="relative bg-gradient-to-br from-brand-50 to-white rounded-[2rem] p-6 md:p-10 shadow-xl border-2 border-brand-100 overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-brand-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                        <div class="space-y-4">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand text-white text-xs font-bold rounded-full">
+                                <i data-lucide="calendar" class="w-3 h-3"></i>
+                                <span>募集中</span>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-maru">${contest.emoji || ''} ${contest.name}</h3>
+                            ${contest.theme ? `<p class="text-gray-500 text-sm md:text-base">テーマ：「${contest.theme}」</p>` : ''}
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="calendar-days" class="w-4 h-4 text-brand"></i>
+                                    <span>${formatDate(contest.start_date)} 〜 ${formatDate(contest.end_date)}</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="users" class="w-4 h-4 text-brand"></i>
+                                    <span>応募 ${contest.entry_count || 0}件</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="clock" class="w-4 h-4 text-brand"></i>
+                                    <span>残り ${daysLeft}日</span>
+                                </div>
+                            </div>
+                            <div class="pt-4">
+                                <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-brand hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg shadow-brand/30 hover:-translate-y-1">
+                                    <i data-lucide="camera" class="w-5 h-5"></i>
+                                    <span>今すぐ応募する</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+                            <img src="${contest.image_url || defaultImage}" alt="${contest.name}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 今後の予定（PC）のHTML生成
+        function renderUpcomingTimelinePC(contests) {
+            const width = contests.length > 0 ? `w-1/${contests.length}` : 'w-full';
+            return contests.map(contest => `
+                <div class="flex flex-col items-center ${width}">
+                    <div class="w-12 h-12 bg-white border-4 border-brand-200 rounded-full flex items-center justify-center text-2xl shadow-sm z-10">
+                        <span>${contest.emoji || '📅'}</span>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-xs text-brand font-bold">${formatMonth(contest.start_date)}</p>
+                        <h4 class="font-bold text-gray-800 font-maru mt-1">${contest.name}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${formatDate(contest.start_date)} 〜 ${formatDate(contest.end_date)}</p>
+                        <span class="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 今後の予定（スマホ）のHTML生成
+        function renderUpcomingTimelineMobile(contests) {
+            return contests.map((contest, index) => `
+                <div class="relative ${index < contests.length - 1 ? 'pb-8' : ''}">
+                    <div class="absolute left-[-22px] w-8 h-8 bg-white border-4 border-brand-200 rounded-full flex items-center justify-center text-lg z-10">
+                        <span>${contest.emoji || '📅'}</span>
+                    </div>
+                    <div class="bg-brand-50 rounded-xl p-4">
+                        <p class="text-xs text-brand font-bold">${formatMonth(contest.start_date)}</p>
+                        <h4 class="font-bold text-gray-800 font-maru mt-1">${contest.name}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${formatDate(contest.start_date)} 〜 ${formatDate(contest.end_date)}</p>
+                        <span class="inline-block mt-2 px-2 py-1 bg-white text-gray-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 過去のイベントのHTML生成
+        function renderEndedEvent(contest) {
+            const defaultImage = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&q=80';
+            return `
+                <div class="flex-shrink-0 w-64 snap-start">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                        <div class="relative aspect-[3/2]">
+                            <img src="${contest.image_url || defaultImage}" alt="${contest.name}" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-gray-800/70 text-white text-xs font-bold px-2 py-1 rounded-full">終了</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-xs text-gray-400">${formatMonth(contest.end_date)}</p>
+                            <h4 class="font-bold text-gray-800 font-maru mt-1">${contest.emoji || ''} ${contest.name}</h4>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                                <span class="flex items-center gap-1"><i data-lucide="image" class="w-3 h-3"></i> ${contest.entry_count || 0}件</span>
+                                <span class="flex items-center gap-1"><i data-lucide="heart" class="w-3 h-3"></i> ${(contest.total_votes || 0).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // イベントデータを取得して表示
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/contests?type=lp`);
+                const data = await response.json();
+
+                // 開催中イベント
+                const activeContainer = document.getElementById('active-events');
+                if (data.active && data.active.length > 0) {
+                    activeContainer.innerHTML = data.active.map(renderActiveEvent).join('');
+                } else {
+                    activeContainer.innerHTML = `
+                        <div class="text-center py-12 bg-brand-50 rounded-2xl text-gray-500">
+                            現在開催中のイベントはありません
+                        </div>
+                    `;
+                }
+
+                // 今後の予定
+                const upcomingContainer = document.getElementById('upcoming-events-container');
+                if (data.upcoming && data.upcoming.length > 0) {
+                    upcomingContainer.classList.remove('hidden');
+                    document.getElementById('upcoming-count').textContent = `${data.upcoming.length}件のイベントが予定されています`;
+                    document.getElementById('upcoming-timeline-pc').innerHTML = renderUpcomingTimelinePC(data.upcoming);
+                    document.getElementById('upcoming-timeline-mobile').innerHTML = renderUpcomingTimelineMobile(data.upcoming);
+                }
+
+                // 過去のイベント
+                const endedContainer = document.getElementById('ended-events-container');
+                if (data.ended && data.ended.length > 0) {
+                    endedContainer.classList.remove('hidden');
+                    document.getElementById('ended-events').innerHTML = data.ended.map(renderEndedEvent).join('');
+                }
+
+                // Lucideアイコンを再描画
+                lucide.createIcons();
+            } catch (error) {
+                console.error('イベントデータの取得に失敗しました:', error);
+                document.getElementById('active-events').innerHTML = `
+                    <div class="text-center py-12 bg-brand-50 rounded-2xl text-gray-500">
+                        イベント情報を読み込めませんでした
+                    </div>
+                `;
+            }
+        }
+
+        // ページ読み込み時にイベントを取得
+        loadEvents();
+
+        // 今後の予定の折りたたみ機能
+        const upcomingToggle = document.getElementById('upcoming-toggle');
+        const upcomingContent = document.getElementById('upcoming-content');
+        const upcomingToggleText = document.getElementById('upcoming-toggle-text');
+        const upcomingToggleIcon = document.getElementById('upcoming-toggle-icon');
+
+        upcomingToggle.addEventListener('click', () => {
+            const isHidden = upcomingContent.classList.contains('hidden');
+
+            if (isHidden) {
+                upcomingContent.classList.remove('hidden');
+                upcomingToggleText.textContent = '閉じる';
+                upcomingToggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                upcomingContent.classList.add('hidden');
+                upcomingToggleText.textContent = '開く';
+                upcomingToggleIcon.style.transform = 'rotate(0deg)';
+            }
+
+            // アイコンを再描画
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
