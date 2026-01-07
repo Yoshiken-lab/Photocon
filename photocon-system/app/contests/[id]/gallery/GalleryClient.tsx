@@ -69,7 +69,7 @@ export function GalleryClient({ entries, winners = [], isContestEnded = false, s
                 onClick={() => handleEntryClick(entry)}
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
-                className="group relative w-[68%] md:w-[420px] aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 select-none border-4 border-yellow-400"
+                className="group relative w-full max-w-[280px] md:max-w-none md:w-[420px] aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 select-none border-4 border-yellow-400"
               >
                 <Image
                   src={entry.media_url}
@@ -128,7 +128,7 @@ export function GalleryClient({ entries, winners = [], isContestEnded = false, s
       )}
 
       {/* 応募作品一覧 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-2 md:gap-6">
         {entries.map((entry) => (
           <div
             key={entry.id}
