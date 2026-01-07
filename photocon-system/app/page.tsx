@@ -1,21 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Camera, ImagePlus, Instagram, Heart, Sun, Gift, ArrowRight, Menu } from 'lucide-react'
+import { Camera, ImagePlus, Instagram, Heart, Gift, Menu } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
 import { EventsSection } from '@/components/EventsSection'
-
-interface EntryWithCategory {
-  id: string
-  media_url: string
-  username: string
-  like_count: number | null
-  categories: { name: string } | null
-}
-
-interface SearchParams {
-  sort?: 'latest' | 'popular'
-}
 
 interface Contest {
   id: string
@@ -29,29 +17,8 @@ interface Contest {
   status: string
 }
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: SearchParams
-}) {
+export default async function Home() {
   const supabase = createServerClient()
-  const sort = searchParams.sort || 'latest'
-
-  // 承認済みエントリーを8件取得
-  let query = supabase
-    .from('entries')
-    .select('id, media_url, username, like_count, categories(name)')
-    .eq('status', 'approved')
-
-  if (sort === 'popular') {
-    query = query.order('like_count', { ascending: false })
-  } else {
-    query = query.order('collected_at', { ascending: false })
-  }
-
-  const { data } = await query.limit(8)
-
-  const entries = data as EntryWithCategory[] | null
 
   // コンテストデータを取得
   const { data: contestsData } = await supabase
@@ -86,13 +53,13 @@ export default async function Home({
             />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-gray-500">
-            <Link href="#about" className="hover:text-brand transition-colors py-2">はじめての方へ</Link>
-            <Link href="#events" className="hover:text-brand transition-colors py-2">イベント</Link>
-            <Link href="#gallery" className="hover:text-brand transition-colors py-2">みんなの作品</Link>
-            <Link href="/admin" className="ml-2 px-6 py-2.5 bg-brand text-white rounded-full hover:bg-brand-600 transition-all duration-300 text-xs font-bold tracking-wide shadow-md hover:shadow-brand/30 hover:-translate-y-0.5">
-              管理画面
-            </Link>
+          <nav className="hidden md:flex items-center gap-5 text-sm font-bold text-gray-500">
+            <Link href="#top" className="hover:text-brand transition-colors py-2">トップ</Link>
+            <Link href="#about" className="hover:text-brand transition-colors py-2">応募方法</Link>
+            <Link href="#events" className="hover:text-brand transition-colors py-2">開催テーマ</Link>
+            <Link href="#past" className="hover:text-brand transition-colors py-2">過去テーマ</Link>
+            <Link href="#faq" className="hover:text-brand transition-colors py-2">Q&A</Link>
+            <Link href="#contact" className="hover:text-brand transition-colors py-2">お問い合わせ</Link>
           </nav>
 
           <button className="md:hidden p-2 text-gray-600 bg-white rounded-full shadow-sm">
@@ -206,82 +173,6 @@ export default async function Home({
           upcomingContests={upcomingContests}
           endedContests={endedContests}
         />
-
-        {/* Gallery Section */}
-        <section id="gallery" className="py-20 px-4 bg-brand-50 scroll-mt-32">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 gap-4">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-800 font-maru flex items-center justify-center md:justify-start gap-3">
-                  <Sun className="text-brand w-6 h-6" />
-                  応募作品
-                </h2>
-              </div>
-              <div className="flex gap-2 text-sm">
-                <Link
-                  href="/?sort=latest#gallery"
-                  className={`px-4 py-2 rounded-full font-bold shadow-sm transition-colors ${
-                    sort === 'latest'
-                      ? 'bg-brand text-white'
-                      : 'bg-white text-gray-500 hover:text-brand'
-                  }`}
-                >
-                  新着順
-                </Link>
-                <Link
-                  href="/?sort=popular#gallery"
-                  className={`px-4 py-2 rounded-full font-bold shadow-sm transition-colors ${
-                    sort === 'popular'
-                      ? 'bg-brand text-white'
-                      : 'bg-white text-gray-500 hover:text-brand'
-                  }`}
-                >
-                  人気順
-                </Link>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-              {entries && entries.length > 0 ? (
-                entries.map((entry) => (
-                  <div key={entry.id} className="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <Image
-                      src={entry.media_url}
-                      alt=""
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    {entry.categories?.name && (
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">{entry.categories.name}</span>
-                      </div>
-                    )}
-                    <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 to-transparent pt-12">
-                      <div className="flex items-center justify-between text-white">
-                        <span className="text-xs font-bold">@{entry.username}</span>
-                        <div className="flex items-center gap-1 text-xs bg-white/20 backdrop-blur px-2 py-1 rounded-full">
-                          <Heart className="w-3 h-3 fill-white" /> {entry.like_count || 0}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-full text-center py-12 text-gray-500">
-                  まだ応募作品がありません
-                </div>
-              )}
-            </div>
-
-            {entries && entries.length > 0 && (
-              <div className="mt-10 text-center">
-                <Link href="/gallery" className="inline-flex items-center gap-2 text-sm font-bold text-brand hover:bg-white px-6 py-3 rounded-full hover:shadow-md transition-all">
-                  もっと作品を見る <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="py-20 px-4">
