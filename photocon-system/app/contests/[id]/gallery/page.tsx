@@ -18,6 +18,7 @@ interface Contest {
   name: string
   emoji: string | null
   theme: string | null
+  end_date: string
 }
 
 interface Props {
@@ -32,13 +33,16 @@ export default async function ContestGalleryPage({ params, searchParams }: Props
   // コンテスト情報を取得
   const { data: contest } = await supabase
     .from('contests')
-    .select('id, name, emoji, theme')
+    .select('id, name, emoji, theme, end_date')
     .eq('id', params.id)
     .single()
 
   if (!contest) {
     notFound()
   }
+
+  // コンテストが終了しているか判定
+  const isContestEnded = new Date(contest.end_date) < new Date()
 
   // このコンテストの承認済みエントリーを取得
   let query = supabase
@@ -54,6 +58,19 @@ export default async function ContestGalleryPage({ params, searchParams }: Props
   }
 
   const { data: entries } = await query
+
+  // 入賞作品を取得（終了コンテストのみ）
+  let winners: Entry[] = []
+  if (isContestEnded) {
+    const { data: winnerEntries } = await supabase
+      .from('entries')
+      .select('id, media_url, username, like_count, caption')
+      .eq('contest_id', params.id)
+      .eq('status', 'winner')
+      .order('like_count', { ascending: false })
+
+    winners = winnerEntries || []
+  }
 
   return (
     <div className="min-h-screen bg-brand-50">
@@ -117,7 +134,7 @@ export default async function ContestGalleryPage({ params, searchParams }: Props
 
           {/* ギャラリー */}
           {entries && entries.length > 0 ? (
-            <GalleryClient entries={entries} />
+            <GalleryClient entries={entries} winners={winners} />
           ) : (
             <div className="text-center py-16 text-gray-500">
               <p className="text-lg mb-2">まだ応募作品がありません</p>
@@ -131,8 +148,8 @@ export default async function ContestGalleryPage({ params, searchParams }: Props
             </div>
           )}
 
-          {/* 応募ボタン */}
-          {entries && entries.length > 0 && (
+          {/* 応募ボタン（終了したコンテストでは非表示） */}
+          {entries && entries.length > 0 && !isContestEnded && (
             <div className="mt-12 text-center">
               <Link
                 href="/submit"
