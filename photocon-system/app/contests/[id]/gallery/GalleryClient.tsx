@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Heart, Crown } from 'lucide-react'
 import { VoteModal } from './VoteModal'
 
@@ -16,9 +17,12 @@ interface Entry {
 interface GalleryClientProps {
   entries: Entry[]
   winners?: Entry[]
+  isContestEnded?: boolean
+  sort?: 'latest' | 'popular'
+  contestId?: string
 }
 
-export function GalleryClient({ entries, winners = [] }: GalleryClientProps) {
+export function GalleryClient({ entries, winners = [], isContestEnded = false, sort = 'latest', contestId }: GalleryClientProps) {
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
   const [entryVotes, setEntryVotes] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {}
@@ -32,6 +36,8 @@ export function GalleryClient({ entries, winners = [] }: GalleryClientProps) {
   })
 
   const handleEntryClick = (entry: Entry) => {
+    // 終了コンテストではモーダルを表示しない
+    if (isContestEnded) return
     setSelectedEntry(entry)
   }
 
@@ -63,7 +69,7 @@ export function GalleryClient({ entries, winners = [] }: GalleryClientProps) {
                 onClick={() => handleEntryClick(entry)}
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
-                className="group relative w-[45%] md:w-[280px] aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 select-none border-4 border-yellow-400"
+                className="group relative w-[68%] md:w-[420px] aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 select-none border-4 border-yellow-400"
               >
                 <Image
                   src={entry.media_url}
@@ -92,6 +98,32 @@ export function GalleryClient({ entries, winners = [] }: GalleryClientProps) {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* ソートボタン（終了コンテストの場合はここに表示） */}
+      {isContestEnded && contestId && (
+        <div className="flex justify-center gap-2 mb-8">
+          <Link
+            href={`/contests/${contestId}/gallery?sort=latest`}
+            className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
+              sort === 'latest'
+                ? 'bg-brand text-white'
+                : 'bg-white text-gray-500 hover:text-brand'
+            }`}
+          >
+            新着順
+          </Link>
+          <Link
+            href={`/contests/${contestId}/gallery?sort=popular`}
+            className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
+              sort === 'popular'
+                ? 'bg-brand text-white'
+                : 'bg-white text-gray-500 hover:text-brand'
+            }`}
+          >
+            投票数順
+          </Link>
         </div>
       )}
 

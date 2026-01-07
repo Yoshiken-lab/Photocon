@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
@@ -92,14 +92,21 @@ export function VoteModal({ entry, voteCount, onClose, onVoteUpdate }: VoteModal
         </button>
 
         {/* 写真 */}
-        <div className="relative w-full aspect-square bg-gray-100">
+        <div
+          className="relative w-full aspect-square bg-gray-100 select-none"
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        >
           <Image
             src={entry.media_url}
             alt={entry.caption || ''}
             fill
-            className="object-contain"
+            className="object-contain select-none"
+            draggable={false}
             priority
           />
+          {/* 画像保護用の透明オーバーレイ */}
+          <div className="absolute inset-0 z-10" />
         </div>
 
         {/* 情報 */}

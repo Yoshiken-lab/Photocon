@@ -108,33 +108,35 @@ export default async function ContestGalleryPage({ params, searchParams }: Props
             <p className="text-gray-500 mt-4">応募作品一覧</p>
           </div>
 
-          {/* ソートボタン */}
-          <div className="flex justify-center gap-2 mb-8">
-            <Link
-              href={`/contests/${params.id}/gallery?sort=latest`}
-              className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
-                sort === 'latest'
-                  ? 'bg-brand text-white'
-                  : 'bg-white text-gray-500 hover:text-brand'
-              }`}
-            >
-              新着順
-            </Link>
-            <Link
-              href={`/contests/${params.id}/gallery?sort=popular`}
-              className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
-                sort === 'popular'
-                  ? 'bg-brand text-white'
-                  : 'bg-white text-gray-500 hover:text-brand'
-              }`}
-            >
-              人気順
-            </Link>
-          </div>
+          {/* ソートボタン（終了していないコンテストのみ表示） */}
+          {!isContestEnded && (
+            <div className="flex justify-center gap-2 mb-8">
+              <Link
+                href={`/contests/${params.id}/gallery?sort=latest`}
+                className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
+                  sort === 'latest'
+                    ? 'bg-brand text-white'
+                    : 'bg-white text-gray-500 hover:text-brand'
+                }`}
+              >
+                新着順
+              </Link>
+              <Link
+                href={`/contests/${params.id}/gallery?sort=popular`}
+                className={`px-4 py-2 rounded-full font-bold text-sm shadow-sm transition-colors ${
+                  sort === 'popular'
+                    ? 'bg-brand text-white'
+                    : 'bg-white text-gray-500 hover:text-brand'
+                }`}
+              >
+                投票数順
+              </Link>
+            </div>
+          )}
 
           {/* ギャラリー */}
           {entries && entries.length > 0 ? (
-            <GalleryClient entries={entries} winners={winners} />
+            <GalleryClient entries={entries} winners={winners} isContestEnded={isContestEnded} sort={sort} contestId={params.id} />
           ) : (
             <div className="text-center py-16 text-gray-500">
               <p className="text-lg mb-2">まだ応募作品がありません</p>
