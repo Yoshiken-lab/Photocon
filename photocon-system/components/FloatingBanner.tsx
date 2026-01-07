@@ -33,13 +33,6 @@ export function FloatingBanner() {
 
         {/* バナー内容 */}
         <div className="pt-4 pb-5 px-4">
-          {/* タイトル */}
-          <div className="text-center mb-3">
-            <p className="text-brand font-black text-lg tracking-tight">
-              写真をご購入の保護者様
-            </p>
-          </div>
-
           {/* リンクボックス */}
           <Link
             href="https://www.schoolphoto.jp/"
@@ -48,8 +41,8 @@ export function FloatingBanner() {
             className="block bg-brand-50 border-2 border-brand-200 rounded-xl p-4 hover:bg-brand-100 transition-colors group"
           >
             <div className="text-center">
-              <p className="text-gray-700 text-sm font-bold">ログイン・新規登録は</p>
-              <p className="text-gray-700 text-sm font-bold">こちらから</p>
+              <p className="text-brand font-black text-lg tracking-tight">お写真のご購入は</p>
+              <p className="text-brand font-black text-lg tracking-tight">こちらから</p>
             </div>
 
             {/* スクールフォト！ロゴ */}
