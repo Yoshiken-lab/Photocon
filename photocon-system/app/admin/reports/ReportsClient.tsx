@@ -467,23 +467,60 @@ export function ReportsClient({
                 {/* 曜日別応募数 */}
                 <div className="bg-gray-50 rounded-xl p-6">
                   <h3 className="font-bold text-gray-800 mb-4">曜日別 応募数</h3>
-                  <div className="flex items-end gap-2 h-40">
-                    {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
-                      const maxDay = Math.max(...timeStats.dayTotals)
-                      const height = maxDay > 0 ? (timeStats.dayTotals[dayIndex] / maxDay * 100) : 0
-                      return (
-                        <div key={dayIndex} className="flex-1 flex flex-col items-center">
-                          <div
-                            className={`w-full rounded-t transition-all ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
-                            style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
-                          />
-                          <span className={`text-xs mt-2 ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
-                            {dayNames[dayIndex]}
-                          </span>
+                  {(() => {
+                    const maxDay = Math.max(...timeStats.dayTotals)
+                    return (
+                      <div className="flex">
+                        {/* 縦軸目盛り */}
+                        <div className="w-12 flex-shrink-0 pr-2">
+                          <div className="flex flex-col justify-between h-40 text-right">
+                            <span className="text-xs text-gray-400 leading-none">{maxDay.toLocaleString()}</span>
+                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.75).toLocaleString()}</span>
+                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.5).toLocaleString()}</span>
+                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.25).toLocaleString()}</span>
+                            <span className="text-xs text-gray-400 leading-none">0</span>
+                          </div>
                         </div>
-                      )
-                    })}
-                  </div>
+                        {/* グラフ本体 */}
+                        <div className="flex-1 min-w-0">
+                          <div className="relative h-40 border-l border-gray-200">
+                            {/* グリッドライン */}
+                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                              {[0, 1, 2, 3, 4].map((i) => (
+                                <div key={i} className="border-t border-gray-200 w-full" />
+                              ))}
+                            </div>
+                            {/* 棒グラフ */}
+                            <div className="flex items-end justify-around h-full relative z-10 px-2">
+                              {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
+                                const height = maxDay > 0 ? (timeStats.dayTotals[dayIndex] / maxDay * 100) : 0
+                                return (
+                                  <div key={dayIndex} className="w-[12%] h-full flex items-end justify-center group">
+                                    <div
+                                      className={`w-full rounded-t transition-all relative ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
+                                      style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                                    >
+                                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                        {timeStats.dayTotals[dayIndex].toLocaleString()}件
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          {/* 曜日ラベル */}
+                          <div className="flex justify-around mt-2 px-2">
+                            {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                              <span key={dayIndex} className={`w-[12%] text-xs text-center ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                                {dayNames[dayIndex]}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })()}
                 </div>
               </div>
             </div>
@@ -805,55 +842,121 @@ export function ReportsClient({
                   {/* 応募数比較 */}
                   <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="font-bold text-gray-800 mb-4">応募数の比較</h3>
-                    <div className="flex items-end gap-4 h-40">
-                      {compareStats.map((stat, index) => {
-                        const maxEntries = Math.max(...compareStats.map(s => s.totalEntries))
-                        const height = maxEntries > 0 ? (stat.totalEntries / maxEntries * 100) : 0
-                        const colors = ['bg-brand', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500']
-                        return (
-                          <div key={stat.contestId} className="flex-1 flex flex-col items-center">
-                            <div
-                              className={`w-full ${colors[index % colors.length]} rounded-t relative group`}
-                              style={{ height: `${height}%`, minHeight: '4px' }}
-                            >
-                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                {stat.totalEntries.toLocaleString()}件
+                    {(() => {
+                      const maxEntries = Math.max(...compareStats.map(s => s.totalEntries))
+                      const colors = ['bg-brand', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500']
+                      return (
+                        <div className="flex">
+                          {/* 縦軸目盛り */}
+                          <div className="w-12 flex-shrink-0 pr-2">
+                            <div className="flex flex-col justify-between h-40 text-right">
+                              <span className="text-xs text-gray-400 leading-none">{maxEntries.toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxEntries * 0.75).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxEntries * 0.5).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxEntries * 0.25).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">0</span>
+                            </div>
+                          </div>
+                          {/* グラフ本体 */}
+                          <div className="flex-1 min-w-0">
+                            <div className="relative h-40 border-l border-gray-200">
+                              {/* グリッドライン */}
+                              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                  <div key={i} className="border-t border-gray-200 w-full" />
+                                ))}
+                              </div>
+                              {/* 棒グラフ */}
+                              <div className="flex items-end justify-around h-full relative z-10 px-2">
+                                {compareStats.map((stat, index) => {
+                                  const height = maxEntries > 0 ? (stat.totalEntries / maxEntries * 100) : 0
+                                  return (
+                                    <div key={stat.contestId} className="flex-1 max-w-[60px] h-full flex items-end justify-center group">
+                                      <div
+                                        className={`w-full ${colors[index % colors.length]} rounded-t relative`}
+                                        style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                                      >
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                          {stat.totalEntries.toLocaleString()}件
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
                             </div>
-                            <span className="text-xs text-gray-500 mt-2 text-center truncate w-full">
-                              {stat.contestName.slice(0, 8)}
-                            </span>
+                            {/* ラベル */}
+                            <div className="flex justify-around mt-2 px-2">
+                              {compareStats.map((stat) => (
+                                <span key={stat.contestId} className="flex-1 max-w-[60px] text-xs text-gray-500 text-center truncate">
+                                  {stat.contestName.slice(0, 8)}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        )
-                      })}
-                    </div>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   {/* ユーザー数比較 */}
                   <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="font-bold text-gray-800 mb-4">ユーザー数の比較</h3>
-                    <div className="flex items-end gap-4 h-40">
-                      {compareStats.map((stat, index) => {
-                        const maxUsers = Math.max(...compareStats.map(s => s.uniqueUsers))
-                        const height = maxUsers > 0 ? (stat.uniqueUsers / maxUsers * 100) : 0
-                        const colors = ['bg-purple-400', 'bg-purple-500', 'bg-purple-600', 'bg-purple-700', 'bg-purple-800']
-                        return (
-                          <div key={stat.contestId} className="flex-1 flex flex-col items-center">
-                            <div
-                              className={`w-full ${colors[index % colors.length]} rounded-t relative group`}
-                              style={{ height: `${height}%`, minHeight: '4px' }}
-                            >
-                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                {stat.uniqueUsers.toLocaleString()}人
+                    {(() => {
+                      const maxUsers = Math.max(...compareStats.map(s => s.uniqueUsers))
+                      const colors = ['bg-purple-400', 'bg-purple-500', 'bg-purple-600', 'bg-purple-700', 'bg-purple-800']
+                      return (
+                        <div className="flex">
+                          {/* 縦軸目盛り */}
+                          <div className="w-12 flex-shrink-0 pr-2">
+                            <div className="flex flex-col justify-between h-40 text-right">
+                              <span className="text-xs text-gray-400 leading-none">{maxUsers.toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxUsers * 0.75).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxUsers * 0.5).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxUsers * 0.25).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">0</span>
+                            </div>
+                          </div>
+                          {/* グラフ本体 */}
+                          <div className="flex-1 min-w-0">
+                            <div className="relative h-40 border-l border-gray-200">
+                              {/* グリッドライン */}
+                              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                  <div key={i} className="border-t border-gray-200 w-full" />
+                                ))}
+                              </div>
+                              {/* 棒グラフ */}
+                              <div className="flex items-end justify-around h-full relative z-10 px-2">
+                                {compareStats.map((stat, index) => {
+                                  const height = maxUsers > 0 ? (stat.uniqueUsers / maxUsers * 100) : 0
+                                  return (
+                                    <div key={stat.contestId} className="flex-1 max-w-[60px] h-full flex items-end justify-center group">
+                                      <div
+                                        className={`w-full ${colors[index % colors.length]} rounded-t relative`}
+                                        style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                                      >
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                          {stat.uniqueUsers.toLocaleString()}人
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
                             </div>
-                            <span className="text-xs text-gray-500 mt-2 text-center truncate w-full">
-                              {stat.contestName.slice(0, 8)}
-                            </span>
+                            {/* ラベル */}
+                            <div className="flex justify-around mt-2 px-2">
+                              {compareStats.map((stat) => (
+                                <span key={stat.contestId} className="flex-1 max-w-[60px] text-xs text-gray-500 text-center truncate">
+                                  {stat.contestName.slice(0, 8)}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        )
-                      })}
-                    </div>
+                        </div>
+                      )
+                    })()}
                   </div>
                 </div>
               )}
