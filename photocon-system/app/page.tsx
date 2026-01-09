@@ -5,7 +5,6 @@ import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
 import { EventsSection } from '@/components/EventsSection'
 import { FAQSection } from '@/components/FAQSection'
-import { RecentApplicantsSection } from '@/components/RecentApplicantsSection'
 
 interface Contest {
   id: string
@@ -36,19 +35,28 @@ export default async function Home() {
   const upcomingContests = contests?.filter(c => c.status === 'upcoming') || []
   const endedContests = contests?.filter(c => c.status === 'ended') || []
 
-  // 最近の応募者を取得（最新5件）
-  const { data: recentEntriesData } = await supabase
-    .from('entries')
-    .select('id, username, instagram_timestamp, contest_id, contests(theme)')
-    .eq('status', 'approved')
-    .order('instagram_timestamp', { ascending: false })
-    .limit(5)
+  // 開催中コンテストのIDリスト
+  const activeContestIds = activeContests.map(c => c.id)
 
-  // 全応募者数を取得
-  const { count: totalApplicants } = await supabase
-    .from('entries')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'approved')
+  // 最近の応募者を取得（開催中コンテストのみ、最新5件）
+  const { data: recentEntriesData } = activeContestIds.length > 0
+    ? await supabase
+        .from('entries')
+        .select('id, username, instagram_timestamp, contest_id, contests(theme)')
+        .eq('status', 'approved')
+        .in('contest_id', activeContestIds)
+        .order('instagram_timestamp', { ascending: false })
+        .limit(5)
+    : { data: [] }
+
+  // 開催中コンテストの応募者数を取得
+  const { count: totalApplicants } = activeContestIds.length > 0
+    ? await supabase
+        .from('entries')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'approved')
+        .in('contest_id', activeContestIds)
+    : { count: 0 }
 
   // 応募者データを整形
   const recentApplicants = (recentEntriesData || []).map((entry: { id: string; username: string; instagram_timestamp: string; contests: { theme: string } | null }) => ({
@@ -191,17 +199,12 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Recent Applicants Section */}
-        <RecentApplicantsSection
-          applicants={recentApplicants}
-          totalCount={totalApplicants || 0}
-        />
-
         {/* Events Section */}
         <EventsSection
           activeContests={activeContests}
-          upcomingContests={upcomingContests}
           endedContests={endedContests}
+          recentApplicants={recentApplicants}
+          totalApplicants={totalApplicants || 0}
         />
 
         {/* FAQ Section */}

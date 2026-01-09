@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Calendar, CalendarDays, CalendarRange, Users, Clock, Camera, ChevronDown, Archive, ArrowRight, ImageIcon, Heart, Images } from 'lucide-react'
+import { Calendar, CalendarDays, Users, Clock, Camera, Archive, ArrowRight, ImageIcon, Heart, Images, Sparkles } from 'lucide-react'
 
 type Contest = {
   id: string
@@ -19,10 +18,18 @@ type Contest = {
   total_votes?: number
 }
 
+type RecentApplicant = {
+  id: string
+  username: string
+  instagram_timestamp: string
+  contest_theme: string | null
+}
+
 type Props = {
   activeContests: Contest[]
-  upcomingContests: Contest[]
   endedContests: Contest[]
+  recentApplicants: RecentApplicant[]
+  totalApplicants: number
 }
 
 // 日付フォーマット
@@ -44,8 +51,39 @@ function getDaysLeft(endDateStr: string) {
   return diff > 0 ? diff : 0
 }
 
-export function EventsSection({ activeContests, upcomingContests, endedContests }: Props) {
-  const [isUpcomingOpen, setIsUpcomingOpen] = useState(false)
+// 相対時間を計算する関数
+function getRelativeTime(dateString: string): string {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffMinutes = Math.floor(diffMs / (1000 * 60))
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+
+  if (diffMinutes < 1) return 'たった今'
+  if (diffMinutes < 60) return `${diffMinutes}分前`
+  if (diffHours < 24) return `${diffHours}時間前`
+  if (diffDays < 7) return `${diffDays}日前`
+  return date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
+}
+
+// ランダムなパステルカラーを生成
+function getAvatarColor(username: string): string {
+  const colors = [
+    'bg-pink-100 text-pink-600',
+    'bg-purple-100 text-purple-600',
+    'bg-blue-100 text-blue-600',
+    'bg-green-100 text-green-600',
+    'bg-yellow-100 text-yellow-600',
+    'bg-orange-100 text-orange-600',
+    'bg-red-100 text-red-600',
+    'bg-indigo-100 text-indigo-600',
+  ]
+  const hash = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  return colors[hash % colors.length]
+}
+
+export function EventsSection({ activeContests, endedContests, recentApplicants, totalApplicants }: Props) {
 
   return (
     <section id="events" className="py-20 px-4 bg-white scroll-mt-32">
@@ -142,81 +180,57 @@ export function EventsSection({ activeContests, upcomingContests, endedContests 
           </div>
         </div>
 
-        {/* 今後の予定 */}
-        {upcomingContests.length > 0 && (
+        {/* 最近の応募者リスト */}
+        {recentApplicants.length > 0 && (
           <div className="mb-16">
-            <button
-              onClick={() => setIsUpcomingOpen(!isUpcomingOpen)}
-              className="w-full flex items-center justify-between p-4 bg-brand-50 hover:bg-brand-100 rounded-2xl transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-brand shadow-sm">
-                  <CalendarRange className="w-5 h-5" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-bold text-gray-800 font-maru">今後の予定</h3>
-                  <p className="text-xs text-gray-500">{upcomingContests.length}件のイベントが予定されています</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-brand font-bold text-sm">
-                <span>{isUpcomingOpen ? '閉じる' : '開く'}</span>
-                <ChevronDown className={`w-5 h-5 transition-transform ${isUpcomingOpen ? 'rotate-180' : ''}`} />
-              </div>
-            </button>
-
-            {isUpcomingOpen && (
-              <div className="mt-4">
-                {/* PC: 横タイムライン */}
-                <div className="hidden md:block bg-white rounded-2xl p-8 shadow-lg border border-brand-50">
-                  <div className="relative">
-                    <div className="absolute top-6 left-0 right-0 h-1 bg-brand-100 rounded-full"></div>
-                    <div className="relative flex justify-between">
-                      {upcomingContests.map((contest) => (
-                        <div key={contest.id} className="flex flex-col items-center flex-1">
-                          <div className="w-12 h-12 bg-white border-4 border-brand-200 rounded-full flex items-center justify-center text-2xl shadow-sm z-10">
-                            <span>{contest.emoji || '📅'}</span>
-                          </div>
-                          <div className="mt-4 text-center">
-                            <p className="text-xs text-brand font-bold">{formatMonth(contest.start_date)}</p>
-                            <h4 className="font-bold text-gray-800 font-maru mt-1">{contest.name}</h4>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
-                            </p>
-                            <span className="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">
-                              Coming Soon
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+            <div className="bg-gradient-to-br from-brand-50 to-white rounded-2xl p-6 md:p-8 border border-brand-100">
+              {/* ヘッダー */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                    <Sparkles className="w-3 h-3" />
+                    リアルタイム
                   </div>
+                  <h3 className="text-lg font-bold text-gray-800 font-maru">最近の応募</h3>
                 </div>
+                <p className="text-sm text-gray-500">
+                  <span className="text-brand font-bold">{totalApplicants}名</span> が参加中
+                </p>
+              </div>
 
-                {/* スマホ: 縦タイムライン */}
-                <div className="md:hidden bg-white rounded-2xl p-6 shadow-lg border border-brand-50">
-                  <div className="relative pl-8">
-                    <div className="absolute top-0 bottom-0 left-[14px] w-1 bg-brand-100 rounded-full"></div>
-                    {upcomingContests.map((contest, index) => (
-                      <div key={contest.id} className={`relative ${index < upcomingContests.length - 1 ? 'pb-8' : ''}`}>
-                        <div className="absolute left-[-22px] w-8 h-8 bg-white border-4 border-brand-200 rounded-full flex items-center justify-center text-lg z-10">
-                          <span>{contest.emoji || '📅'}</span>
-                        </div>
-                        <div className="bg-brand-50 rounded-xl p-4">
-                          <p className="text-xs text-brand font-bold">{formatMonth(contest.start_date)}</p>
-                          <h4 className="font-bold text-gray-800 font-maru mt-1">{contest.name}</h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
-                          </p>
-                          <span className="inline-block mt-2 px-2 py-1 bg-white text-gray-500 text-xs rounded-full">
-                            Coming Soon
+              {/* 応募者リスト */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="divide-y divide-gray-100">
+                  {recentApplicants.map((applicant) => (
+                    <div
+                      key={applicant.id}
+                      className="flex items-center gap-4 p-4 hover:bg-brand-50/30 transition-colors"
+                    >
+                      {/* アバター */}
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${getAvatarColor(applicant.username)}`}>
+                        {applicant.username.charAt(0).toUpperCase()}
+                      </div>
+
+                      {/* 情報 */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-gray-800 text-sm truncate">
+                            {applicant.username}
                           </span>
+                          <span className="text-xs text-gray-400">さんが応募</span>
                         </div>
                       </div>
-                    ))}
-                  </div>
+
+                      {/* 時間 */}
+                      <div className="text-xs text-gray-400 flex-shrink-0">
+                        {getRelativeTime(applicant.instagram_timestamp)}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            )}
+
+            </div>
           </div>
         )}
 
