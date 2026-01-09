@@ -4,6 +4,7 @@ import { Camera, ImagePlus, Instagram, Heart, Gift, Menu } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
 import { EventsSection } from '@/components/EventsSection'
+import { FAQSection } from '@/components/FAQSection'
 
 interface Contest {
   id: string
@@ -200,6 +201,9 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* FAQ Section */}
+        <FAQSection />
       </main>
 
       {/* フローティングバナー */}
@@ -218,7 +222,7 @@ export default async function Home() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm">
-            <Link href="#" className="hover:text-brand transition-colors">よくある質問</Link>
+            <Link href="#faq" className="hover:text-brand transition-colors">よくある質問</Link>
             <Link href="#" className="hover:text-brand transition-colors">利用規約</Link>
             <Link href="#" className="hover:text-brand transition-colors">プライバシーポリシー</Link>
             <Link href="#" className="hover:text-brand transition-colors">運営会社</Link>

@@ -90,8 +90,7 @@ export default async function PastContestsPage() {
         <div className="max-w-6xl mx-auto">
           {/* タイトル */}
           <div className="text-center mb-12">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 font-maru">過去のフォトコンテスト</h1>
-            <p className="text-gray-500">これまでに開催されたコンテストの一覧です</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-maru">開催されたコンテスト一覧</h1>
           </div>
 
           {/* グリッド */}
