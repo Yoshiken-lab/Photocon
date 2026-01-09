@@ -127,63 +127,117 @@ export default async function AdminDashboard() {
         </div>
 
         {activeContests && activeContests.length > 0 ? (
-          <div className={activeContests.length === 1 ? '' : 'grid gap-4 md:grid-cols-2'}>
-              {(activeContests as Contest[]).map((contest) => {
+          activeContests.length === 1 ? (
+            // 1件の場合: 横長レイアウト（案6）
+            (() => {
+              const contest = activeContests[0] as Contest
               const remaining = getRemainingDays(contest.end_date)
               const stats = contestStats[contest.id]
 
               return (
-                <div
-                  key={contest.id}
-                  className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-                >
-                  {/* 左ボーダー付きコンテンツ */}
-                  <div className="border-l-4 border-brand p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">{contest.name}</h3>
-                        {contest.theme && (
-                          <p className="text-gray-500 text-sm mt-1">テーマ: {contest.theme}</p>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="flex items-stretch">
+                    {/* 左側: コンテスト情報 */}
+                    <div className="border-l-4 border-brand p-5 flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-800">{contest.name}</h3>
+                        <span className="px-2 py-0.5 bg-brand text-white rounded-full text-xs font-bold">
+                          開催中
+                        </span>
+                      </div>
+                      {contest.theme && (
+                        <p className="text-sm text-gray-500 mb-3">テーマ: {contest.theme}</p>
+                      )}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                        <span>
+                          <span className="font-medium text-gray-600">開催:</span>{' '}
+                          {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
+                        </span>
+                        {contest.voting_start && contest.voting_end && (
+                          <span>
+                            <span className="font-medium text-gray-600">投票:</span>{' '}
+                            {formatDate(contest.voting_start)} 〜 {formatDate(contest.voting_end)}
+                          </span>
                         )}
                       </div>
-                      <span className="px-3 py-1 bg-brand text-white rounded-full text-sm font-bold">
-                        開催中
+                    </div>
+
+                    {/* 右側: ステータス（バッジ風縦配置） */}
+                    <div className="bg-brand-50 px-5 py-4 flex flex-col justify-center gap-2">
+                      <span className="px-3 py-1.5 bg-white text-brand rounded-lg text-sm font-medium text-center shadow-sm">
+                        応募 <span className="font-bold">{stats?.total || 0}</span>件
                       </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      <div className="bg-brand-50 rounded-xl p-3 text-center">
-                        <p className="text-2xl font-bold text-brand">{stats?.total || 0}</p>
-                        <p className="text-xs text-gray-500">応募数</p>
-                      </div>
-                      <div className="bg-brand-50 rounded-xl p-3 text-center">
-                        <p className="text-2xl font-bold text-brand">{stats?.pending || 0}</p>
-                        <p className="text-xs text-gray-500">審査待ち</p>
-                      </div>
-                      <div className="bg-brand-50 rounded-xl p-3 text-center">
-                        <p className="text-2xl font-bold text-brand">{remaining > 0 ? remaining : 0}</p>
-                        <p className="text-xs text-gray-500">残り日数</p>
-                      </div>
-                    </div>
-
-                    {/* 期間情報 */}
-                    <div className="space-y-1 text-sm text-gray-500 pt-4 border-t border-gray-100">
-                      <p>
-                        <span className="font-medium text-gray-600">開催期間:</span>{' '}
-                        {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
-                      </p>
-                      {contest.voting_start && contest.voting_end && (
-                        <p>
-                          <span className="font-medium text-gray-600">投票期間:</span>{' '}
-                          {formatDate(contest.voting_start)} 〜 {formatDate(contest.voting_end)}
-                        </p>
-                      )}
+                      <span className="px-3 py-1.5 bg-white text-brand rounded-lg text-sm font-medium text-center shadow-sm">
+                        審査待ち <span className="font-bold">{stats?.pending || 0}</span>件
+                      </span>
+                      <span className="px-3 py-1.5 bg-white text-brand rounded-lg text-sm font-medium text-center shadow-sm">
+                        残り <span className="font-bold">{remaining > 0 ? remaining : 0}</span>日
+                      </span>
                     </div>
                   </div>
                 </div>
               )
-            })}
-          </div>
+            })()
+          ) : (
+            // 複数件の場合: グリッドレイアウト
+            <div className="grid gap-4 md:grid-cols-2">
+              {(activeContests as Contest[]).map((contest) => {
+                const remaining = getRemainingDays(contest.end_date)
+                const stats = contestStats[contest.id]
+
+                return (
+                  <div
+                    key={contest.id}
+                    className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+                  >
+                    {/* 左ボーダー付きコンテンツ */}
+                    <div className="border-l-4 border-brand p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-800">{contest.name}</h3>
+                          {contest.theme && (
+                            <p className="text-gray-500 text-sm mt-1">テーマ: {contest.theme}</p>
+                          )}
+                        </div>
+                        <span className="px-3 py-1 bg-brand text-white rounded-full text-sm font-bold">
+                          開催中
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-3 mb-4">
+                        <div className="bg-brand-50 rounded-xl p-3 text-center">
+                          <p className="text-2xl font-bold text-brand">{stats?.total || 0}</p>
+                          <p className="text-xs text-gray-500">応募数</p>
+                        </div>
+                        <div className="bg-brand-50 rounded-xl p-3 text-center">
+                          <p className="text-2xl font-bold text-brand">{stats?.pending || 0}</p>
+                          <p className="text-xs text-gray-500">審査待ち</p>
+                        </div>
+                        <div className="bg-brand-50 rounded-xl p-3 text-center">
+                          <p className="text-2xl font-bold text-brand">{remaining > 0 ? remaining : 0}</p>
+                          <p className="text-xs text-gray-500">残り日数</p>
+                        </div>
+                      </div>
+
+                      {/* 期間情報 */}
+                      <div className="space-y-1 text-sm text-gray-500 pt-4 border-t border-gray-100">
+                        <p>
+                          <span className="font-medium text-gray-600">開催期間:</span>{' '}
+                          {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
+                        </p>
+                        {contest.voting_start && contest.voting_end && (
+                          <p>
+                            <span className="font-medium text-gray-600">投票期間:</span>{' '}
+                            {formatDate(contest.voting_start)} 〜 {formatDate(contest.voting_end)}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )
         ) : (
           <div className="bg-gray-50 rounded-2xl p-8 text-center border border-gray-100">
             <Trophy className="w-12 h-12 text-gray-300 mx-auto mb-3" />
