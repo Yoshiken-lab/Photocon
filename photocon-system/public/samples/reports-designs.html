@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レポート機能 サンプルデザイン</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E85A4F',
+              50: '#FEF2F1',
+              100: '#FDE6E4',
+              600: '#D43D31',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Simple Chart CSS */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 120px;
+    }
+    .bar {
+      flex: 1;
+      background: linear-gradient(to top, #E85A4F, #FDE6E4);
+      border-radius: 4px 4px 0 0;
+      min-width: 20px;
+      transition: all 0.3s;
+    }
+    .bar:hover {
+      opacity: 0.8;
+    }
+    .heatmap-cell {
+      transition: all 0.2s;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+  <div class="max-w-6xl mx-auto space-y-12">
+    <div class="text-center mb-12">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">レポート機能 サンプルデザイン</h1>
+      <p class="text-gray-500">4つのレポート機能のUI案</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- 1. コンテスト別サマリー -->
+    <!-- ============================================ -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">1. コンテスト別サマリー</h2>
+          <p class="text-sm text-gray-500">各コンテストの詳細統計を表示</p>
+        </div>
+      </div>
+
+      <!-- コンテスト選択 -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-4">
+          <span class="text-sm font-medium text-gray-600">コンテスト選択:</span>
+          <select class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand">
+            <option>2024年 冬のフォトコン</option>
+            <option>2024年 秋のフォトコン</option>
+            <option>2024年 夏のフォトコン</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 統計カード -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">総応募数</p>
+          <p class="text-3xl font-bold text-gray-800">1,234</p>
+          <p class="text-xs text-green-600 mt-1">+15% 前回比</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">承認数</p>
+          <p class="text-3xl font-bold text-green-600">1,089</p>
+          <p class="text-xs text-gray-500 mt-1">承認率 88.3%</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">却下数</p>
+          <p class="text-3xl font-bold text-red-500">145</p>
+          <p class="text-xs text-gray-500 mt-1">却下率 11.7%</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">ユニークユーザー</p>
+          <p class="text-3xl font-bold text-brand">892</p>
+          <p class="text-xs text-gray-500 mt-1">平均1.4件/人</p>
+        </div>
+      </div>
+
+      <!-- 日別応募数グラフ & カテゴリ内訳 -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- 日別応募数 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">日別応募数</h3>
+          <div class="bar-chart">
+            <div class="bar" style="height: 30%;" title="12/1: 45件"></div>
+            <div class="bar" style="height: 45%;" title="12/2: 67件"></div>
+            <div class="bar" style="height: 60%;" title="12/3: 89件"></div>
+            <div class="bar" style="height: 55%;" title="12/4: 82件"></div>
+            <div class="bar" style="height: 40%;" title="12/5: 60件"></div>
+            <div class="bar" style="height: 35%;" title="12/6: 52件"></div>
+            <div class="bar" style="height: 85%;" title="12/7: 127件"></div>
+            <div class="bar" style="height: 100%;" title="12/8: 150件"></div>
+            <div class="bar" style="height: 75%;" title="12/9: 112件"></div>
+            <div class="bar" style="height: 50%;" title="12/10: 75件"></div>
+            <div class="bar" style="height: 65%;" title="12/11: 97件"></div>
+            <div class="bar" style="height: 70%;" title="12/12: 105件"></div>
+            <div class="bar" style="height: 90%;" title="12/13: 135件"></div>
+            <div class="bar" style="height: 55%;" title="12/14: 82件"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-400 mt-2">
+            <span>12/1</span>
+            <span>12/7</span>
+            <span>12/14</span>
+          </div>
+        </div>
+
+        <!-- カテゴリ内訳 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">カテゴリ別内訳</h3>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">風景</span>
+                <span class="font-medium text-gray-800">412件 (33%)</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-brand rounded-full" style="width: 33%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">ポートレート</span>
+                <span class="font-medium text-gray-800">321件 (26%)</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 26%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">スナップ</span>
+                <span class="font-medium text-gray-800">289件 (23%)</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-green-500 rounded-full" style="width: 23%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">その他</span>
+                <span class="font-medium text-gray-800">212件 (18%)</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-yellow-500 rounded-full" style="width: 18%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 承認率推移 -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-800 mb-4">承認率の推移</h3>
+        <div class="flex items-end gap-1 h-32">
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-green-100 rounded" style="height: 85%;"></div>
+            <span class="text-xs text-gray-500">Week1</span>
+            <span class="text-xs font-medium text-green-600">85%</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-green-100 rounded" style="height: 88%;"></div>
+            <span class="text-xs text-gray-500">Week2</span>
+            <span class="text-xs font-medium text-green-600">88%</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-green-100 rounded" style="height: 90%;"></div>
+            <span class="text-xs text-gray-500">Week3</span>
+            <span class="text-xs font-medium text-green-600">90%</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-green-100 rounded" style="height: 87%;"></div>
+            <span class="text-xs text-gray-500">Week4</span>
+            <span class="text-xs font-medium text-green-600">87%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 2. 時間帯分析 -->
+    <!-- ============================================ -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">2. 時間帯分析</h2>
+          <p class="text-sm text-gray-500">投稿が多い曜日・時間帯を分析</p>
+        </div>
+      </div>
+
+      <!-- ヒートマップ -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-800 mb-4">曜日×時間帯 ヒートマップ</h3>
+        <div class="overflow-x-auto">
+          <div class="min-w-[600px]">
+            <!-- 時間帯ラベル -->
+            <div class="flex mb-2">
+              <div class="w-16"></div>
+              <div class="flex-1 grid grid-cols-12 gap-1 text-xs text-gray-500 text-center">
+                <span>0時</span>
+                <span>2時</span>
+                <span>4時</span>
+                <span>6時</span>
+                <span>8時</span>
+                <span>10時</span>
+                <span>12時</span>
+                <span>14時</span>
+                <span>16時</span>
+                <span>18時</span>
+                <span>20時</span>
+                <span>22時</span>
+              </div>
+            </div>
+
+            <!-- ヒートマップ本体 -->
+            <div class="space-y-1">
+              <!-- 月曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600">月</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 0-2時: 5件"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 2-4時: 2件"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 4-6時: 3件"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer" title="月 6-8時: 15件"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer" title="月 8-10時: 20件"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 10-12時: 12件"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer" title="月 12-14時: 25件"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 14-16時: 10件"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer" title="月 16-18時: 8件"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer" title="月 18-20時: 18件"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer" title="月 20-22時: 45件"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer" title="月 22-24時: 22件"></div>
+                </div>
+              </div>
+              <!-- 火曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600">火</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                </div>
+              </div>
+              <!-- 水曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600">水</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                </div>
+              </div>
+              <!-- 木曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600">木</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                </div>
+              </div>
+              <!-- 金曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600">金</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                </div>
+              </div>
+              <!-- 土曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600 font-medium text-blue-600">土</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                </div>
+              </div>
+              <!-- 日曜日 -->
+              <div class="flex items-center">
+                <div class="w-16 text-sm text-gray-600 font-medium text-red-500">日</div>
+                <div class="flex-1 grid grid-cols-12 gap-1">
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-gray-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand rounded cursor-pointer"></div>
+                  <div class="heatmap-cell h-8 bg-brand-100 rounded cursor-pointer"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 凡例 -->
+            <div class="flex items-center justify-end gap-2 mt-4 text-xs text-gray-500">
+              <span>少</span>
+              <div class="w-4 h-4 bg-gray-100 rounded"></div>
+              <div class="w-4 h-4 bg-brand-100 rounded"></div>
+              <div class="w-4 h-4 bg-brand rounded"></div>
+              <span>多</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ピーク時間帯 & 曜日別サマリー -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- ピーク時間帯 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">ピーク時間帯 TOP5</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-white text-xs font-bold">1</span>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">土曜 14:00-16:00</p>
+                <p class="text-xs text-gray-500">平均 85件</p>
+              </div>
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-yellow-400 rounded-full" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white text-xs font-bold">2</span>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">日曜 20:00-22:00</p>
+                <p class="text-xs text-gray-500">平均 78件</p>
+              </div>
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gray-400 rounded-full" style="width: 92%;"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center text-white text-xs font-bold">3</span>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">土曜 20:00-22:00</p>
+                <p class="text-xs text-gray-500">平均 72件</p>
+              </div>
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-600 rounded-full" style="width: 85%;"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-xs font-bold">4</span>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">金曜 21:00-23:00</p>
+                <p class="text-xs text-gray-500">平均 65件</p>
+              </div>
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gray-300 rounded-full" style="width: 76%;"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-xs font-bold">5</span>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">日曜 14:00-16:00</p>
+                <p class="text-xs text-gray-500">平均 58件</p>
+              </div>
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gray-300 rounded-full" style="width: 68%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 曜日別サマリー -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">曜日別 応募数</h3>
+          <div class="flex items-end gap-2 h-40">
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-gray-200 rounded-t" style="height: 50%;"></div>
+              <span class="text-xs text-gray-600 mt-2">月</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-gray-200 rounded-t" style="height: 55%;"></div>
+              <span class="text-xs text-gray-600 mt-2">火</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-gray-200 rounded-t" style="height: 48%;"></div>
+              <span class="text-xs text-gray-600 mt-2">水</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-gray-200 rounded-t" style="height: 52%;"></div>
+              <span class="text-xs text-gray-600 mt-2">木</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-brand-100 rounded-t" style="height: 70%;"></div>
+              <span class="text-xs text-gray-600 mt-2">金</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-brand rounded-t" style="height: 100%;"></div>
+              <span class="text-xs text-blue-600 font-medium mt-2">土</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-brand rounded-t" style="height: 95%;"></div>
+              <span class="text-xs text-red-500 font-medium mt-2">日</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 3. ユーザー分析 -->
+    <!-- ============================================ -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">3. ユーザー分析</h2>
+          <p class="text-sm text-gray-500">参加者の傾向とリピーター分析</p>
+        </div>
+      </div>
+
+      <!-- ユーザー統計カード -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">総ユーザー数</p>
+          <p class="text-3xl font-bold text-gray-800">2,456</p>
+          <p class="text-xs text-gray-500 mt-1">累計参加者</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">リピーター率</p>
+          <p class="text-3xl font-bold text-green-600">34.2%</p>
+          <p class="text-xs text-green-600 mt-1">+5.2% 前回比</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">新規参加者</p>
+          <p class="text-3xl font-bold text-blue-500">587</p>
+          <p class="text-xs text-gray-500 mt-1">今回コンテスト</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">平均応募数</p>
+          <p class="text-3xl font-bold text-brand">1.8</p>
+          <p class="text-xs text-gray-500 mt-1">件/ユーザー</p>
+        </div>
+      </div>
+
+      <!-- 新規 vs リピーター & トップ応募者 -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- 新規 vs リピーター -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">新規 vs リピーター</h3>
+          <div class="flex items-center gap-6">
+            <!-- ドーナツチャート風 -->
+            <div class="relative w-32 h-32">
+              <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  stroke-width="3"
+                />
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="#10B981"
+                  stroke-width="3"
+                  stroke-dasharray="34.2, 100"
+                />
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-2xl font-bold text-gray-800">34%</span>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span class="text-sm text-gray-600">リピーター</span>
+                <span class="text-sm font-bold text-gray-800">840人 (34%)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                <span class="text-sm text-gray-600">新規参加</span>
+                <span class="text-sm font-bold text-gray-800">1,616人 (66%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- トップ応募者 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">トップ応募者</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-white text-xs font-bold">1</span>
+              <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">@photo_master_jp</p>
+                <p class="text-xs text-gray-500">累計参加: 12回</p>
+              </div>
+              <span class="text-sm font-bold text-brand">28件</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white text-xs font-bold">2</span>
+              <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">@sunset_lover</p>
+                <p class="text-xs text-gray-500">累計参加: 10回</p>
+              </div>
+              <span class="text-sm font-bold text-brand">24件</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center text-white text-xs font-bold">3</span>
+              <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">@daily_snap</p>
+                <p class="text-xs text-gray-500">累計参加: 8回</p>
+              </div>
+              <span class="text-sm font-bold text-brand">21件</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xs font-bold">4</span>
+              <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div class="flex-1">
+                <p class="font-medium text-gray-800">@nature_walk</p>
+                <p class="text-xs text-gray-500">累計参加: 6回</p>
+              </div>
+              <span class="text-sm font-bold text-brand">18件</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- リピート回数分布 -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-800 mb-4">リピート回数分布</h3>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">1回のみ</span>
+              <span class="font-medium text-gray-800">1,616人 (65.8%)</span>
+            </div>
+            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gray-300 rounded-full" style="width: 65.8%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">2-3回</span>
+              <span class="font-medium text-gray-800">512人 (20.8%)</span>
+            </div>
+            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full bg-green-300 rounded-full" style="width: 20.8%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">4-6回</span>
+              <span class="font-medium text-gray-800">215人 (8.8%)</span>
+            </div>
+            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full bg-green-500 rounded-full" style="width: 8.8%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">7回以上</span>
+              <span class="font-medium text-gray-800">113人 (4.6%)</span>
+            </div>
+            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full bg-green-700 rounded-full" style="width: 4.6%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 4. コンテスト比較 -->
+    <!-- ============================================ -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">4. コンテスト比較</h2>
+          <p class="text-sm text-gray-500">過去コンテストとのパフォーマンス比較</p>
+        </div>
+      </div>
+
+      <!-- コンテスト選択 -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="text-sm font-medium text-gray-600">比較対象:</span>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked class="w-4 h-4 text-brand rounded">
+            <span class="text-sm text-gray-700">2024年 冬のフォトコン</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked class="w-4 h-4 text-brand rounded">
+            <span class="text-sm text-gray-700">2024年 秋のフォトコン</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked class="w-4 h-4 text-brand rounded">
+            <span class="text-sm text-gray-700">2024年 夏のフォトコン</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 text-brand rounded">
+            <span class="text-sm text-gray-700">2024年 春のフォトコン</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 比較テーブル -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">コンテスト名</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">応募数</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">承認率</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">ユーザー数</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">リピーター率</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">開催期間</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="bg-brand-50">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-brand rounded-full"></span>
+                    <span class="font-medium text-gray-800">2024年 冬のフォトコン</span>
+                    <span class="px-2 py-0.5 bg-brand text-white text-xs font-bold rounded-full">開催中</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right font-bold text-gray-800">1,234</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">88.3%</span>
+                </td>
+                <td class="px-6 py-4 text-right font-medium text-gray-800">892</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">34.2%</span>
+                </td>
+                <td class="px-6 py-4 text-right text-sm text-gray-500">14日間</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span class="font-medium text-gray-800">2024年 秋のフォトコン</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right font-bold text-gray-800">1,089</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">85.1%</span>
+                </td>
+                <td class="px-6 py-4 text-right font-medium text-gray-800">756</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">29.0%</span>
+                </td>
+                <td class="px-6 py-4 text-right text-sm text-gray-500">14日間</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span class="font-medium text-gray-800">2024年 夏のフォトコン</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right font-bold text-gray-800">1,567</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">82.4%</span>
+                </td>
+                <td class="px-6 py-4 text-right font-medium text-gray-800">1,102</td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-green-600 font-medium">25.3%</span>
+                </td>
+                <td class="px-6 py-4 text-right text-sm text-gray-500">21日間</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 比較チャート -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- 応募数比較 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">応募数の推移</h3>
+          <div class="flex items-end gap-4 h-40">
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-green-500 rounded-t relative group" style="height: 100%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  1,567件
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">夏</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-blue-500 rounded-t relative group" style="height: 69%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  1,089件
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">秋</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-brand rounded-t relative group" style="height: 79%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  1,234件
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">冬</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 承認率比較 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 class="font-bold text-gray-800 mb-4">承認率の推移</h3>
+          <div class="flex items-end gap-4 h-40">
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-green-200 rounded-t relative group" style="height: 82%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  82.4%
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">夏</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-green-300 rounded-t relative group" style="height: 85%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  85.1%
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">秋</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center">
+              <div class="w-full bg-green-500 rounded-t relative group" style="height: 88%;">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  88.3%
+                </div>
+              </div>
+              <span class="text-xs text-gray-500 mt-2 text-center">冬</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <p class="text-sm text-gray-500">
+              <span class="text-green-600 font-medium">+5.9%</span> 夏から冬にかけて承認率が向上
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成長指標 -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-800 mb-4">成長指標サマリー</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-sm text-gray-500 mb-1">応募数成長率</p>
+            <p class="text-2xl font-bold text-green-600">+13.3%</p>
+            <p class="text-xs text-gray-400">秋→冬</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-sm text-gray-500 mb-1">ユーザー成長率</p>
+            <p class="text-2xl font-bold text-green-600">+18.0%</p>
+            <p class="text-xs text-gray-400">秋→冬</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-sm text-gray-500 mb-1">リピーター増加率</p>
+            <p class="text-2xl font-bold text-green-600">+5.2%</p>
+            <p class="text-xs text-gray-400">秋→冬</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-sm text-gray-500 mb-1">承認率改善</p>
+            <p class="text-2xl font-bold text-green-600">+3.2%</p>
+            <p class="text-xs text-gray-400">秋→冬</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <div class="text-center text-sm text-gray-400 pt-8 border-t border-gray-200">
+      <p>レポート機能 サンプルデザイン - 4つの分析機能</p>
+    </div>
+  </div>
+</body>
+</html>

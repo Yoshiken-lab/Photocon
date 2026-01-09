@@ -18,6 +18,20 @@ interface ContestStats {
   pendingEntries: number
   rejectedEntries: number
   totalVotes: number
+  uniqueUsers: number
+}
+
+interface Entry {
+  id: string
+  username: string
+  collected_at: string
+  contest_id: string
+  category_id: string | null
+}
+
+interface Category {
+  id: string
+  name: string
 }
 
 export default async function ReportsPage() {
@@ -30,6 +44,20 @@ export default async function ReportsPage() {
     .order('start_date', { ascending: false })
 
   const contestList = contests as Contest[] || []
+
+  // カテゴリ一覧を取得
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('id, name')
+  const categoryList = categories as Category[] || []
+
+  // 全エントリーを取得（時間帯分析・ユーザー分析用）
+  const { data: allEntries } = await supabase
+    .from('entries')
+    .select('id, username, collected_at, contest_id, category_id')
+    .order('collected_at', { ascending: false })
+
+  const entryList = allEntries as Entry[] || []
 
   // 各コンテストの統計を取得
   const contestStats: ContestStats[] = await Promise.all(
@@ -58,6 +86,10 @@ export default async function ReportsPage() {
         .eq('contest_id', contest.id)
         .eq('status', 'rejected')
 
+      // ユニークユーザー数を取得
+      const contestEntries = entryList.filter(e => e.contest_id === contest.id)
+      const uniqueUsers = new Set(contestEntries.map(e => e.username)).size
+
       // 投票数を取得（このコンテストのエントリーに対する投票）
       const { data: entries } = await supabase
         .from('entries')
@@ -82,6 +114,7 @@ export default async function ReportsPage() {
         pendingEntries: pendingEntries || 0,
         rejectedEntries: rejectedEntries || 0,
         totalVotes,
+        uniqueUsers,
       }
     })
   )
@@ -95,12 +128,44 @@ export default async function ReportsPage() {
     .from('votes')
     .select('*', { count: 'exact', head: true })
 
+  // ユニークユーザー数（全体）
+  const allUniqueUsers = new Set(entryList.map(e => e.username)).size
+
   const overallStats = {
     totalContests: contestList.length,
     totalEntries: totalAllEntries || 0,
     totalVotes: totalAllVotes || 0,
     activeContests: contestList.filter(c => c.status === 'active').length,
+    totalUsers: allUniqueUsers,
   }
+
+  // 時間帯分析用データ
+  const timeAnalysisData = entryList.map(entry => ({
+    date: entry.collected_at,
+    contestId: entry.contest_id,
+  }))
+
+  // ユーザー分析用データ
+  const userAnalysisData = entryList.reduce((acc, entry) => {
+    if (!acc[entry.username]) {
+      acc[entry.username] = { count: 0, contests: new Set<string>() }
+    }
+    acc[entry.username].count++
+    acc[entry.username].contests.add(entry.contest_id)
+    return acc
+  }, {} as Record<string, { count: number; contests: Set<string> }>)
+
+  const userStats = Object.entries(userAnalysisData).map(([username, data]) => ({
+    username,
+    totalEntries: data.count,
+    contestCount: data.contests.size,
+  })).sort((a, b) => b.totalEntries - a.totalEntries)
+
+  // カテゴリ別集計
+  const categoryStats = categoryList.map(category => {
+    const count = entryList.filter(e => e.category_id === category.id).length
+    return { id: category.id, name: category.name, count }
+  }).filter(c => c.count > 0)
 
   return (
     <div className="space-y-6">
@@ -113,6 +178,9 @@ export default async function ReportsPage() {
         contests={contestList}
         contestStats={contestStats}
         overallStats={overallStats}
+        timeAnalysisData={timeAnalysisData}
+        userStats={userStats}
+        categoryStats={categoryStats}
       />
     </div>
   )

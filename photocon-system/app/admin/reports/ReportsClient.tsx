@@ -1,6 +1,10 @@
 'use client'
 
-import { Trophy, Images, Heart, Clock, CheckCircle, XCircle, Download } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import {
+  Trophy, Images, Heart, Clock, CheckCircle, XCircle, Download,
+  BarChart3, Users, GitCompare, ChevronDown
+} from 'lucide-react'
 
 interface Contest {
   id: string
@@ -19,6 +23,7 @@ interface ContestStats {
   pendingEntries: number
   rejectedEntries: number
   totalVotes: number
+  uniqueUsers: number
 }
 
 interface OverallStats {
@@ -26,13 +31,43 @@ interface OverallStats {
   totalEntries: number
   totalVotes: number
   activeContests: number
+  totalUsers: number
+}
+
+interface TimeData {
+  date: string
+  contestId: string
+}
+
+interface UserStat {
+  username: string
+  totalEntries: number
+  contestCount: number
+}
+
+interface CategoryStat {
+  id: string
+  name: string
+  count: number
 }
 
 interface ReportsClientProps {
   contests: Contest[]
   contestStats: ContestStats[]
   overallStats: OverallStats
+  timeAnalysisData: TimeData[]
+  userStats: UserStat[]
+  categoryStats: CategoryStat[]
 }
+
+type TabType = 'summary' | 'time' | 'users' | 'compare'
+
+const tabs = [
+  { id: 'summary' as TabType, label: 'コンテスト別サマリー', icon: BarChart3 },
+  { id: 'time' as TabType, label: '時間帯分析', icon: Clock },
+  { id: 'users' as TabType, label: 'ユーザー分析', icon: Users },
+  { id: 'compare' as TabType, label: 'コンテスト比較', icon: GitCompare },
+]
 
 function getStatusBadge(status: string) {
   switch (status) {
@@ -49,10 +84,86 @@ function getStatusBadge(status: string) {
   }
 }
 
-export function ReportsClient({ contests, contestStats, overallStats }: ReportsClientProps) {
+// 曜日名
+const dayNames = ['日', '月', '火', '水', '木', '金', '土']
+
+export function ReportsClient({
+  contests,
+  contestStats,
+  overallStats,
+  timeAnalysisData,
+  userStats,
+  categoryStats,
+}: ReportsClientProps) {
+  const [activeTab, setActiveTab] = useState<TabType>('summary')
+  const [selectedContestId, setSelectedContestId] = useState<string>(contests[0]?.id || '')
+  const [compareContestIds, setCompareContestIds] = useState<string[]>(
+    contests.slice(0, 3).map(c => c.id)
+  )
+
+  // 選択されたコンテストの統計
+  const selectedContestStats = contestStats.find(s => s.contestId === selectedContestId)
+  const selectedContest = contests.find(c => c.id === selectedContestId)
+
+  // 時間帯分析データの集計
+  const timeStats = useMemo(() => {
+    // 曜日×時間帯のヒートマップデータ
+    const heatmap: number[][] = Array(7).fill(null).map(() => Array(12).fill(0))
+    // 曜日別の集計
+    const dayTotals = Array(7).fill(0)
+    // 時間帯別の集計
+    const hourTotals: { [key: string]: number } = {}
+
+    timeAnalysisData.forEach(item => {
+      const date = new Date(item.date)
+      const day = date.getDay()
+      const hour = date.getHours()
+      const hourSlot = Math.floor(hour / 2) // 2時間ごとのスロット
+
+      heatmap[day][hourSlot]++
+      dayTotals[day]++
+
+      const key = `${dayNames[day]} ${hourSlot * 2}:00-${(hourSlot + 1) * 2}:00`
+      hourTotals[key] = (hourTotals[key] || 0) + 1
+    })
+
+    // ピーク時間帯TOP5
+    const peakTimes = Object.entries(hourTotals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+
+    // ヒートマップの最大値
+    const maxHeatValue = Math.max(...heatmap.flat())
+
+    return { heatmap, dayTotals, peakTimes, maxHeatValue }
+  }, [timeAnalysisData])
+
+  // ユーザー分析データ
+  const userAnalysis = useMemo(() => {
+    const totalUsers = userStats.length
+    const repeatUsers = userStats.filter(u => u.contestCount > 1).length
+    const repeatRate = totalUsers > 0 ? (repeatUsers / totalUsers * 100).toFixed(1) : '0'
+
+    // リピート回数分布
+    const repeatDistribution = {
+      once: userStats.filter(u => u.contestCount === 1).length,
+      twoThree: userStats.filter(u => u.contestCount >= 2 && u.contestCount <= 3).length,
+      fourSix: userStats.filter(u => u.contestCount >= 4 && u.contestCount <= 6).length,
+      sevenPlus: userStats.filter(u => u.contestCount >= 7).length,
+    }
+
+    // トップ応募者
+    const topUsers = userStats.slice(0, 5)
+
+    return { totalUsers, repeatUsers, repeatRate, repeatDistribution, topUsers }
+  }, [userStats])
+
+  // 比較対象コンテストの統計
+  const compareStats = contestStats.filter(s => compareContestIds.includes(s.contestId))
+
+  // CSVエクスポート
   const handleExportCSV = () => {
-    // CSVデータを作成
-    const headers = ['コンテスト名', 'ステータス', '総応募数', '承認済み', '審査待ち', '却下', '総投票数']
+    const headers = ['コンテスト名', 'ステータス', '総応募数', '承認済み', '審査待ち', '却下', 'ユニークユーザー', '総投票数']
     const rows = contestStats.map(stat => {
       const contest = contests.find(c => c.id === stat.contestId)
       return [
@@ -62,6 +173,7 @@ export function ReportsClient({ contests, contestStats, overallStats }: ReportsC
         stat.approvedEntries,
         stat.pendingEntries,
         stat.rejectedEntries,
+        stat.uniqueUsers,
         stat.totalVotes,
       ]
     })
@@ -71,7 +183,6 @@ export function ReportsClient({ contests, contestStats, overallStats }: ReportsC
       ...rows.map(row => row.join(','))
     ].join('\n')
 
-    // BOMを追加してExcelで文字化けしないようにする
     const bom = new Uint8Array([0xEF, 0xBB, 0xBF])
     const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
@@ -82,140 +193,568 @@ export function ReportsClient({ contests, contestStats, overallStats }: ReportsC
     URL.revokeObjectURL(url)
   }
 
+  // 比較対象の切り替え
+  const toggleCompareContest = (contestId: string) => {
+    if (compareContestIds.includes(contestId)) {
+      setCompareContestIds(compareContestIds.filter(id => id !== contestId))
+    } else {
+      setCompareContestIds([...compareContestIds, contestId])
+    }
+  }
+
+  // ヒートマップの色を取得
+  const getHeatColor = (value: number, max: number) => {
+    if (max === 0 || value === 0) return 'bg-gray-100'
+    const ratio = value / max
+    if (ratio > 0.7) return 'bg-brand'
+    if (ratio > 0.3) return 'bg-brand-100'
+    return 'bg-gray-100'
+  }
+
   return (
     <div className="space-y-6">
       {/* 全体統計 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center">
               <Trophy className="w-5 h-5 text-brand" />
             </div>
-            <span className="text-sm text-gray-500">総コンテスト数</span>
+            <span className="text-sm text-gray-500">総コンテスト</span>
           </div>
-          <p className="text-3xl font-bold text-gray-800">{overallStats.totalContests}</p>
+          <p className="text-2xl font-bold text-gray-800">{overallStats.totalContests}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
               <Clock className="w-5 h-5 text-green-600" />
             </div>
             <span className="text-sm text-gray-500">開催中</span>
           </div>
-          <p className="text-3xl font-bold text-gray-800">{overallStats.activeContests}</p>
+          <p className="text-2xl font-bold text-gray-800">{overallStats.activeContests}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
               <Images className="w-5 h-5 text-blue-600" />
             </div>
             <span className="text-sm text-gray-500">総応募数</span>
           </div>
-          <p className="text-3xl font-bold text-gray-800">{overallStats.totalEntries.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-gray-800">{overallStats.totalEntries.toLocaleString()}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+              <Users className="w-5 h-5 text-purple-600" />
+            </div>
+            <span className="text-sm text-gray-500">総ユーザー</span>
+          </div>
+          <p className="text-2xl font-bold text-gray-800">{overallStats.totalUsers.toLocaleString()}</p>
+        </div>
+
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-red-500" />
             </div>
             <span className="text-sm text-gray-500">総投票数</span>
           </div>
-          <p className="text-3xl font-bold text-gray-800">{overallStats.totalVotes.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-gray-800">{overallStats.totalVotes.toLocaleString()}</p>
         </div>
       </div>
 
-      {/* コンテスト別統計 */}
+      {/* タブナビゲーション */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="font-bold text-gray-800">コンテスト別統計</h2>
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            CSVエクスポート
-          </button>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">コンテスト</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ステータス</th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">総応募</th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  <span className="flex items-center justify-end gap-1">
-                    <CheckCircle className="w-3 h-3 text-green-500" />
-                    承認
-                  </span>
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  <span className="flex items-center justify-end gap-1">
-                    <Clock className="w-3 h-3 text-yellow-500" />
-                    審査待ち
-                  </span>
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  <span className="flex items-center justify-end gap-1">
-                    <XCircle className="w-3 h-3 text-red-500" />
-                    却下
-                  </span>
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  <span className="flex items-center justify-end gap-1">
-                    <Heart className="w-3 h-3 text-brand" />
-                    投票数
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {contestStats.map((stat) => {
-                const contest = contests.find(c => c.id === stat.contestId)
-                return (
-                  <tr key={stat.contestId} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-800">{stat.contestName}</p>
-                        {contest?.theme && (
-                          <p className="text-xs text-gray-500">テーマ: {contest.theme}</p>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {contest && getStatusBadge(contest.status)}
-                    </td>
-                    <td className="px-6 py-4 text-right font-medium text-gray-800">
-                      {stat.totalEntries}
-                    </td>
-                    <td className="px-6 py-4 text-right font-medium text-green-600">
-                      {stat.approvedEntries}
-                    </td>
-                    <td className="px-6 py-4 text-right font-medium text-yellow-600">
-                      {stat.pendingEntries}
-                    </td>
-                    <td className="px-6 py-4 text-right font-medium text-red-600">
-                      {stat.rejectedEntries}
-                    </td>
-                    <td className="px-6 py-4 text-right font-medium text-brand">
-                      {stat.totalVotes.toLocaleString()}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {contestStats.length === 0 && (
-          <div className="p-12 text-center text-gray-500">
-            コンテストがありません
+        <div className="border-b border-gray-100">
+          <div className="flex">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors border-b-2 ${
+                  activeTab === tab.id
+                    ? 'border-brand text-brand bg-brand-50'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
+
+        <div className="p-6">
+          {/* コンテスト別サマリー */}
+          {activeTab === 'summary' && (
+            <div className="space-y-6">
+              {/* コンテスト選択 */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium text-gray-600">コンテスト選択:</span>
+                <div className="relative">
+                  <select
+                    value={selectedContestId}
+                    onChange={(e) => setSelectedContestId(e.target.value)}
+                    className="appearance-none bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand"
+                  >
+                    {contests.map((contest) => (
+                      <option key={contest.id} value={contest.id}>
+                        {contest.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {selectedContestStats && selectedContest && (
+                <>
+                  {/* 統計カード */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">総応募数</p>
+                      <p className="text-3xl font-bold text-gray-800">{selectedContestStats.totalEntries.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">承認数</p>
+                      <p className="text-3xl font-bold text-green-600">{selectedContestStats.approvedEntries.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">却下数</p>
+                      <p className="text-3xl font-bold text-red-500">{selectedContestStats.rejectedEntries.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">ユニークユーザー</p>
+                      <p className="text-3xl font-bold text-brand">{selectedContestStats.uniqueUsers.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        平均 {selectedContestStats.uniqueUsers > 0
+                          ? (selectedContestStats.totalEntries / selectedContestStats.uniqueUsers).toFixed(1)
+                          : 0}件/人
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* カテゴリ別内訳 */}
+                  {categoryStats.length > 0 && (
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h3 className="font-bold text-gray-800 mb-4">カテゴリ別内訳</h3>
+                      <div className="space-y-3">
+                        {categoryStats.map((category, index) => {
+                          const percentage = overallStats.totalEntries > 0
+                            ? (category.count / overallStats.totalEntries * 100).toFixed(0)
+                            : 0
+                          const colors = ['bg-brand', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500']
+                          return (
+                            <div key={category.id}>
+                              <div className="flex justify-between text-sm mb-1">
+                                <span className="text-gray-600">{category.name}</span>
+                                <span className="font-medium text-gray-800">{category.count}件 ({percentage}%)</span>
+                              </div>
+                              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full ${colors[index % colors.length]} rounded-full`}
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* 時間帯分析 */}
+          {activeTab === 'time' && (
+            <div className="space-y-6">
+              {/* ヒートマップ */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-4">曜日×時間帯 ヒートマップ</h3>
+                <div className="overflow-x-auto">
+                  <div className="min-w-[600px]">
+                    {/* 時間帯ラベル */}
+                    <div className="flex mb-2">
+                      <div className="w-12"></div>
+                      <div className="flex-1 grid grid-cols-12 gap-1 text-xs text-gray-500 text-center">
+                        {[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => (
+                          <span key={hour}>{hour}時</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ヒートマップ本体 */}
+                    <div className="space-y-1">
+                      {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                        <div key={dayIndex} className="flex items-center">
+                          <div className={`w-12 text-sm ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                            {dayNames[dayIndex]}
+                          </div>
+                          <div className="flex-1 grid grid-cols-12 gap-1">
+                            {timeStats.heatmap[dayIndex].map((value, hourIndex) => (
+                              <div
+                                key={hourIndex}
+                                className={`h-8 ${getHeatColor(value, timeStats.maxHeatValue)} rounded cursor-pointer transition-all hover:scale-110`}
+                                title={`${dayNames[dayIndex]} ${hourIndex * 2}:00-${(hourIndex + 1) * 2}:00: ${value}件`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* 凡例 */}
+                    <div className="flex items-center justify-end gap-2 mt-4 text-xs text-gray-500">
+                      <span>少</span>
+                      <div className="w-4 h-4 bg-gray-100 rounded"></div>
+                      <div className="w-4 h-4 bg-brand-100 rounded"></div>
+                      <div className="w-4 h-4 bg-brand rounded"></div>
+                      <span>多</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* ピーク時間帯 */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="font-bold text-gray-800 mb-4">ピーク時間帯 TOP5</h3>
+                  <div className="space-y-3">
+                    {timeStats.peakTimes.map(([time, count], index) => {
+                      const maxCount = timeStats.peakTimes[0]?.[1] || 1
+                      const percentage = (count / maxCount * 100).toFixed(0)
+                      const medals = ['bg-yellow-400 text-white', 'bg-gray-400 text-white', 'bg-amber-600 text-white', 'bg-gray-200 text-gray-600', 'bg-gray-200 text-gray-600']
+                      return (
+                        <div key={time} className="flex items-center gap-3">
+                          <span className={`w-6 h-6 ${medals[index]} rounded-full flex items-center justify-center text-xs font-bold`}>
+                            {index + 1}
+                          </span>
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-800">{time}</p>
+                            <p className="text-xs text-gray-500">{count}件</p>
+                          </div>
+                          <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-amber-600' : 'bg-gray-300'}`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                    {timeStats.peakTimes.length === 0 && (
+                      <p className="text-gray-500 text-center py-4">データがありません</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* 曜日別応募数 */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="font-bold text-gray-800 mb-4">曜日別 応募数</h3>
+                  <div className="flex items-end gap-2 h-40">
+                    {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
+                      const maxDay = Math.max(...timeStats.dayTotals)
+                      const height = maxDay > 0 ? (timeStats.dayTotals[dayIndex] / maxDay * 100) : 0
+                      return (
+                        <div key={dayIndex} className="flex-1 flex flex-col items-center">
+                          <div
+                            className={`w-full rounded-t transition-all ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
+                            style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                          />
+                          <span className={`text-xs mt-2 ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                            {dayNames[dayIndex]}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ユーザー分析 */}
+          {activeTab === 'users' && (
+            <div className="space-y-6">
+              {/* ユーザー統計カード */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gray-50 rounded-xl p-5">
+                  <p className="text-sm text-gray-500 mb-1">総ユーザー数</p>
+                  <p className="text-3xl font-bold text-gray-800">{userAnalysis.totalUsers.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">累計参加者</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-5">
+                  <p className="text-sm text-gray-500 mb-1">リピーター率</p>
+                  <p className="text-3xl font-bold text-green-600">{userAnalysis.repeatRate}%</p>
+                  <p className="text-xs text-gray-500 mt-1">{userAnalysis.repeatUsers}人</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-5">
+                  <p className="text-sm text-gray-500 mb-1">新規参加者</p>
+                  <p className="text-3xl font-bold text-blue-500">{userAnalysis.repeatDistribution.once.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">1回のみ参加</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-5">
+                  <p className="text-sm text-gray-500 mb-1">平均応募数</p>
+                  <p className="text-3xl font-bold text-brand">
+                    {userAnalysis.totalUsers > 0
+                      ? (overallStats.totalEntries / userAnalysis.totalUsers).toFixed(1)
+                      : 0}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">件/ユーザー</p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* 新規 vs リピーター */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="font-bold text-gray-800 mb-4">新規 vs リピーター</h3>
+                  <div className="flex items-center gap-6">
+                    {/* ドーナツチャート風 */}
+                    <div className="relative w-32 h-32">
+                      <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#E5E7EB"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#10B981"
+                          strokeWidth="3"
+                          strokeDasharray={`${userAnalysis.repeatRate}, 100`}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-gray-800">{userAnalysis.repeatRate}%</span>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span className="text-sm text-gray-600">リピーター</span>
+                        <span className="text-sm font-bold text-gray-800">{userAnalysis.repeatUsers}人</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        <span className="text-sm text-gray-600">新規参加</span>
+                        <span className="text-sm font-bold text-gray-800">{userAnalysis.repeatDistribution.once}人</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* トップ応募者 */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="font-bold text-gray-800 mb-4">トップ応募者</h3>
+                  <div className="space-y-3">
+                    {userAnalysis.topUsers.map((user, index) => {
+                      const medals = ['bg-yellow-400 text-white', 'bg-gray-400 text-white', 'bg-amber-600 text-white', 'bg-gray-200 text-gray-600', 'bg-gray-200 text-gray-600']
+                      return (
+                        <div key={user.username} className="flex items-center gap-3">
+                          <span className={`w-6 h-6 ${medals[index]} rounded-full flex items-center justify-center text-xs font-bold`}>
+                            {index + 1}
+                          </span>
+                          <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-800">@{user.username}</p>
+                            <p className="text-xs text-gray-500">累計参加: {user.contestCount}回</p>
+                          </div>
+                          <span className="text-sm font-bold text-brand">{user.totalEntries}件</span>
+                        </div>
+                      )
+                    })}
+                    {userAnalysis.topUsers.length === 0 && (
+                      <p className="text-gray-500 text-center py-4">データがありません</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* リピート回数分布 */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="font-bold text-gray-800 mb-4">リピート回数分布</h3>
+                <div className="space-y-3">
+                  {[
+                    { label: '1回のみ', count: userAnalysis.repeatDistribution.once, color: 'bg-gray-300' },
+                    { label: '2-3回', count: userAnalysis.repeatDistribution.twoThree, color: 'bg-green-300' },
+                    { label: '4-6回', count: userAnalysis.repeatDistribution.fourSix, color: 'bg-green-500' },
+                    { label: '7回以上', count: userAnalysis.repeatDistribution.sevenPlus, color: 'bg-green-700' },
+                  ].map((item) => {
+                    const percentage = userAnalysis.totalUsers > 0
+                      ? (item.count / userAnalysis.totalUsers * 100).toFixed(1)
+                      : 0
+                    return (
+                      <div key={item.label}>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-gray-600">{item.label}</span>
+                          <span className="font-medium text-gray-800">{item.count}人 ({percentage}%)</span>
+                        </div>
+                        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full ${item.color} rounded-full`}
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* コンテスト比較 */}
+          {activeTab === 'compare' && (
+            <div className="space-y-6">
+              {/* コンテスト選択 */}
+              <div className="flex flex-wrap items-center gap-4">
+                <span className="text-sm font-medium text-gray-600">比較対象:</span>
+                {contests.map((contest) => (
+                  <label key={contest.id} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={compareContestIds.includes(contest.id)}
+                      onChange={() => toggleCompareContest(contest.id)}
+                      className="w-4 h-4 text-brand rounded"
+                    />
+                    <span className="text-sm text-gray-700">{contest.name}</span>
+                  </label>
+                ))}
+              </div>
+
+              {/* 比較テーブル */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">コンテスト名</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">応募数</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">ユーザー数</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">投票数</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase">開催期間</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {compareStats.map((stat) => {
+                      const contest = contests.find(c => c.id === stat.contestId)
+                      const startDate = contest ? new Date(contest.start_date) : null
+                      const endDate = contest ? new Date(contest.end_date) : null
+                      const days = startDate && endDate
+                        ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                        : 0
+                      return (
+                        <tr key={stat.contestId} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 bg-brand rounded-full"></span>
+                              <span className="font-medium text-gray-800">{stat.contestName}</span>
+                              {contest && getStatusBadge(contest.status)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-right font-bold text-gray-800">
+                            {stat.totalEntries.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-right font-medium text-gray-800">
+                            {stat.uniqueUsers.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-right font-medium text-brand">
+                            {stat.totalVotes.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-right text-sm text-gray-500">
+                            {days}日間
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {compareStats.length === 0 && (
+                <div className="p-12 text-center text-gray-500">
+                  比較対象のコンテストを選択してください
+                </div>
+              )}
+
+              {/* 比較チャート */}
+              {compareStats.length > 0 && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* 応募数比較 */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="font-bold text-gray-800 mb-4">応募数の比較</h3>
+                    <div className="flex items-end gap-4 h-40">
+                      {compareStats.map((stat, index) => {
+                        const maxEntries = Math.max(...compareStats.map(s => s.totalEntries))
+                        const height = maxEntries > 0 ? (stat.totalEntries / maxEntries * 100) : 0
+                        const colors = ['bg-brand', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500']
+                        return (
+                          <div key={stat.contestId} className="flex-1 flex flex-col items-center">
+                            <div
+                              className={`w-full ${colors[index % colors.length]} rounded-t relative group`}
+                              style={{ height: `${height}%`, minHeight: '4px' }}
+                            >
+                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                {stat.totalEntries.toLocaleString()}件
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-500 mt-2 text-center truncate w-full">
+                              {stat.contestName.slice(0, 8)}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ユーザー数比較 */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="font-bold text-gray-800 mb-4">ユーザー数の比較</h3>
+                    <div className="flex items-end gap-4 h-40">
+                      {compareStats.map((stat, index) => {
+                        const maxUsers = Math.max(...compareStats.map(s => s.uniqueUsers))
+                        const height = maxUsers > 0 ? (stat.uniqueUsers / maxUsers * 100) : 0
+                        const colors = ['bg-purple-400', 'bg-purple-500', 'bg-purple-600', 'bg-purple-700', 'bg-purple-800']
+                        return (
+                          <div key={stat.contestId} className="flex-1 flex flex-col items-center">
+                            <div
+                              className={`w-full ${colors[index % colors.length]} rounded-t relative group`}
+                              style={{ height: `${height}%`, minHeight: '4px' }}
+                            >
+                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                {stat.uniqueUsers.toLocaleString()}人
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-500 mt-2 text-center truncate w-full">
+                              {stat.contestName.slice(0, 8)}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* CSVエクスポートボタン */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleExportCSV}
+          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          CSVエクスポート
+        </button>
       </div>
     </div>
   )
