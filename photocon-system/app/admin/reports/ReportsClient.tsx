@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import {
   Trophy, Images, Heart, Clock, CheckCircle, XCircle, Download,
-  BarChart3, Users, GitCompare, ChevronDown
+  BarChart3, Users, GitCompare, ChevronDown, Search, X
 } from 'lucide-react'
 
 interface Contest {
@@ -100,6 +100,7 @@ export function ReportsClient({
   const [compareContestIds, setCompareContestIds] = useState<string[]>(
     contests.slice(0, 3).map(c => c.id)
   )
+  const [compareSearchQuery, setCompareSearchQuery] = useState('')
 
   // 選択されたコンテストの統計
   const selectedContestStats = contestStats.find(s => s.contestId === selectedContestId)
@@ -160,6 +161,16 @@ export function ReportsClient({
 
   // 比較対象コンテストの統計
   const compareStats = contestStats.filter(s => compareContestIds.includes(s.contestId))
+
+  // 検索でフィルタリングされたコンテストリスト
+  const filteredContests = useMemo(() => {
+    if (!compareSearchQuery.trim()) return contests
+    const query = compareSearchQuery.toLowerCase()
+    return contests.filter(c =>
+      c.name.toLowerCase().includes(query) ||
+      (c.theme && c.theme.toLowerCase().includes(query))
+    )
+  }, [contests, compareSearchQuery])
 
   // CSVエクスポート
   const handleExportCSV = () => {
@@ -613,20 +624,125 @@ export function ReportsClient({
           {/* コンテスト比較 */}
           {activeTab === 'compare' && (
             <div className="space-y-6">
-              {/* コンテスト選択 */}
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="text-sm font-medium text-gray-600">比較対象:</span>
-                {contests.map((contest) => (
-                  <label key={contest.id} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={compareContestIds.includes(contest.id)}
-                      onChange={() => toggleCompareContest(contest.id)}
-                      className="w-4 h-4 text-brand rounded"
-                    />
-                    <span className="text-sm text-gray-700">{contest.name}</span>
-                  </label>
-                ))}
+              {/* コンテスト選択：検索付きマルチセレクト */}
+              <div className="bg-gray-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <GitCompare className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-600">比較対象を選択</span>
+                  <span className="text-xs text-gray-400">（{compareContestIds.length}件選択中）</span>
+                </div>
+
+                {/* 選択済みタグ */}
+                {compareContestIds.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {compareContestIds.map((id) => {
+                      const contest = contests.find(c => c.id === id)
+                      if (!contest) return null
+                      return (
+                        <span
+                          key={id}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white rounded-full text-sm font-medium"
+                        >
+                          {contest.name}
+                          <button
+                            onClick={() => toggleCompareContest(id)}
+                            className="hover:bg-brand-600 rounded-full p-0.5 transition-colors"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </span>
+                      )
+                    })}
+                    <button
+                      onClick={() => setCompareContestIds([])}
+                      className="text-xs text-gray-500 hover:text-gray-700 underline"
+                    >
+                      すべて解除
+                    </button>
+                  </div>
+                )}
+
+                {/* 検索ボックス */}
+                <div className="relative mb-3">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="コンテスト名・テーマで検索..."
+                    value={compareSearchQuery}
+                    onChange={(e) => setCompareSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+                  />
+                  {compareSearchQuery && (
+                    <button
+                      onClick={() => setCompareSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* コンテストリスト */}
+                <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg bg-white divide-y divide-gray-100">
+                  {filteredContests.length > 0 ? (
+                    filteredContests.map((contest) => {
+                      const isSelected = compareContestIds.includes(contest.id)
+                      return (
+                        <label
+                          key={contest.id}
+                          className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                            isSelected ? 'bg-brand-50' : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleCompareContest(contest.id)}
+                            className="w-4 h-4 text-brand rounded border-gray-300 focus:ring-brand"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-sm font-medium truncate ${isSelected ? 'text-brand' : 'text-gray-800'}`}>
+                              {contest.name}
+                            </p>
+                            {contest.theme && (
+                              <p className="text-xs text-gray-500 truncate">{contest.theme}</p>
+                            )}
+                          </div>
+                          {getStatusBadge(contest.status)}
+                        </label>
+                      )
+                    })
+                  ) : (
+                    <div className="px-3 py-4 text-center text-sm text-gray-500">
+                      「{compareSearchQuery}」に一致するコンテストがありません
+                    </div>
+                  )}
+                </div>
+
+                {/* クイック選択 */}
+                <div className="flex items-center gap-2 mt-3 text-xs">
+                  <span className="text-gray-500">クイック選択:</span>
+                  <button
+                    onClick={() => setCompareContestIds(contests.slice(0, 3).map(c => c.id))}
+                    className="text-brand hover:underline"
+                  >
+                    最新3件
+                  </button>
+                  <span className="text-gray-300">|</span>
+                  <button
+                    onClick={() => setCompareContestIds(contests.slice(0, 5).map(c => c.id))}
+                    className="text-brand hover:underline"
+                  >
+                    最新5件
+                  </button>
+                  <span className="text-gray-300">|</span>
+                  <button
+                    onClick={() => setCompareContestIds(contests.map(c => c.id))}
+                    className="text-brand hover:underline"
+                  >
+                    すべて選択
+                  </button>
+                </div>
               </div>
 
               {/* 比較テーブル */}
