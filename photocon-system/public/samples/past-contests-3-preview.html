@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案3: 入賞作品プレビュー付き</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              600: '#D14318'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- ヘッダー -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-gray-600 hover:text-brand-DEFAULT transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <span class="font-bold">トップに戻る</span>
+      </a>
+      <span class="text-xl font-bold text-gray-800">過去のテーマ</span>
+    </div>
+  </header>
+
+  <main class="py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- タイトル -->
+      <div class="text-center mb-12">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">過去のフォトコンテスト</h1>
+        <p class="text-gray-500">入賞作品をピックアップしてご紹介</p>
+      </div>
+
+      <!-- コンテスト一覧 -->
+      <div class="space-y-12">
+        <!-- コンテスト1 -->
+        <a href="#" class="block bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group">
+          <div class="md:flex">
+            <!-- 入賞作品プレビュー（3枚並び） -->
+            <div class="md:w-1/2 relative">
+              <div class="flex h-64 md:h-80">
+                <!-- メイン画像（大きめ） -->
+                <div class="w-1/2 relative">
+                  <img src="https://picsum.photos/400/500?random=1" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><path d="M19 19H5v1a1 1 0 001 1h12a1 1 0 001-1v-1z"/></svg>
+                      1位
+                    </span>
+                  </div>
+                </div>
+                <!-- サブ画像（2枚縦並び） -->
+                <div class="w-1/2 flex flex-col">
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=2" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-gray-300 text-gray-700 px-2 py-0.5 rounded-full text-xs font-bold">2位</span>
+                    </div>
+                  </div>
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=3" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-amber-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">3位</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- コンテスト情報 -->
+            <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="bg-gray-800/70 text-white text-xs font-bold px-3 py-1 rounded-full">終了</span>
+                <span class="text-brand-DEFAULT font-bold text-sm">2024年12月</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">🎄 クリスマスフォトコンテスト</h3>
+              <p class="text-gray-500 mb-4">テーマ：「家族の笑顔」</p>
+              <p class="text-sm text-gray-400 mb-4 line-clamp-2">家族で過ごすあたたかいクリスマスの瞬間を切り取った作品が多数集まりました。</p>
+              <div class="flex items-center gap-6 text-sm text-gray-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  128件の応募
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                  1,234票
+                </span>
+              </div>
+              <div class="mt-6">
+                <span class="inline-flex items-center gap-2 text-brand-DEFAULT font-bold group-hover:gap-3 transition-all">
+                  作品を見る
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- コンテスト2 -->
+        <a href="#" class="block bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group">
+          <div class="md:flex md:flex-row-reverse">
+            <!-- 入賞作品プレビュー -->
+            <div class="md:w-1/2 relative">
+              <div class="flex h-64 md:h-80">
+                <div class="w-1/2 relative">
+                  <img src="https://picsum.photos/400/500?random=4" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><path d="M19 19H5v1a1 1 0 001 1h12a1 1 0 001-1v-1z"/></svg>
+                      1位
+                    </span>
+                  </div>
+                </div>
+                <div class="w-1/2 flex flex-col">
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=5" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-gray-300 text-gray-700 px-2 py-0.5 rounded-full text-xs font-bold">2位</span>
+                    </div>
+                  </div>
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=6" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-amber-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">3位</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- コンテスト情報 -->
+            <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="bg-gray-800/70 text-white text-xs font-bold px-3 py-1 rounded-full">終了</span>
+                <span class="text-brand-DEFAULT font-bold text-sm">2024年10月</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">🎃 ハロウィンフォトコンテスト</h3>
+              <p class="text-gray-500 mb-4">テーマ：「仮装」</p>
+              <p class="text-sm text-gray-400 mb-4 line-clamp-2">お子様の可愛い仮装姿や、家族でのハロウィンパーティーの様子が届きました。</p>
+              <div class="flex items-center gap-6 text-sm text-gray-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  95件の応募
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                  892票
+                </span>
+              </div>
+              <div class="mt-6">
+                <span class="inline-flex items-center gap-2 text-brand-DEFAULT font-bold group-hover:gap-3 transition-all">
+                  作品を見る
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- コンテスト3 -->
+        <a href="#" class="block bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group">
+          <div class="md:flex">
+            <!-- 入賞作品プレビュー -->
+            <div class="md:w-1/2 relative">
+              <div class="flex h-64 md:h-80">
+                <div class="w-1/2 relative">
+                  <img src="https://picsum.photos/400/500?random=7" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><path d="M19 19H5v1a1 1 0 001 1h12a1 1 0 001-1v-1z"/></svg>
+                      1位
+                    </span>
+                  </div>
+                </div>
+                <div class="w-1/2 flex flex-col">
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=8" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-gray-300 text-gray-700 px-2 py-0.5 rounded-full text-xs font-bold">2位</span>
+                    </div>
+                  </div>
+                  <div class="h-1/2 relative">
+                    <img src="https://picsum.photos/200/250?random=9" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-2 left-2">
+                      <span class="bg-amber-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">3位</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- コンテスト情報 -->
+            <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="bg-gray-800/70 text-white text-xs font-bold px-3 py-1 rounded-full">終了</span>
+                <span class="text-brand-DEFAULT font-bold text-sm">2024年8月</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">🌻 夏休みフォトコンテスト</h3>
+              <p class="text-gray-500 mb-4">テーマ：「夏の思い出」</p>
+              <p class="text-sm text-gray-400 mb-4 line-clamp-2">海やプール、花火大会など、夏ならではの思い出いっぱいの作品が集まりました。</p>
+              <div class="flex items-center gap-6 text-sm text-gray-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  156件の応募
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                  1,567票
+                </span>
+              </div>
+              <div class="mt-6">
+                <span class="inline-flex items-center gap-2 text-brand-DEFAULT font-bold group-hover:gap-3 transition-all">
+                  作品を見る
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

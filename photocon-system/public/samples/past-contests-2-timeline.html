@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案2: タイムライン形式</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              600: '#D14318'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- ヘッダー -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-gray-600 hover:text-brand-DEFAULT transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <span class="font-bold">トップに戻る</span>
+      </a>
+      <span class="text-xl font-bold text-gray-800">過去のテーマ</span>
+    </div>
+  </header>
+
+  <main class="py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- タイトル -->
+      <div class="text-center mb-16">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">過去のフォトコンテスト</h1>
+        <p class="text-gray-500">これまでに開催されたコンテストの軌跡</p>
+      </div>
+
+      <!-- タイムライン -->
+      <div class="relative">
+        <!-- 中央の線 -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-brand-100 hidden md:block"></div>
+        <!-- モバイル用の左線 -->
+        <div class="absolute left-4 h-full w-1 bg-brand-100 md:hidden"></div>
+
+        <!-- 2024年 -->
+        <div class="relative mb-12">
+          <div class="md:flex md:justify-center mb-8">
+            <div class="bg-brand-DEFAULT text-white px-6 py-2 rounded-full font-bold text-lg shadow-lg inline-block ml-10 md:ml-0">
+              2024年
+            </div>
+          </div>
+
+          <!-- アイテム1 - 右側 -->
+          <div class="relative flex items-center mb-8">
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-brand-DEFAULT rounded-full border-4 border-white shadow"></div>
+            <div class="ml-12 md:ml-0 md:w-1/2 md:pl-12">
+              <a href="#" class="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group">
+                <div class="flex">
+                  <div class="w-32 h-32 flex-shrink-0 bg-gray-100">
+                    <img src="https://picsum.photos/200/200?random=1" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                  </div>
+                  <div class="p-4 flex-1">
+                    <p class="text-xs text-brand-DEFAULT font-bold mb-1">12月</p>
+                    <h3 class="font-bold text-gray-800 mb-1">🎄 クリスマスフォトコンテスト</h3>
+                    <p class="text-xs text-gray-500 mb-2">テーマ：「家族の笑顔」</p>
+                    <div class="flex gap-3 text-xs text-gray-400">
+                      <span>📷 128件</span>
+                      <span>❤️ 1,234</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- アイテム2 - 左側 -->
+          <div class="relative flex items-center mb-8">
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-brand-DEFAULT rounded-full border-4 border-white shadow"></div>
+            <div class="ml-12 md:ml-0 md:w-1/2 md:pr-12 md:mr-auto">
+              <a href="#" class="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group">
+                <div class="flex md:flex-row-reverse">
+                  <div class="w-32 h-32 flex-shrink-0 bg-gray-100">
+                    <img src="https://picsum.photos/200/200?random=2" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                  </div>
+                  <div class="p-4 flex-1 md:text-right">
+                    <p class="text-xs text-brand-DEFAULT font-bold mb-1">10月</p>
+                    <h3 class="font-bold text-gray-800 mb-1">🎃 ハロウィンフォトコンテスト</h3>
+                    <p class="text-xs text-gray-500 mb-2">テーマ：「仮装」</p>
+                    <div class="flex md:justify-end gap-3 text-xs text-gray-400">
+                      <span>📷 95件</span>
+                      <span>❤️ 892</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- アイテム3 - 右側 -->
+          <div class="relative flex items-center mb-8">
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-brand-DEFAULT rounded-full border-4 border-white shadow"></div>
+            <div class="ml-12 md:ml-0 md:w-1/2 md:pl-12 md:ml-auto">
+              <a href="#" class="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group">
+                <div class="flex">
+                  <div class="w-32 h-32 flex-shrink-0 bg-gray-100">
+                    <img src="https://picsum.photos/200/200?random=3" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                  </div>
+                  <div class="p-4 flex-1">
+                    <p class="text-xs text-brand-DEFAULT font-bold mb-1">8月</p>
+                    <h3 class="font-bold text-gray-800 mb-1">🌻 夏休みフォトコンテスト</h3>
+                    <p class="text-xs text-gray-500 mb-2">テーマ：「夏の思い出」</p>
+                    <div class="flex gap-3 text-xs text-gray-400">
+                      <span>📷 156件</span>
+                      <span>❤️ 1,567</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- アイテム4 - 左側 -->
+          <div class="relative flex items-center">
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-brand-DEFAULT rounded-full border-4 border-white shadow"></div>
+            <div class="ml-12 md:ml-0 md:w-1/2 md:pr-12 md:mr-auto">
+              <a href="#" class="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group">
+                <div class="flex md:flex-row-reverse">
+                  <div class="w-32 h-32 flex-shrink-0 bg-gray-100">
+                    <img src="https://picsum.photos/200/200?random=4" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                  </div>
+                  <div class="p-4 flex-1 md:text-right">
+                    <p class="text-xs text-brand-DEFAULT font-bold mb-1">5月</p>
+                    <h3 class="font-bold text-gray-800 mb-1">🌸 春のフォトコンテスト</h3>
+                    <p class="text-xs text-gray-500 mb-2">テーマ：「新生活」</p>
+                    <div class="flex md:justify-end gap-3 text-xs text-gray-400">
+                      <span>📷 112件</span>
+                      <span>❤️ 945</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2023年 -->
+        <div class="relative">
+          <div class="md:flex md:justify-center mb-8">
+            <div class="bg-gray-400 text-white px-6 py-2 rounded-full font-bold text-lg shadow-lg inline-block ml-10 md:ml-0">
+              2023年
+            </div>
+          </div>
+
+          <!-- アイテム -->
+          <div class="relative flex items-center mb-8">
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-gray-400 rounded-full border-4 border-white shadow"></div>
+            <div class="ml-12 md:ml-0 md:w-1/2 md:pl-12 md:ml-auto">
+              <a href="#" class="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group">
+                <div class="flex">
+                  <div class="w-32 h-32 flex-shrink-0 bg-gray-100">
+                    <img src="https://picsum.photos/200/200?random=5" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                  </div>
+                  <div class="p-4 flex-1">
+                    <p class="text-xs text-gray-500 font-bold mb-1">12月</p>
+                    <h3 class="font-bold text-gray-800 mb-1">🎄 クリスマスフォトコンテスト</h3>
+                    <p class="text-xs text-gray-500 mb-2">テーマ：「冬のあたたかさ」</p>
+                    <div class="flex gap-3 text-xs text-gray-400">
+                      <span>📷 89件</span>
+                      <span>❤️ 756</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -57,7 +57,7 @@ export default async function Home() {
             <Link href="#top" className="hover:text-brand transition-colors py-2">トップ</Link>
             <Link href="#about" className="hover:text-brand transition-colors py-2">応募方法</Link>
             <Link href="#events" className="hover:text-brand transition-colors py-2">開催テーマ</Link>
-            <Link href="#past" className="hover:text-brand transition-colors py-2">過去テーマ</Link>
+            <Link href="/past-contests" className="hover:text-brand transition-colors py-2">過去テーマ</Link>
             <Link href="#faq" className="hover:text-brand transition-colors py-2">Q&A</Link>
             <Link href="#contact" className="hover:text-brand transition-colors py-2">お問い合わせ</Link>
           </nav>

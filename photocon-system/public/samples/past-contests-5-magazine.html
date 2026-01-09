@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案5: マガジン風アーカイブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              600: '#D14318'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <!-- ヘッダー -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-gray-600 hover:text-brand-DEFAULT transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <span class="font-bold">トップに戻る</span>
+      </a>
+      <span class="text-xl font-bold text-gray-800">アーカイブ</span>
+    </div>
+  </header>
+
+  <main class="py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- タイトル -->
+      <div class="text-center mb-12">
+        <span class="text-brand-DEFAULT font-bold text-sm tracking-widest uppercase">Archive</span>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2 mb-3">思い出のアルバム</h1>
+        <p class="text-gray-500">これまでの輝きをもう一度</p>
+      </div>
+
+      <!-- マガジングリッド -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <!-- 大きいカード（最新・注目） -->
+        <a href="#" class="col-span-2 row-span-2 group relative overflow-hidden rounded-3xl bg-white shadow-lg">
+          <div class="absolute inset-0">
+            <img src="https://picsum.photos/800/800?random=1" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          </div>
+          <div class="relative h-full min-h-[400px] md:min-h-[500px] p-6 md:p-8 flex flex-col justify-end text-white">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="bg-brand-DEFAULT px-3 py-1 rounded-full text-xs font-bold">PICK UP</span>
+              <span class="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-bold">2024年12月</span>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-2">🎄 クリスマス<br>フォトコンテスト</h3>
+            <p class="text-white/80 text-sm mb-4">テーマ：「家族の笑顔」</p>
+            <div class="flex items-center gap-4 text-sm text-white/70">
+              <span>📷 128件</span>
+              <span>❤️ 1,234票</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 中サイズカード -->
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=2" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2024年10月</p>
+              <h3 class="font-bold text-sm md:text-base">🎃 ハロウィン</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 95</span>
+                <span>❤️ 892</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=3" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2024年8月</p>
+              <h3 class="font-bold text-sm md:text-base">🌻 夏休み</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 156</span>
+                <span>❤️ 1,567</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=4" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2024年5月</p>
+              <h3 class="font-bold text-sm md:text-base">🌸 春</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 112</span>
+                <span>❤️ 945</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=5" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2024年3月</p>
+              <h3 class="font-bold text-sm md:text-base">🎓 卒入学</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 78</span>
+                <span>❤️ 654</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- 横長カード -->
+        <a href="#" class="col-span-2 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="flex h-40 md:h-48">
+            <div class="w-2/5 relative">
+              <img src="https://picsum.photos/400/300?random=6" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="w-3/5 p-4 md:p-6 flex flex-col justify-center bg-gradient-to-r from-amber-50 to-white">
+              <span class="text-xs font-bold text-amber-600 mb-1">2023年度 BEST</span>
+              <h3 class="font-bold text-gray-800 text-lg md:text-xl mb-2">🏆 年間ベストフォト</h3>
+              <p class="text-sm text-gray-500 mb-3 line-clamp-2">2023年で最も心に響いた作品を振り返ります</p>
+              <div class="flex items-center gap-4 text-sm text-gray-400">
+                <span>📷 45件</span>
+                <span>❤️ 3,456</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- 小さいカード群 -->
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=7" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2023年12月</p>
+              <h3 class="font-bold text-sm md:text-base">🎄 クリスマス</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 89</span>
+                <span>❤️ 756</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=8" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2023年10月</p>
+              <h3 class="font-bold text-sm md:text-base">🍂 秋の思い出</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 67</span>
+                <span>❤️ 543</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=9" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2023年8月</p>
+              <h3 class="font-bold text-sm md:text-base">🌊 海と子供</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 134</span>
+                <span>❤️ 1,234</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="col-span-1 group relative overflow-hidden rounded-2xl bg-white shadow-md">
+          <div class="aspect-[4/5] relative">
+            <img src="https://picsum.photos/400/500?random=10" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <p class="text-xs font-bold text-white/70 mb-1">2023年5月</p>
+              <h3 class="font-bold text-sm md:text-base">🌷 こどもの日</h3>
+              <div class="flex items-center gap-2 mt-2 text-xs text-white/70">
+                <span>📷 98</span>
+                <span>❤️ 876</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- もっと見るボタン -->
+      <div class="text-center mt-12">
+        <button class="px-8 py-4 bg-white text-gray-600 rounded-full font-bold shadow-md hover:shadow-lg hover:text-brand-DEFAULT transition-all inline-flex items-center gap-2">
+          もっと見る
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

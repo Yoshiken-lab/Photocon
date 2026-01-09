@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Calendar, CalendarDays, CalendarRange, Users, Clock, Camera, ChevronDown, Archive, ArrowRight, ImageIcon, Heart } from 'lucide-react'
+import { Calendar, CalendarDays, CalendarRange, Users, Clock, Camera, ChevronDown, Archive, ArrowRight, ImageIcon, Heart, Images } from 'lucide-react'
 
 type Contest = {
   id: string
@@ -98,13 +98,20 @@ export function EventsSection({ activeContests, upcomingContests, endedContests 
                             <span>残り {daysLeft}日</span>
                           </div>
                         </div>
-                        <div className="pt-4">
+                        <div className="pt-4 flex flex-wrap gap-3">
                           <Link
                             href="/submit"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-brand hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg shadow-brand/30 hover:-translate-y-1"
                           >
                             <Camera className="w-5 h-5" />
                             <span>今すぐ応募する</span>
+                          </Link>
+                          <Link
+                            href={`/contests/${contest.id}/gallery`}
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-brand-100 hover:border-brand hover:text-brand text-gray-600 rounded-full font-bold transition-all"
+                          >
+                            <Images className="w-5 h-5" />
+                            <span>応募作品を見る</span>
                           </Link>
                         </div>
                       </div>
@@ -221,15 +228,15 @@ export function EventsSection({ activeContests, upcomingContests, endedContests 
                 <Archive className="w-5 h-5 text-gray-400" />
                 過去のイベント
               </h3>
-              <Link href="#" className="text-sm text-brand font-bold hover:underline flex items-center gap-1">
+              <Link href="/past-contests" className="text-sm text-brand font-bold hover:underline flex items-center gap-1">
                 すべて見る <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
               {endedContests.map((contest) => (
-                <div key={contest.id} className="flex-shrink-0 w-64 snap-start">
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                <Link key={contest.id} href={`/contests/${contest.id}/gallery`} className="flex-shrink-0 w-64 snap-start">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100 h-full">
                     <div className="relative aspect-[3/2] bg-gray-100">
                       {contest.image_url ? (
                         <Image
@@ -261,9 +268,12 @@ export function EventsSection({ activeContests, upcomingContests, endedContests 
                           <Heart className="w-3 h-3" /> {(contest.total_votes || 0).toLocaleString()}
                         </span>
                       </div>
+                      <div className="mt-3 text-xs text-brand font-bold flex items-center gap-1">
+                        応募作品を見る <ArrowRight className="w-3 h-3" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

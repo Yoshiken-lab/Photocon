@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案4: フィルター・検索付き一覧</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              600: '#D14318'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- ヘッダー -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-gray-600 hover:text-brand-DEFAULT transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <span class="font-bold">トップに戻る</span>
+      </a>
+      <span class="text-xl font-bold text-gray-800">過去のテーマ</span>
+    </div>
+  </header>
+
+  <main class="py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- タイトル -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">過去のフォトコンテスト</h1>
+        <p class="text-gray-500">お探しのコンテストを見つけましょう</p>
+      </div>
+
+      <!-- 検索・フィルターエリア -->
+      <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm mb-8">
+        <div class="flex flex-col md:flex-row gap-4">
+          <!-- 検索バー -->
+          <div class="flex-1 relative">
+            <input
+              type="text"
+              placeholder="コンテスト名やテーマで検索..."
+              class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-DEFAULT focus:ring-2 focus:ring-brand-100 transition-all"
+            >
+            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+
+          <!-- 年度フィルター -->
+          <div class="flex gap-2">
+            <select class="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-DEFAULT bg-white text-gray-600">
+              <option value="">すべての年</option>
+              <option value="2024">2024年</option>
+              <option value="2023">2023年</option>
+              <option value="2022">2022年</option>
+            </select>
+
+            <!-- 季節フィルター -->
+            <select class="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-DEFAULT bg-white text-gray-600">
+              <option value="">すべての季節</option>
+              <option value="spring">春</option>
+              <option value="summer">夏</option>
+              <option value="autumn">秋</option>
+              <option value="winter">冬</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- タグフィルター -->
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="text-sm text-gray-500 py-1">人気のテーマ：</span>
+          <button class="px-3 py-1 bg-brand-50 text-brand-DEFAULT rounded-full text-sm font-medium hover:bg-brand-100 transition-colors">家族</button>
+          <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">笑顔</button>
+          <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">運動会</button>
+          <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">季節行事</button>
+          <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">成長記録</button>
+        </div>
+      </div>
+
+      <!-- 結果表示 -->
+      <div class="flex items-center justify-between mb-6">
+        <p class="text-gray-500 text-sm">12件のコンテストが見つかりました</p>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-500">並び替え：</span>
+          <select class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-DEFAULT bg-white">
+            <option value="newest">新しい順</option>
+            <option value="popular">人気順</option>
+            <option value="entries">応募数順</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- コンテスト一覧（テーブル形式） -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <!-- ヘッダー（PC用） -->
+        <div class="hidden md:grid md:grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-100 text-sm font-bold text-gray-500">
+          <div class="col-span-5">コンテスト</div>
+          <div class="col-span-2 text-center">開催期間</div>
+          <div class="col-span-2 text-center">応募数</div>
+          <div class="col-span-2 text-center">投票数</div>
+          <div class="col-span-1"></div>
+        </div>
+
+        <!-- コンテスト行 -->
+        <a href="#" class="block md:grid md:grid-cols-12 gap-4 p-4 border-b border-gray-100 hover:bg-brand-50/30 transition-colors group">
+          <div class="col-span-5 flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+              <img src="https://picsum.photos/100/100?random=1" alt="" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 group-hover:text-brand-DEFAULT transition-colors">🎄 クリスマスフォトコンテスト</h3>
+              <p class="text-sm text-gray-500">テーマ：「家族の笑顔」</p>
+            </div>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="text-sm text-gray-500">2024年12月</span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              128件
+            </span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              1,234
+            </span>
+          </div>
+          <div class="col-span-1 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-DEFAULT transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+
+        <a href="#" class="block md:grid md:grid-cols-12 gap-4 p-4 border-b border-gray-100 hover:bg-brand-50/30 transition-colors group">
+          <div class="col-span-5 flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+              <img src="https://picsum.photos/100/100?random=2" alt="" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 group-hover:text-brand-DEFAULT transition-colors">🎃 ハロウィンフォトコンテスト</h3>
+              <p class="text-sm text-gray-500">テーマ：「仮装」</p>
+            </div>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="text-sm text-gray-500">2024年10月</span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              95件
+            </span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              892
+            </span>
+          </div>
+          <div class="col-span-1 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-DEFAULT transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+
+        <a href="#" class="block md:grid md:grid-cols-12 gap-4 p-4 border-b border-gray-100 hover:bg-brand-50/30 transition-colors group">
+          <div class="col-span-5 flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+              <img src="https://picsum.photos/100/100?random=3" alt="" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 group-hover:text-brand-DEFAULT transition-colors">🌻 夏休みフォトコンテスト</h3>
+              <p class="text-sm text-gray-500">テーマ：「夏の思い出」</p>
+            </div>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="text-sm text-gray-500">2024年8月</span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              156件
+            </span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              1,567
+            </span>
+          </div>
+          <div class="col-span-1 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-DEFAULT transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+
+        <a href="#" class="block md:grid md:grid-cols-12 gap-4 p-4 border-b border-gray-100 hover:bg-brand-50/30 transition-colors group">
+          <div class="col-span-5 flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+              <img src="https://picsum.photos/100/100?random=4" alt="" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 group-hover:text-brand-DEFAULT transition-colors">🌸 春のフォトコンテスト</h3>
+              <p class="text-sm text-gray-500">テーマ：「新生活」</p>
+            </div>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="text-sm text-gray-500">2024年5月</span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              112件
+            </span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              945
+            </span>
+          </div>
+          <div class="col-span-1 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-DEFAULT transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+
+        <a href="#" class="block md:grid md:grid-cols-12 gap-4 p-4 hover:bg-brand-50/30 transition-colors group">
+          <div class="col-span-5 flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+              <img src="https://picsum.photos/100/100?random=5" alt="" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 group-hover:text-brand-DEFAULT transition-colors">🎄 クリスマスフォトコンテスト</h3>
+              <p class="text-sm text-gray-500">テーマ：「冬のあたたかさ」</p>
+            </div>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="text-sm text-gray-500">2023年12月</span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              89件
+            </span>
+          </div>
+          <div class="col-span-2 flex items-center justify-center">
+            <span class="flex items-center gap-1 text-gray-600">
+              <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              756
+            </span>
+          </div>
+          <div class="col-span-1 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-DEFAULT transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+      </div>
+
+      <!-- ページネーション -->
+      <div class="flex justify-center mt-8 gap-2">
+        <button class="w-10 h-10 rounded-full bg-brand-DEFAULT text-white font-bold">1</button>
+        <button class="w-10 h-10 rounded-full bg-white text-gray-500 font-bold hover:bg-brand-50 transition-colors">2</button>
+        <button class="w-10 h-10 rounded-full bg-white text-gray-500 font-bold hover:bg-brand-50 transition-colors">3</button>
+        <span class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>
+        <button class="w-10 h-10 rounded-full bg-white text-gray-500 font-bold hover:bg-brand-50 transition-colors">10</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
