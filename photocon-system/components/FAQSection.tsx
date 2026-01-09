@@ -46,9 +46,7 @@ export function FAQSection() {
       <div className="max-w-4xl mx-auto">
         {/* タイトル */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-sm mb-4">
-            <span className="text-xl font-bold text-brand font-maru">Q&A</span>
-          </div>
+          <span className="block text-xl font-bold text-brand font-maru mb-2">Q&A</span>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 font-maru">よくある質問</h2>
         </div>
 

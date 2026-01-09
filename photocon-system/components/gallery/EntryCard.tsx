@@ -12,16 +12,21 @@ interface Props {
 export function EntryCard({ entry, onClick }: Props) {
   return (
     <div
-      className="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+      className="group relative aspect-[4/5] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 select-none"
       onClick={onClick}
+      onContextMenu={(e) => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
     >
       <Image
         src={entry.media_url}
         alt={entry.caption || '応募作品'}
         fill
-        className="object-cover transition-transform duration-700 group-hover:scale-110"
+        className="object-cover transition-transform duration-700 group-hover:scale-110 select-none"
         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        draggable={false}
       />
+      {/* 画像保護用の透明オーバーレイ */}
+      <div className="absolute inset-0 z-[1]" />
 
       {entry.categories?.name && (
         <div className="absolute top-3 left-3">

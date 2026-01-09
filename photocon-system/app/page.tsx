@@ -175,6 +175,9 @@ export default async function Home() {
           endedContests={endedContests}
         />
 
+        {/* FAQ Section */}
+        <FAQSection />
+
         {/* CTA Section */}
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden shadow-xl border-4 border-brand-50">
@@ -202,8 +205,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <FAQSection />
+
       </main>
 
       {/* フローティングバナー */}

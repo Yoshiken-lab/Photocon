@@ -46,13 +46,20 @@ export function LightboxModal({ entry, onClose }: Props) {
         </button>
 
         {/* 画像 */}
-        <div className="relative w-full md:w-2/3 aspect-square md:aspect-auto md:min-h-[500px] bg-gray-100">
+        <div
+          className="relative w-full md:w-2/3 aspect-square md:aspect-auto md:min-h-[500px] bg-gray-100 select-none"
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        >
           <Image
             src={entry.media_url}
             alt={entry.caption || '応募作品'}
             fill
-            className="object-contain"
+            className="object-contain select-none"
+            draggable={false}
           />
+          {/* 画像保護用の透明オーバーレイ */}
+          <div className="absolute inset-0 z-10" />
         </div>
 
         {/* 情報 */}

@@ -74,7 +74,7 @@ INSTAGRAM_ACCESS_TOKEN=your_instagram_token
 ```
 
 #### 開発サーバーの起動
-
+※ディレクトリの階層違いに注意！！※
 ```bash
 cd C:\Users\admin\Documents\06-Python\photocon\photocon-system
 npm run dev
@@ -84,15 +84,80 @@ npm run dev
 
 | ページ | URL |
 |--------|-----|
-| **ランディングページ** | http://localhost:8888/photo-con.html |
-| トップページ | http://localhost:3000 |
-| ギャラリー | http://localhost:3000/gallery |
-| ランキング | http://localhost:3000/ranking |
+| **ランディングページ（静的）** | http://localhost:8888/photo-con.html |
+| **メインサイト（トップ）** | http://localhost:3000 |
 | 投稿ページ | http://localhost:3000/submit |
+| コンテスト別ギャラリー | http://localhost:3000/contests/{コンテストID}/gallery |
+| ランキング | http://localhost:3000/ranking |
 | **管理ダッシュボード** | http://localhost:3000/admin |
 | 応募一覧 | http://localhost:3000/admin/entries |
 | コンテスト管理 | http://localhost:3000/admin/contests |
 | 設定 | http://localhost:3000/admin/settings |
+
+---
+
+## 開発時のファイル編集ガイド
+
+### メインサイト（http://localhost:3000）を編集する場合
+
+| 編集対象 | ファイルパス |
+|----------|-------------|
+| トップページ全体 | `photocon-system/app/page.tsx` |
+| イベントセクション | `photocon-system/components/EventsSection.tsx` |
+| 投稿ページ | `photocon-system/app/submit/page.tsx` |
+| コンテスト別ギャラリー | `photocon-system/app/contests/[id]/gallery/page.tsx` |
+| 共通レイアウト | `photocon-system/app/layout.tsx` |
+| フローティングバナー | `photocon-system/components/FloatingBanner.tsx` |
+
+### 管理画面を編集する場合
+
+| 編集対象 | ファイルパス |
+|----------|-------------|
+| ダッシュボード | `photocon-system/app/admin/page.tsx` |
+| 応募一覧 | `photocon-system/app/admin/entries/` |
+| コンテスト管理 | `photocon-system/app/admin/contests/` |
+| コンテスト作成/編集フォーム | `photocon-system/app/admin/contests/ContestForm.tsx` |
+| 設定ページ | `photocon-system/app/admin/settings/page.tsx` |
+| 管理画面レイアウト | `photocon-system/app/admin/layout.tsx` |
+
+### API/サーバーアクションを編集する場合
+
+| 編集対象 | ファイルパス |
+|----------|-------------|
+| 投稿処理 | `photocon-system/app/api/entries/route.ts` |
+| コンテストAPI | `photocon-system/app/api/contests/route.ts` |
+| コンテスト作成/更新 | `photocon-system/app/admin/contests/actions.ts` |
+
+---
+
+## 動作確認コマンド
+
+### 開発サーバーの起動
+
+```bash
+# Next.jsサーバーを起動（メインサイト・管理画面）
+cd C:\Users\admin\Documents\06-Python\photocon\photocon-system
+npm run dev
+```
+
+サーバー起動後: http://localhost:3000 にアクセス
+
+### LP（静的HTML）の起動
+
+```bash
+# Pythonサーバーを起動
+cd C:\Users\admin\Documents\06-Python\photocon
+python -m http.server 8888
+```
+
+サーバー起動後: http://localhost:8888/photo-con.html にアクセス
+
+### ビルド確認
+
+```bash
+cd C:\Users\admin\Documents\06-Python\photocon\photocon-system
+npm run build
+```
 
 ---
 
