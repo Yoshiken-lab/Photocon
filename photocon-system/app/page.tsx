@@ -5,6 +5,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
 import { EventsSection } from '@/components/EventsSection'
 import { FAQSection } from '@/components/FAQSection'
+import { RecentApplicantsSection } from '@/components/RecentApplicantsSection'
 
 interface Contest {
   id: string
@@ -34,6 +35,28 @@ export default async function Home() {
   const activeContests = contests?.filter(c => c.status === 'active') || []
   const upcomingContests = contests?.filter(c => c.status === 'upcoming') || []
   const endedContests = contests?.filter(c => c.status === 'ended') || []
+
+  // 最近の応募者を取得（最新5件）
+  const { data: recentEntriesData } = await supabase
+    .from('entries')
+    .select('id, username, instagram_timestamp, contest_id, contests(theme)')
+    .eq('status', 'approved')
+    .order('instagram_timestamp', { ascending: false })
+    .limit(5)
+
+  // 全応募者数を取得
+  const { count: totalApplicants } = await supabase
+    .from('entries')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'approved')
+
+  // 応募者データを整形
+  const recentApplicants = (recentEntriesData || []).map((entry: { id: string; username: string; instagram_timestamp: string; contests: { theme: string } | null }) => ({
+    id: entry.id,
+    username: entry.username,
+    instagram_timestamp: entry.instagram_timestamp,
+    contest_theme: entry.contests?.theme || null
+  }))
 
   return (
     <>
@@ -167,6 +190,12 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* Recent Applicants Section */}
+        <RecentApplicantsSection
+          applicants={recentApplicants}
+          totalCount={totalApplicants || 0}
+        />
 
         {/* Events Section */}
         <EventsSection
