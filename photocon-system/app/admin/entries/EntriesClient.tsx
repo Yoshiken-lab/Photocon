@@ -3,8 +3,30 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Search, Filter, ChevronDown, Check, X, Clock, CheckCircle, XCircle, Images } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { Search, Filter, ChevronDown, Check, X, Clock, CheckCircle, XCircle, Images, ImageOff } from 'lucide-react'
+import { updateEntryStatus } from '@/app/actions/entries'
+
+// 画像読み込みエラー時のフォールバックコンポーネント
+function ImageWithFallback({ src, alt, ...props }: { src: string; alt: string; width: number; height: number; className?: string }) {
+  const [hasError, setHasError] = useState(false)
+
+  if (hasError || !src) {
+    return (
+      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+        <ImageOff className="w-5 h-5 text-gray-400" />
+      </div>
+    )
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      {...props}
+      onError={() => setHasError(true)}
+    />
+  )
+}
 
 interface Entry {
   id: string
@@ -42,7 +64,6 @@ interface Props {
 export function EntriesClient({ entries, contests, currentStatus, currentContest, currentSearch, stats }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClient()
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
@@ -72,13 +93,11 @@ export function EntriesClient({ entries, contests, currentStatus, currentContest
 
   // ステータス変更
   const handleStatusChange = async (id: string, status: 'approved' | 'rejected' | 'pending') => {
-    const { error } = await supabase
-      .from('entries')
-      .update({ status })
-      .eq('id', id)
-
-    if (!error) {
+    try {
+      await updateEntryStatus(id, status)
       router.refresh()
+    } catch (error) {
+      console.error('Failed to update status:', error)
     }
   }
 
@@ -105,16 +124,17 @@ export function EntriesClient({ entries, contests, currentStatus, currentContest
 
     setIsProcessing(true)
 
-    for (const id of selectedIds) {
-      await supabase
-        .from('entries')
-        .update({ status })
-        .eq('id', id)
+    try {
+      for (const id of selectedIds) {
+        await updateEntryStatus(id, status)
+      }
+      setSelectedIds([])
+    } catch (error) {
+      console.error('Failed to bulk update status:', error)
+    } finally {
+      setIsProcessing(false)
+      router.refresh()
     }
-
-    setSelectedIds([])
-    setIsProcessing(false)
-    router.refresh()
   }
 
   const getStatusBadge = (status: string) => {
@@ -281,7 +301,7 @@ export function EntriesClient({ entries, contests, currentStatus, currentContest
                   </td>
                   <td className="px-4 py-3">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-                      <Image
+                      <ImageWithFallback
                         src={entry.media_url}
                         alt=""
                         width={48}

@@ -7,7 +7,7 @@ import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Sett
 
 const menuItems = [
   { href: '/admin', icon: LayoutDashboard, label: 'ダッシュボード', group: 'main' },
-  { href: '/admin/review', icon: ClipboardCheck, label: '審査する', group: 'manage' },
+  { href: '/admin/review', icon: ClipboardCheck, label: '審査待ち', group: 'manage', showBadge: true },
   { href: '/admin/entries', icon: Images, label: '応募一覧', group: 'manage' },
   { href: '/admin/ranking', icon: Award, label: 'ランキング', group: 'manage' },
   { href: '/admin/contests', icon: Trophy, label: 'コンテスト管理', group: 'settings' },
@@ -15,7 +15,11 @@ const menuItems = [
   { href: '/admin/settings', icon: Settings, label: '設定', group: 'settings' },
 ]
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  pendingCount: number
+}
+
+export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -62,6 +66,7 @@ export function AdminSidebar() {
           <ul className="space-y-1">
             {menuItems.filter(item => item.group === 'manage').map((item) => {
               const isActive = pathname === item.href
+              const showBadge = 'showBadge' in item && item.showBadge && pendingCount > 0
               return (
                 <li key={item.href}>
                   <Link
@@ -73,7 +78,14 @@ export function AdminSidebar() {
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
-                    {item.label}
+                    <span className="flex-1">{item.label}</span>
+                    {showBadge && (
+                      <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold flex items-center justify-center ${
+                        isActive ? 'bg-white text-brand' : 'bg-red-500 text-white'
+                      }`}>
+                        {pendingCount > 99 ? '99+' : pendingCount}
+                      </span>
+                    )}
                   </Link>
                 </li>
               )

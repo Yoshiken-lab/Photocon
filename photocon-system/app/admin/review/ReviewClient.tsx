@@ -1,10 +1,36 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Check, X, ChevronLeft, ChevronRight, Clock, User, Tag, Calendar, ExternalLink } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { Check, X, ChevronLeft, ChevronRight, Clock, User, Tag, Calendar, ExternalLink, ImageOff } from 'lucide-react'
+import { updateEntryStatus } from '@/app/actions/entries'
 import { useRouter } from 'next/navigation'
+
+// 画像読み込みエラー時のフォールバックコンポーネント
+function ImageWithFallback({ src, alt, className }: { src: string; alt: string; fill?: boolean; className?: string }) {
+  const [hasError, setHasError] = useState(false)
+
+  if (hasError || !src) {
+    return (
+      <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <ImageOff className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+          <p className="text-sm text-gray-500">画像を読み込めませんでした</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className={className}
+      onError={() => setHasError(true)}
+    />
+  )
+}
 
 interface Entry {
   id: string
@@ -24,59 +50,44 @@ interface ReviewClientProps {
 export function ReviewClient({ entries }: ReviewClientProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [localEntries, setLocalEntries] = useState(entries)
   const router = useRouter()
-  const supabase = createClient()
 
-  const currentEntry = localEntries[currentIndex]
-  const totalEntries = localEntries.length
+  // インデックスが範囲外になった場合は調整
+  useEffect(() => {
+    if (currentIndex >= entries.length && entries.length > 0) {
+      setCurrentIndex(entries.length - 1)
+    }
+  }, [entries.length, currentIndex])
+
+  const currentEntry = entries[currentIndex]
+  const totalEntries = entries.length
 
   const handleApprove = async () => {
     if (!currentEntry || isProcessing) return
     setIsProcessing(true)
 
-    const { error } = await supabase
-      .from('entries')
-      .update({ status: 'approved' })
-      .eq('id', currentEntry.id)
-
-    if (!error) {
-      // ローカルのエントリーリストから削除
-      const newEntries = localEntries.filter((_, i) => i !== currentIndex)
-      setLocalEntries(newEntries)
-
-      // インデックスを調整
-      if (currentIndex >= newEntries.length && newEntries.length > 0) {
-        setCurrentIndex(newEntries.length - 1)
-      }
+    try {
+      await updateEntryStatus(currentEntry.id, 'approved')
+      router.refresh()
+    } catch (error) {
+      console.error('Failed to approve entry:', error)
+    } finally {
+      setIsProcessing(false)
     }
-
-    setIsProcessing(false)
-    router.refresh()
   }
 
   const handleReject = async () => {
     if (!currentEntry || isProcessing) return
     setIsProcessing(true)
 
-    const { error } = await supabase
-      .from('entries')
-      .update({ status: 'rejected' })
-      .eq('id', currentEntry.id)
-
-    if (!error) {
-      // ローカルのエントリーリストから削除
-      const newEntries = localEntries.filter((_, i) => i !== currentIndex)
-      setLocalEntries(newEntries)
-
-      // インデックスを調整
-      if (currentIndex >= newEntries.length && newEntries.length > 0) {
-        setCurrentIndex(newEntries.length - 1)
-      }
+    try {
+      await updateEntryStatus(currentEntry.id, 'rejected')
+      router.refresh()
+    } catch (error) {
+      console.error('Failed to reject entry:', error)
+    } finally {
+      setIsProcessing(false)
     }
-
-    setIsProcessing(false)
-    router.refresh()
   }
 
   const goToPrevious = () => {
@@ -127,10 +138,9 @@ export function ReviewClient({ entries }: ReviewClientProps) {
         {/* 画像表示 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
-            <Image
+            <ImageWithFallback
               src={currentEntry.media_url}
               alt={`応募写真 by ${currentEntry.username}`}
-              fill
               className="object-contain"
             />
           </div>
