@@ -5,7 +5,7 @@ import { Coins, Image as ImageIcon, Copy, FileCheck, Trash2 } from 'lucide-react
 const faqs = [
   {
     question: '無料で応募できますか？',
-    answer: 'はい、スマートフォンやパソコンがあれば無料で応募できます。テーマに沿ったお写真をご用意の上、ぜひご参加ください。',
+    answer: 'スマートフォンやパソコンがあれば無料で応募できます。テーマに沿ったお写真をご用意の上、ぜひご参加ください。',
     icon: Coins,
     color: 'bg-orange-100 text-orange-600',
     borderColor: 'hover:border-orange-200'
@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     question: '応募した写真を後から削除できますか？',
-    answer: 'はい、できます。お写真の削除依頼に関しましては、「お問い合わせ」からお問い合わせください。',
+    answer: 'お写真の削除依頼に関しましては、「お問い合わせ」からお問い合わせください。',
     icon: Trash2,
     color: 'bg-red-100 text-red-600',
     borderColor: 'hover:border-red-200'
@@ -47,7 +47,7 @@ export function FAQSection() {
         {/* タイトル */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-sm mb-4">
-            <span className="text-3xl">💡</span>
+            <span className="text-xl font-bold text-brand font-maru">Q&A</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 font-maru">よくある質問</h2>
         </div>
