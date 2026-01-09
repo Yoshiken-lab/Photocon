@@ -9,6 +9,8 @@ interface Contest {
   status: string
   start_date: string
   end_date: string
+  voting_start: string | null
+  voting_end: string | null
 }
 
 interface RecentEntry {
@@ -108,14 +110,25 @@ export default async function AdminDashboard() {
 
       {/* 開催中のコンテスト */}
       <section>
-        <div className="flex items-center gap-2 mb-4">
-          <Trophy className="w-5 h-5 text-brand" />
-          <h2 className="text-lg font-bold text-gray-800">開催中のコンテスト</h2>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-brand" />
+            <h2 className="text-lg font-bold text-gray-800">開催中のコンテスト</h2>
+          </div>
+          {activeContests && activeContests.length > 0 && (
+            <Link
+              href="/admin/contests"
+              className="flex items-center gap-1 text-sm text-brand hover:underline font-medium"
+            >
+              詳細を見る
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
 
         {activeContests && activeContests.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {(activeContests as Contest[]).map((contest) => {
+          <div className={activeContests.length === 1 ? '' : 'grid gap-4 md:grid-cols-2'}>
+              {(activeContests as Contest[]).map((contest) => {
               const remaining = getRemainingDays(contest.end_date)
               const stats = contestStats[contest.id]
 
@@ -153,17 +166,18 @@ export default async function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">
-                        終了: {formatDate(contest.end_date)}
-                      </span>
-                      <Link
-                        href={`/admin/contests`}
-                        className="flex items-center gap-1 text-brand hover:underline font-medium"
-                      >
-                        詳細を見る
-                        <ChevronRight className="w-4 h-4" />
-                      </Link>
+                    {/* 期間情報 */}
+                    <div className="space-y-1 text-sm text-gray-500 pt-4 border-t border-gray-100">
+                      <p>
+                        <span className="font-medium text-gray-600">開催期間:</span>{' '}
+                        {formatDate(contest.start_date)} 〜 {formatDate(contest.end_date)}
+                      </p>
+                      {contest.voting_start && contest.voting_end && (
+                        <p>
+                          <span className="font-medium text-gray-600">投票期間:</span>{' '}
+                          {formatDate(contest.voting_start)} 〜 {formatDate(contest.voting_end)}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -184,12 +198,21 @@ export default async function AdminDashboard() {
         )}
       </section>
 
-      {/* 次に開催予定のコンテスト */}
+      {/* 開催予定のコンテスト */}
       {nextContest && (
         <section>
-          <div className="flex items-center gap-2 mb-4">
-            <CalendarClock className="w-5 h-5 text-blue-500" />
-            <h2 className="text-lg font-bold text-gray-800">次に開催予定</h2>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <CalendarClock className="w-5 h-5 text-blue-500" />
+              <h2 className="text-lg font-bold text-gray-800">開催予定のコンテスト</h2>
+            </div>
+            <Link
+              href="/admin/contests"
+              className="flex items-center gap-1 text-sm text-brand hover:underline font-medium"
+            >
+              詳細を見る
+              <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
 
           <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
@@ -215,16 +238,8 @@ export default async function AdminDashboard() {
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-sm">
-              <span className="text-gray-500">
-                {formatDate(nextContest.start_date)} 〜 {formatDate(nextContest.end_date)}
-              </span>
-              <Link
-                href="/admin/contests"
-                className="text-brand hover:underline font-medium"
-              >
-                編集する
-              </Link>
+            <div className="mt-4 pt-4 border-t border-gray-100 text-sm text-gray-500">
+              開催期間: {formatDate(nextContest.start_date)} 〜 {formatDate(nextContest.end_date)}
             </div>
           </div>
         </section>
