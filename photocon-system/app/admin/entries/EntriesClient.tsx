@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Search, Filter, ChevronDown, Check, X, Clock, CheckCircle, XCircle, Images, ImageOff } from 'lucide-react'
+import { Search, Filter, ChevronDown, Check, X, Clock, Images, ImageOff } from 'lucide-react'
 import { updateEntryStatus } from '@/app/actions/entries'
 
 // 画像読み込みエラー時のフォールバックコンポーネント
@@ -328,32 +328,32 @@ export function EntriesClient({ entries, contests, currentStatus, currentContest
                     </p>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-2">
                       {entry.status !== 'approved' && (
                         <button
                           onClick={() => handleStatusChange(entry.id, 'approved')}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                          title="承認"
+                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition-colors"
                         >
-                          <CheckCircle className="w-5 h-5" />
+                          <Check className="w-3.5 h-3.5" />
+                          承認
                         </button>
                       )}
                       {entry.status !== 'rejected' && (
                         <button
                           onClick={() => handleStatusChange(entry.id, 'rejected')}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="却下"
+                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors"
                         >
-                          <XCircle className="w-5 h-5" />
+                          <X className="w-3.5 h-3.5" />
+                          却下
                         </button>
                       )}
                       {entry.status !== 'pending' && (
                         <button
                           onClick={() => handleStatusChange(entry.id, 'pending')}
-                          className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
-                          title="審査中に戻す"
+                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded-lg transition-colors"
                         >
-                          <Clock className="w-5 h-5" />
+                          <Clock className="w-3.5 h-3.5" />
+                          保留
                         </button>
                       )}
                     </div>
