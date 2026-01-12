@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メインページ（案1＋案3組み込み版）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              200: '#FBCFC5',
+              600: '#D14318'
+            }
+          },
+          fontFamily: {
+            maru: ['Zen Maru Gothic', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .font-maru { font-family: 'Zen Maru Gothic', sans-serif; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-50 font-maru">
+
+  <!-- トップバナー -->
+  <div class="fixed top-0 w-full z-50 bg-brand-DEFAULT text-white text-center py-2 text-xs md:text-sm font-bold">
+    スクールフォト！会員様限定
+  </div>
+
+  <!-- ヘッダー -->
+  <header class="fixed top-8 w-full z-40 bg-white/80 backdrop-blur-md border-b border-white/50">
+    <div class="max-w-6xl mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center">
+        <span class="text-xl font-bold text-brand-DEFAULT">スクールフォト!</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-5 text-sm font-bold text-gray-500">
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors py-2">トップ</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors py-2">応募方法</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors py-2">開催テーマ</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors py-2">過去テーマ</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors py-2">Q&A</a>
+      </nav>
+      <button class="md:hidden p-2 text-gray-600 bg-white rounded-full shadow-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="pt-36 pb-16 md:pt-48 md:pb-24 px-4 overflow-hidden">
+      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div class="space-y-6 relative z-10 order-2 md:order-1 text-center md:text-left">
+          <div class="inline-flex items-center gap-3 px-6 py-3 bg-white text-brand-DEFAULT text-lg md:text-xl font-bold rounded-full shadow-sm border border-brand-100">
+            <span class="text-orange-400 text-2xl">★</span>
+            <span>スマホにあるその1枚でOK</span>
+          </div>
+
+          <h1 class="text-3xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-gray-800">
+            あの日の一瞬を、<br>
+            <span class="text-brand-DEFAULT">未来の宝物</span>に。
+          </h1>
+
+          <p class="text-gray-500 leading-relaxed max-w-md mx-auto md:mx-0 font-medium text-sm md:text-base">
+            運動会のがんばった顔、お弁当をほおばる笑顔。<br>
+            スマホの中に眠っているお子さまのベストショットを<br>
+            みんなでシェアして楽しみませんか？
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-4">
+            <a href="#" class="w-full sm:w-auto px-8 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-brand-DEFAULT/20 hover:-translate-y-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span>写真を応募する</span>
+            </a>
+            <a href="#" class="w-full sm:w-auto px-8 py-4 bg-white border-2 border-brand-100 hover:border-brand-DEFAULT hover:text-brand-DEFAULT text-gray-600 rounded-full font-bold transition-all flex items-center justify-center gap-2">
+              作品を見る
+            </a>
+          </div>
+        </div>
+
+        <div class="relative order-1 md:order-2 px-4 md:px-0">
+          <div class="absolute top-0 right-0 w-48 h-48 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float"></div>
+          <div class="absolute bottom-0 left-0 w-48 h-48 bg-brand-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float" style="animation-delay: 2s"></div>
+
+          <div class="relative aspect-[4/3] md:aspect-square bg-white rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand-DEFAULT/10 border-[6px] border-white transform rotate-2 hover:rotate-0 transition-transform duration-700">
+            <img src="https://picsum.photos/600/600?random=hero" alt="公園で遊ぶ子ども" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000">
+            <div class="absolute top-6 right-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-lg border border-white/50 flex flex-col items-center text-center rotate-12">
+              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Theme</span>
+              <span class="text-brand-DEFAULT font-bold">「最高の笑顔」</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-20 bg-white rounded-t-[3rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)]">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-brand-DEFAULT font-bold text-lg md:text-xl bg-brand-50 px-6 py-3 rounded-full mb-3 inline-block">かんたん 3ステップ</span>
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-800 mb-4">ママ・パパのための<br>やさしいコンテスト</h2>
+          <p class="text-gray-500 text-sm">難しい操作はいりません。<br>いつものスマホ操作だけで参加できます。</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+          <div class="text-center group">
+            <div class="w-20 h-20 mx-auto bg-brand-50 rounded-2xl flex items-center justify-center text-brand-DEFAULT mb-6 transition-transform group-hover:scale-110 rotate-3 group-hover:rotate-6">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-3">1. 写真を選ぶ</h3>
+            <p class="text-gray-500 text-sm leading-7">スマホのアルバムから、<br>お気に入りの1枚を選びます。</p>
+          </div>
+
+          <div class="text-center group">
+            <div class="relative w-20 h-20 mx-auto bg-brand-50 rounded-2xl flex items-center justify-center text-brand-DEFAULT mb-6 transition-transform group-hover:scale-110 -rotate-2 group-hover:-rotate-6">
+              <div class="absolute -right-2 -top-2 bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-sm">!</div>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-3">2. アップロード</h3>
+            <p class="text-gray-500 text-sm leading-7">そのままアップロードするか、<br>Instagramでタグ付け投稿でもOK。</p>
+          </div>
+
+          <div class="text-center group">
+            <div class="w-20 h-20 mx-auto bg-brand-50 rounded-2xl flex items-center justify-center text-brand-DEFAULT mb-6 transition-transform group-hover:scale-110 rotate-3 group-hover:rotate-6">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-3">3. みんなで応援</h3>
+            <p class="text-gray-500 text-sm leading-7">素敵な作品にハートを送ろう。<br>入賞作品はサイトで表彰！</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ★★★ 案3: 最近の応募者リスト（NEW） ★★★ -->
+    <section class="py-16 px-4 bg-white">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <!-- 左側：統計情報 -->
+          <div class="text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-600 rounded-full mb-4">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              <span class="font-bold text-sm">リアルタイム更新中</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">今、みんなが参加しています！</h2>
+            <p class="text-gray-500 mb-6">たくさんの素敵な写真が届いています。<br>あなたも一緒に参加しませんか？</p>
+
+            <!-- 統計カード -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+              <div class="bg-brand-50 rounded-2xl p-4 text-center">
+                <div class="text-2xl md:text-3xl font-bold text-brand-DEFAULT">128</div>
+                <div class="text-xs text-gray-500">応募作品</div>
+              </div>
+              <div class="bg-brand-50 rounded-2xl p-4 text-center">
+                <div class="text-2xl md:text-3xl font-bold text-brand-DEFAULT">89</div>
+                <div class="text-xs text-gray-500">参加者</div>
+              </div>
+              <div class="bg-brand-50 rounded-2xl p-4 text-center">
+                <div class="text-2xl md:text-3xl font-bold text-red-500">12日</div>
+                <div class="text-xs text-gray-500">残り</div>
+              </div>
+            </div>
+
+            <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg shadow-brand-DEFAULT/30 hover:-translate-y-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              私も応募する
+            </a>
+          </div>
+
+          <!-- 右側：最近の応募者リスト -->
+          <div class="bg-gray-50 rounded-3xl p-6 shadow-lg">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-DEFAULT" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                最近の応募
+              </h3>
+              <span class="text-xs text-gray-400">自動更新</span>
+            </div>
+
+            <div class="space-y-3">
+              <!-- 応募者1 -->
+              <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border-l-4 border-brand-DEFAULT">
+                <div class="w-12 h-12 bg-brand-100 rounded-full overflow-hidden">
+                  <img src="https://picsum.photos/100/100?random=user1" alt="" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm text-gray-800">mama_smile_123さん</p>
+                  <p class="text-xs text-gray-500">たった今応募しました 🎉</p>
+                </div>
+                <span class="bg-brand-DEFAULT text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">NEW</span>
+              </div>
+
+              <!-- 応募者2 -->
+              <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                <div class="w-12 h-12 bg-blue-100 rounded-full overflow-hidden">
+                  <img src="https://picsum.photos/100/100?random=user2" alt="" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm text-gray-800">papa_photoさん</p>
+                  <p class="text-xs text-gray-500">3分前に応募しました</p>
+                </div>
+              </div>
+
+              <!-- 応募者3 -->
+              <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                <div class="w-12 h-12 bg-green-100 rounded-full overflow-hidden">
+                  <img src="https://picsum.photos/100/100?random=user3" alt="" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm text-gray-800">happy_familyさん</p>
+                  <p class="text-xs text-gray-500">5分前に応募しました</p>
+                </div>
+              </div>
+
+              <!-- 応募者4 -->
+              <div class="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm">
+                <div class="w-12 h-12 bg-purple-100 rounded-full overflow-hidden">
+                  <img src="https://picsum.photos/100/100?random=user4" alt="" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm text-gray-800">kids_loveさん</p>
+                  <p class="text-xs text-gray-500">8分前に応募しました</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+              <p class="text-sm text-gray-500">今日だけで<span class="font-bold text-brand-DEFAULT">12人</span>が応募中！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ★★★ 案1: 横スクロール型ギャラリープレビュー（NEW） ★★★ -->
+    <section class="py-20 px-4 bg-brand-50">
+      <div class="max-w-6xl mx-auto">
+        <!-- ヘッダー部分 -->
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full mb-4 shadow-sm">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-DEFAULT opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-DEFAULT"></span>
+            </span>
+            <span class="text-brand-DEFAULT font-bold text-sm">みんなの応募作品</span>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">こんな写真が届いています！</h2>
+          <p class="text-gray-500 text-sm">スマホで撮ったお子さまの日常の1枚でOK</p>
+        </div>
+
+        <!-- 横スクロールギャラリー -->
+        <div class="relative mb-8">
+          <div class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+            <!-- カード1 -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] relative">
+                  <img src="https://picsum.photos/400/500?random=g1" alt="" class="w-full h-full object-cover">
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-brand-DEFAULT text-white text-xs font-bold px-2 py-1 rounded-full">人気</span>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <div class="flex items-center justify-between text-white">
+                      <span class="text-sm font-bold">@happy_mama</span>
+                      <span class="flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        312
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- カード2 -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] relative">
+                  <img src="https://picsum.photos/400/500?random=g2" alt="" class="w-full h-full object-cover">
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">NEW</span>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <div class="flex items-center justify-between text-white">
+                      <span class="text-sm font-bold">@smile_kids</span>
+                      <span class="flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        245
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- カード3 -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] relative">
+                  <img src="https://picsum.photos/400/500?random=g3" alt="" class="w-full h-full object-cover">
+                  <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <div class="flex items-center justify-between text-white">
+                      <span class="text-sm font-bold">@papa_camera</span>
+                      <span class="flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        198
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- カード4 -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] relative">
+                  <img src="https://picsum.photos/400/500?random=g4" alt="" class="w-full h-full object-cover">
+                  <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <div class="flex items-center justify-between text-white">
+                      <span class="text-sm font-bold">@family_life</span>
+                      <span class="flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        167
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- カード5 -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] relative">
+                  <img src="https://picsum.photos/400/500?random=g5" alt="" class="w-full h-full object-cover">
+                  <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <div class="flex items-center justify-between text-white">
+                      <span class="text-sm font-bold">@sunny_day</span>
+                      <span class="flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        143
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- もっと見るカード -->
+            <div class="flex-shrink-0 w-64 snap-start">
+              <a href="#" class="block bg-white rounded-2xl overflow-hidden shadow-lg h-full hover:shadow-xl transition-shadow">
+                <div class="aspect-[4/5] bg-brand-50 flex flex-col items-center justify-center text-brand-DEFAULT">
+                  <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                  </div>
+                  <span class="font-bold text-lg">もっと見る</span>
+                  <span class="text-sm text-gray-500 mt-1">+120作品</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- スクロールヒント（モバイル） -->
+          <div class="flex justify-center md:hidden mt-2">
+            <span class="text-xs text-gray-400 flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              スワイプして見る
+            </span>
+          </div>
+        </div>
+
+        <!-- 応募ボタン -->
+        <div class="text-center">
+          <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg shadow-brand-DEFAULT/30 hover:-translate-y-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            私も応募する
+          </a>
+          <p class="text-xs text-gray-400 mt-4">※ 掲載している写真はイメージです</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events Section（既存） -->
+    <section class="py-20 px-4 bg-white">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-8">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-DEFAULT opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-DEFAULT"></span>
+          </span>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">開催中のイベント</h2>
+        </div>
+
+        <div class="bg-gradient-to-br from-brand-50 to-white rounded-[2rem] p-6 md:p-10 shadow-xl border-2 border-brand-100">
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-DEFAULT text-white text-xs font-bold rounded-full">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span>募集中</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-bold text-gray-800">🌸 春のフォトコンテスト</h3>
+              <p class="text-gray-500">テーマ：「新生活」</p>
+              <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                <span>📅 1/1 〜 3/31</span>
+                <span>👥 応募 128件</span>
+                <span>⏰ 残り 12日</span>
+              </div>
+              <div class="pt-4 flex flex-wrap gap-3">
+                <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg">
+                  今すぐ応募する
+                </a>
+                <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-brand-100 text-gray-600 rounded-full font-bold transition-all hover:border-brand-DEFAULT hover:text-brand-DEFAULT">
+                  応募作品を見る
+                </a>
+              </div>
+            </div>
+            <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg bg-gray-100">
+              <img src="https://picsum.photos/600/450?random=event" alt="" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section（既存） -->
+    <section class="py-20 px-4 bg-brand-50">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="block text-xl font-bold text-brand-DEFAULT mb-2">Q&A</span>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">よくある質問</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-white p-6 rounded-2xl shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800 mb-2">無料で応募できますか？</h3>
+                <p class="text-sm text-gray-500">スマートフォンやパソコンがあれば無料で応募できます。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800 mb-2">子ども以外の写真も応募できますか？</h3>
+                <p class="text-sm text-gray-500">お子様が写っているお写真でご応募ください。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800 mb-2">一人何枚まで応募できますか？</h3>
+                <p class="text-sm text-gray-500">何枚でも応募できます。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800 mb-2">写真の形式やサイズに制限は？</h3>
+                <p class="text-sm text-gray-500">JPEG・JPG・PNGのみ対応。15MBまで受付。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section（既存） -->
+    <section class="py-20 px-4 bg-white">
+      <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden shadow-xl border-4 border-brand-50">
+        <div class="absolute top-0 left-0 w-full h-full opacity-[0.03]" style="background-image: radial-gradient(#E84D1C 2px, transparent 2px); background-size: 20px 20px;"></div>
+
+        <div class="relative z-10 space-y-6">
+          <div class="w-16 h-16 bg-brand-100 text-brand-DEFAULT rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+          </div>
+
+          <h2 class="text-2xl md:text-4xl font-bold text-gray-800">自慢の一枚、待ってます</h2>
+          <p class="text-gray-500 max-w-lg mx-auto text-sm md:text-base">
+            入賞者には「スクールフォト！お値引きクーポン」など<br class="hidden md:block">
+            素敵なプレゼントをご用意しています。
+          </p>
+          <div class="pt-4">
+            <a href="#" class="inline-block px-12 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-brand-DEFAULT/30 hover:-translate-y-1">
+              無料で参加する
+            </a>
+          </div>
+          <p class="text-xs text-gray-400 mt-4">募集期間：2025年12月31日まで</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <footer class="bg-white text-gray-500 py-12 border-t border-brand-100 text-sm">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center">
+        <span class="text-lg font-bold text-brand-DEFAULT">スクールフォト!</span>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 text-xs md:text-sm">
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors">よくある質問</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors">利用規約</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors">プライバシーポリシー</a>
+        <a href="#" class="hover:text-brand-DEFAULT transition-colors">運営会社</a>
+      </div>
+
+      <p class="text-xs text-gray-400">&copy; 2025 スクールフォト!</p>
+    </div>
+  </footer>
+
+</body>
+</html>

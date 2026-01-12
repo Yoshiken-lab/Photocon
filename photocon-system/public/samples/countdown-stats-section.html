@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案3: 参加者数・カウントダウン</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#E84D1C',
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              600: '#D14318'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50">
+
+  <!-- パターン1: Hero内に組み込むタイプ -->
+  <section class="py-20 px-4 bg-gradient-to-b from-brand-50 to-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">【パターン1】Hero内に組み込むタイプ</h2>
+        <p class="text-gray-500 text-sm">ファーストビューで緊急性を訴求</p>
+      </div>
+
+      <!-- カウントダウン＋統計バナー -->
+      <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 border-4 border-brand-100 relative overflow-hidden">
+        <!-- 背景装飾 -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-brand-50 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-yellow-100 rounded-full translate-y-1/2 -translate-x-1/2 opacity-50"></div>
+
+        <div class="relative z-10">
+          <!-- 緊急性バッジ -->
+          <div class="flex justify-center mb-6">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-full animate-pulse">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span class="font-bold text-sm">締め切り間近！</span>
+            </div>
+          </div>
+
+          <!-- カウントダウン -->
+          <div class="text-center mb-8">
+            <p class="text-gray-500 text-sm mb-2">応募締め切りまで</p>
+            <div class="flex justify-center gap-3 md:gap-4">
+              <div class="bg-brand-DEFAULT text-white rounded-2xl p-4 md:p-6 min-w-[70px] md:min-w-[90px] shadow-lg">
+                <div class="text-3xl md:text-5xl font-bold">12</div>
+                <div class="text-xs md:text-sm opacity-80">日</div>
+              </div>
+              <div class="bg-brand-DEFAULT text-white rounded-2xl p-4 md:p-6 min-w-[70px] md:min-w-[90px] shadow-lg">
+                <div class="text-3xl md:text-5xl font-bold">08</div>
+                <div class="text-xs md:text-sm opacity-80">時間</div>
+              </div>
+              <div class="bg-brand-DEFAULT text-white rounded-2xl p-4 md:p-6 min-w-[70px] md:min-w-[90px] shadow-lg">
+                <div class="text-3xl md:text-5xl font-bold">45</div>
+                <div class="text-xs md:text-sm opacity-80">分</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 統計情報 -->
+          <div class="grid grid-cols-3 gap-4 md:gap-8 mb-8">
+            <div class="text-center">
+              <div class="text-2xl md:text-4xl font-bold text-brand-DEFAULT">128</div>
+              <div class="text-xs md:text-sm text-gray-500">応募作品</div>
+            </div>
+            <div class="text-center border-x border-gray-200">
+              <div class="text-2xl md:text-4xl font-bold text-brand-DEFAULT">89</div>
+              <div class="text-xs md:text-sm text-gray-500">参加者</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl md:text-4xl font-bold text-brand-DEFAULT">1,234</div>
+              <div class="text-xs md:text-sm text-gray-500">いいね</div>
+            </div>
+          </div>
+
+          <!-- 応募ボタン -->
+          <div class="text-center">
+            <a href="#" class="inline-flex items-center gap-2 px-10 py-5 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold text-lg transition-all shadow-xl shadow-brand-DEFAULT/30 hover:-translate-y-1">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              今すぐ応募する
+            </a>
+            <p class="text-xs text-gray-400 mt-3">※ 無料で参加できます</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- パターン2: フローティングバナー型 -->
+  <section class="py-20 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">【パターン2】フローティングバナー型</h2>
+        <p class="text-gray-500 text-sm">画面下部に固定表示</p>
+      </div>
+
+      <!-- フローティングバナーのプレビュー -->
+      <div class="bg-gray-100 rounded-2xl p-8 relative min-h-[300px] flex items-end justify-center">
+        <p class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400">（ページコンテンツ）</p>
+
+        <!-- フローティングバナー -->
+        <div class="w-full max-w-lg bg-white rounded-t-2xl shadow-2xl border-t-4 border-brand-DEFAULT p-4">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="bg-red-100 text-red-600 rounded-full p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">締め切りまであと</p>
+                <p class="font-bold text-brand-DEFAULT">12日 08:45:32</p>
+              </div>
+            </div>
+            <a href="#" class="px-6 py-3 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold text-sm transition-all whitespace-nowrap">
+              応募する
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- パターン3: コンパクトな統計バー -->
+  <section class="py-20 px-4 bg-brand-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">【パターン3】コンパクトな統計バー</h2>
+        <p class="text-gray-500 text-sm">ヘッダー下やセクション間に配置</p>
+      </div>
+
+      <!-- 統計バー -->
+      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+        <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8">
+          <!-- 参加者数 -->
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-brand-50 rounded-full flex items-center justify-center text-brand-DEFAULT">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-gray-800">89人</div>
+              <div class="text-xs text-gray-500">が参加中</div>
+            </div>
+          </div>
+
+          <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+
+          <!-- 応募数 -->
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-brand-50 rounded-full flex items-center justify-center text-brand-DEFAULT">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-gray-800">128枚</div>
+              <div class="text-xs text-gray-500">の作品</div>
+            </div>
+          </div>
+
+          <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+
+          <!-- 残り日数 -->
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-red-500">残り12日</div>
+              <div class="text-xs text-gray-500">で締め切り</div>
+            </div>
+          </div>
+
+          <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+
+          <!-- 応募ボタン -->
+          <a href="#" class="px-6 py-3 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold text-sm transition-all">
+            今すぐ応募 →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- パターン4: プログレスバー付き -->
+  <section class="py-20 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">【パターン4】プログレスバー付き</h2>
+        <p class="text-gray-500 text-sm">目標に向かって盛り上がってる感を演出</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto bg-gradient-to-br from-brand-50 to-white rounded-3xl p-8 shadow-lg border border-brand-100">
+        <!-- 目標達成率 -->
+        <div class="text-center mb-6">
+          <p class="text-gray-500 text-sm mb-2">目標100作品まで</p>
+          <div class="flex items-end justify-center gap-1">
+            <span class="text-5xl font-bold text-brand-DEFAULT">128</span>
+            <span class="text-gray-400 text-lg mb-2">/ 100作品</span>
+          </div>
+          <p class="text-brand-DEFAULT font-bold mt-2">🎉 目標達成！</p>
+        </div>
+
+        <!-- プログレスバー -->
+        <div class="mb-8">
+          <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-brand-DEFAULT to-yellow-400 rounded-full" style="width: 100%"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-xs text-gray-500">
+            <span>0</span>
+            <span>50</span>
+            <span>100 🎯</span>
+          </div>
+        </div>
+
+        <!-- 統計 -->
+        <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+          <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="text-2xl font-bold text-gray-800">89人</div>
+            <div class="text-xs text-gray-500">参加者</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="text-2xl font-bold text-gray-800">1,234</div>
+            <div class="text-xs text-gray-500">いいね</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="text-2xl font-bold text-red-500">12日</div>
+            <div class="text-xs text-gray-500">残り</div>
+          </div>
+        </div>
+
+        <!-- 応募ボタン -->
+        <div class="text-center">
+          <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all shadow-lg shadow-brand-DEFAULT/30 hover:-translate-y-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            私も参加する
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- パターン5: 最近の応募者リスト -->
+  <section class="py-20 px-4 bg-brand-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">【パターン5】最近の応募者リスト</h2>
+        <p class="text-gray-500 text-sm">「今まさに応募されてる」感を演出</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-2xl p-6 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-800">最近の応募</h3>
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+        </div>
+
+        <div class="space-y-3">
+          <!-- 応募者1 -->
+          <div class="flex items-center gap-3 p-3 bg-brand-50 rounded-xl">
+            <div class="w-10 h-10 bg-brand-200 rounded-full flex items-center justify-center text-brand-DEFAULT font-bold">
+              M
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-sm text-gray-800">mama_smile_123さん</p>
+              <p class="text-xs text-gray-500">たった今応募しました</p>
+            </div>
+            <span class="text-xs text-brand-DEFAULT font-bold">NEW</span>
+          </div>
+
+          <!-- 応募者2 -->
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+            <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-600 font-bold">
+              P
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-sm text-gray-800">papa_photoさん</p>
+              <p class="text-xs text-gray-500">3分前に応募しました</p>
+            </div>
+          </div>
+
+          <!-- 応募者3 -->
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+            <div class="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center text-green-600 font-bold">
+              K
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-sm text-gray-800">kids_loveさん</p>
+              <p class="text-xs text-gray-500">5分前に応募しました</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-gray-100 text-center">
+          <p class="text-sm text-gray-500 mb-3">今日だけで<span class="font-bold text-brand-DEFAULT">12人</span>が応募中！</p>
+          <a href="#" class="inline-block w-full py-3 bg-brand-DEFAULT hover:bg-brand-600 text-white rounded-full font-bold transition-all text-center">
+            私も応募する
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
