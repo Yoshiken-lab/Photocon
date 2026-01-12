@@ -16,6 +16,8 @@ export async function updateEntryStatus(id: string, status: 'approved' | 'reject
   }
 
   revalidatePath('/admin/entries')
+  revalidatePath('/admin/review')
+  revalidatePath('/admin', 'layout')
   revalidatePath('/gallery')
 
   return { success: true }
