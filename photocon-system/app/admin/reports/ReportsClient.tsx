@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from 'react'
 import {
-  Trophy, Images, Heart, Clock, CheckCircle, XCircle, Download,
-  BarChart3, Users, GitCompare, ChevronDown, Search, X
+  Trophy, Images, Heart, Clock, Download,
+  BarChart3, Users, GitCompare, ChevronDown, Search, X, Calendar
 } from 'lucide-react'
 
 interface Contest {
@@ -51,6 +51,12 @@ interface CategoryStat {
   count: number
 }
 
+interface AccessData {
+  date: string
+  deviceType: string
+  visitorId: string
+}
+
 interface ReportsClientProps {
   contests: Contest[]
   contestStats: ContestStats[]
@@ -58,9 +64,11 @@ interface ReportsClientProps {
   timeAnalysisData: TimeData[]
   userStats: UserStat[]
   categoryStats: CategoryStat[]
+  accessAnalysisData: AccessData[]
 }
 
 type TabType = 'summary' | 'time' | 'users' | 'compare'
+type TimeSubTabType = 'submission' | 'access'
 
 const tabs = [
   { id: 'summary' as TabType, label: 'コンテスト別サマリー', icon: BarChart3 },
@@ -94,8 +102,11 @@ export function ReportsClient({
   timeAnalysisData,
   userStats,
   categoryStats,
+  accessAnalysisData,
 }: ReportsClientProps) {
   const [activeTab, setActiveTab] = useState<TabType>('summary')
+  const [timeSubTab, setTimeSubTab] = useState<TimeSubTabType>('submission')
+  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' })
   const [selectedContestId, setSelectedContestId] = useState<string>(contests[0]?.id || '')
   const [compareContestIds, setCompareContestIds] = useState<string[]>(
     contests.slice(0, 3).map(c => c.id)
@@ -108,6 +119,22 @@ export function ReportsClient({
 
   // 時間帯分析データの集計
   const timeStats = useMemo(() => {
+    // 日付でフィルタリング
+    const filteredData = timeAnalysisData.filter(item => {
+      const itemDate = new Date(item.date)
+      if (dateRange.start) {
+        const startDate = new Date(dateRange.start)
+        startDate.setHours(0, 0, 0, 0)
+        if (itemDate < startDate) return false
+      }
+      if (dateRange.end) {
+        const endDate = new Date(dateRange.end)
+        endDate.setHours(23, 59, 59, 999)
+        if (itemDate > endDate) return false
+      }
+      return true
+    })
+
     // 曜日×時間帯のヒートマップデータ
     const heatmap: number[][] = Array(7).fill(null).map(() => Array(12).fill(0))
     // 曜日別の集計
@@ -115,7 +142,7 @@ export function ReportsClient({
     // 時間帯別の集計
     const hourTotals: { [key: string]: number } = {}
 
-    timeAnalysisData.forEach(item => {
+    filteredData.forEach(item => {
       const date = new Date(item.date)
       const day = date.getDay()
       const hour = date.getHours()
@@ -136,8 +163,77 @@ export function ReportsClient({
     // ヒートマップの最大値
     const maxHeatValue = Math.max(...heatmap.flat())
 
-    return { heatmap, dayTotals, peakTimes, maxHeatValue }
-  }, [timeAnalysisData])
+    return { heatmap, dayTotals, peakTimes, maxHeatValue, totalCount: filteredData.length }
+  }, [timeAnalysisData, dateRange])
+
+  // アクセス分析データの集計
+  const accessStats = useMemo(() => {
+    // 日付でフィルタリング
+    const filteredData = accessAnalysisData.filter(item => {
+      const itemDate = new Date(item.date)
+      if (dateRange.start) {
+        const startDate = new Date(dateRange.start)
+        startDate.setHours(0, 0, 0, 0)
+        if (itemDate < startDate) return false
+      }
+      if (dateRange.end) {
+        const endDate = new Date(dateRange.end)
+        endDate.setHours(23, 59, 59, 999)
+        if (itemDate > endDate) return false
+      }
+      return true
+    })
+
+    // 曜日×時間帯のヒートマップデータ
+    const heatmap: number[][] = Array(7).fill(null).map(() => Array(12).fill(0))
+    // 曜日別の集計
+    const dayTotals = Array(7).fill(0)
+    // 時間帯別の集計
+    const hourTotals: { [key: string]: number } = {}
+    // デバイス別の集計
+    const deviceTotals = { mobile: 0, desktop: 0, tablet: 0 }
+    // ユニーク訪問者数
+    const uniqueVisitors = new Set<string>()
+
+    filteredData.forEach(item => {
+      const date = new Date(item.date)
+      const day = date.getDay()
+      const hour = date.getHours()
+      const hourSlot = Math.floor(hour / 2) // 2時間ごとのスロット
+
+      heatmap[day][hourSlot]++
+      dayTotals[day]++
+
+      const key = `${dayNames[day]} ${hourSlot * 2}:00-${(hourSlot + 1) * 2}:00`
+      hourTotals[key] = (hourTotals[key] || 0) + 1
+
+      // デバイス集計
+      if (item.deviceType === 'mobile') deviceTotals.mobile++
+      else if (item.deviceType === 'desktop') deviceTotals.desktop++
+      else if (item.deviceType === 'tablet') deviceTotals.tablet++
+
+      // ユニーク訪問者
+      uniqueVisitors.add(item.visitorId)
+    })
+
+    // ピーク時間帯TOP5
+    const peakTimes = Object.entries(hourTotals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+
+    // ヒートマップの最大値
+    const maxHeatValue = Math.max(...heatmap.flat(), 0)
+
+    return {
+      heatmap,
+      dayTotals,
+      peakTimes,
+      maxHeatValue,
+      deviceTotals,
+      totalAccess: filteredData.length,
+      uniqueVisitorCount: uniqueVisitors.size,
+    }
+  }, [accessAnalysisData, dateRange])
 
   // ユーザー分析データ
   const userAnalysis = useMemo(() => {
@@ -384,145 +480,445 @@ export function ReportsClient({
           {/* 時間帯分析 */}
           {activeTab === 'time' && (
             <div className="space-y-6">
-              {/* ヒートマップ */}
-              <div>
-                <h3 className="font-bold text-gray-800 mb-4">曜日×時間帯 ヒートマップ</h3>
-                <div className="overflow-x-auto">
-                  <div className="min-w-[600px]">
-                    {/* 時間帯ラベル */}
-                    <div className="flex mb-2">
-                      <div className="w-12"></div>
-                      <div className="flex-1 grid grid-cols-12 gap-1 text-xs text-gray-500 text-center">
-                        {[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => (
-                          <span key={hour}>{hour}時</span>
-                        ))}
-                      </div>
-                    </div>
+              {/* サブタブ */}
+              <div className="flex gap-2 border-b border-gray-200 pb-3">
+                <button
+                  onClick={() => setTimeSubTab('submission')}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    timeSubTab === 'submission'
+                      ? 'bg-brand text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  投稿分析
+                </button>
+                <button
+                  onClick={() => setTimeSubTab('access')}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    timeSubTab === 'access'
+                      ? 'bg-brand text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  アクセス分析
+                </button>
+              </div>
 
-                    {/* ヒートマップ本体 */}
-                    <div className="space-y-1">
-                      {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
-                        <div key={dayIndex} className="flex items-center">
-                          <div className={`w-12 text-sm ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
-                            {dayNames[dayIndex]}
-                          </div>
-                          <div className="flex-1 grid grid-cols-12 gap-1">
-                            {timeStats.heatmap[dayIndex].map((value, hourIndex) => (
-                              <div
-                                key={hourIndex}
-                                className={`h-8 ${getHeatColor(value, timeStats.maxHeatValue)} rounded cursor-pointer transition-all hover:scale-110`}
-                                title={`${dayNames[dayIndex]} ${hourIndex * 2}:00-${(hourIndex + 1) * 2}:00: ${value}件`}
-                              />
+              {/* 日付ピッカー */}
+              <div className="flex flex-wrap items-center gap-4 bg-gray-50 rounded-xl p-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-600">期間:</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="date"
+                    value={dateRange.start}
+                    onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                    className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                  />
+                  <span className="text-gray-400">〜</span>
+                  <input
+                    type="date"
+                    value={dateRange.end}
+                    onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                    className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const today = new Date()
+                      const weekAgo = new Date(today)
+                      weekAgo.setDate(today.getDate() - 7)
+                      setDateRange({
+                        start: weekAgo.toISOString().split('T')[0],
+                        end: today.toISOString().split('T')[0],
+                      })
+                    }}
+                    className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    過去7日
+                  </button>
+                  <button
+                    onClick={() => {
+                      const today = new Date()
+                      const monthAgo = new Date(today)
+                      monthAgo.setDate(today.getDate() - 30)
+                      setDateRange({
+                        start: monthAgo.toISOString().split('T')[0],
+                        end: today.toISOString().split('T')[0],
+                      })
+                    }}
+                    className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    過去30日
+                  </button>
+                  <button
+                    onClick={() => setDateRange({ start: '', end: '' })}
+                    className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    全期間
+                  </button>
+                </div>
+                {(dateRange.start || dateRange.end) && (
+                  <button
+                    onClick={() => setDateRange({ start: '', end: '' })}
+                    className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    <X className="w-3 h-3" />
+                    クリア
+                  </button>
+                )}
+              </div>
+
+              {/* 投稿分析 */}
+              {timeSubTab === 'submission' && (
+                <div className="space-y-6">
+                  {/* ヒートマップ */}
+                  <div>
+                    <h3 className="font-bold text-gray-800 mb-4">曜日×時間帯 投稿ヒートマップ</h3>
+                    <div className="overflow-x-auto">
+                      <div className="min-w-[600px]">
+                        {/* 時間帯ラベル */}
+                        <div className="flex mb-2">
+                          <div className="w-12"></div>
+                          <div className="flex-1 grid grid-cols-12 gap-1 text-xs text-gray-500 text-center">
+                            {[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => (
+                              <span key={hour}>{hour}時</span>
                             ))}
                           </div>
                         </div>
-                      ))}
+
+                        {/* ヒートマップ本体 */}
+                        <div className="space-y-1">
+                          {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                            <div key={dayIndex} className="flex items-center">
+                              <div className={`w-12 text-sm ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                                {dayNames[dayIndex]}
+                              </div>
+                              <div className="flex-1 grid grid-cols-12 gap-1">
+                                {timeStats.heatmap[dayIndex].map((value, hourIndex) => (
+                                  <div
+                                    key={hourIndex}
+                                    className={`h-8 ${getHeatColor(value, timeStats.maxHeatValue)} rounded cursor-pointer transition-all hover:scale-110`}
+                                    title={`${dayNames[dayIndex]} ${hourIndex * 2}:00-${(hourIndex + 1) * 2}:00: ${value}件`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* 凡例 */}
+                        <div className="flex items-center justify-end gap-2 mt-4 text-xs text-gray-500">
+                          <span>少</span>
+                          <div className="w-4 h-4 bg-gray-100 rounded"></div>
+                          <div className="w-4 h-4 bg-brand-100 rounded"></div>
+                          <div className="w-4 h-4 bg-brand rounded"></div>
+                          <span>多</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* ピーク時間帯 */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h3 className="font-bold text-gray-800 mb-4">ピーク時間帯 TOP5</h3>
+                      <div className="space-y-3">
+                        {timeStats.peakTimes.map(([time, count], index) => {
+                          const maxCount = timeStats.peakTimes[0]?.[1] || 1
+                          const percentage = (count / maxCount * 100).toFixed(0)
+                          const medals = ['bg-yellow-400 text-white', 'bg-gray-400 text-white', 'bg-amber-600 text-white', 'bg-gray-200 text-gray-600', 'bg-gray-200 text-gray-600']
+                          return (
+                            <div key={time} className="flex items-center gap-3">
+                              <span className={`w-6 h-6 ${medals[index]} rounded-full flex items-center justify-center text-xs font-bold`}>
+                                {index + 1}
+                              </span>
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-800">{time}</p>
+                                <p className="text-xs text-gray-500">{count}件</p>
+                              </div>
+                              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-amber-600' : 'bg-gray-300'}`}
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          )
+                        })}
+                        {timeStats.peakTimes.length === 0 && (
+                          <p className="text-gray-500 text-center py-4">データがありません</p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* 凡例 */}
-                    <div className="flex items-center justify-end gap-2 mt-4 text-xs text-gray-500">
-                      <span>少</span>
-                      <div className="w-4 h-4 bg-gray-100 rounded"></div>
-                      <div className="w-4 h-4 bg-brand-100 rounded"></div>
-                      <div className="w-4 h-4 bg-brand rounded"></div>
-                      <span>多</span>
+                    {/* 曜日別応募数 */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h3 className="font-bold text-gray-800 mb-4">曜日別 応募数</h3>
+                      {(() => {
+                        const maxDay = Math.max(...timeStats.dayTotals)
+                        return (
+                          <div className="flex">
+                            {/* 縦軸目盛り */}
+                            <div className="w-12 flex-shrink-0 pr-2">
+                              <div className="flex flex-col justify-between h-40 text-right">
+                                <span className="text-xs text-gray-400 leading-none">{maxDay.toLocaleString()}</span>
+                                <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.75).toLocaleString()}</span>
+                                <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.5).toLocaleString()}</span>
+                                <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.25).toLocaleString()}</span>
+                                <span className="text-xs text-gray-400 leading-none">0</span>
+                              </div>
+                            </div>
+                            {/* グラフ本体 */}
+                            <div className="flex-1 min-w-0">
+                              <div className="relative h-40 border-l border-gray-200">
+                                {/* グリッドライン */}
+                                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                                  {[0, 1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="border-t border-gray-200 w-full" />
+                                  ))}
+                                </div>
+                                {/* 棒グラフ */}
+                                <div className="flex items-end justify-around h-full relative z-10 px-2">
+                                  {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
+                                    const height = maxDay > 0 ? (timeStats.dayTotals[dayIndex] / maxDay * 100) : 0
+                                    return (
+                                      <div key={dayIndex} className="w-[12%] h-full flex items-end justify-center group">
+                                        <div
+                                          className={`w-full rounded-t transition-all relative ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
+                                          style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                                        >
+                                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                            {timeStats.dayTotals[dayIndex].toLocaleString()}件
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              </div>
+                              {/* 曜日ラベル */}
+                              <div className="flex justify-around mt-2 px-2">
+                                {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                                  <span key={dayIndex} className={`w-[12%] text-xs text-center ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                                    {dayNames[dayIndex]}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })()}
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* ピーク時間帯 */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="font-bold text-gray-800 mb-4">ピーク時間帯 TOP5</h3>
-                  <div className="space-y-3">
-                    {timeStats.peakTimes.map(([time, count], index) => {
-                      const maxCount = timeStats.peakTimes[0]?.[1] || 1
-                      const percentage = (count / maxCount * 100).toFixed(0)
-                      const medals = ['bg-yellow-400 text-white', 'bg-gray-400 text-white', 'bg-amber-600 text-white', 'bg-gray-200 text-gray-600', 'bg-gray-200 text-gray-600']
-                      return (
-                        <div key={time} className="flex items-center gap-3">
-                          <span className={`w-6 h-6 ${medals[index]} rounded-full flex items-center justify-center text-xs font-bold`}>
-                            {index + 1}
-                          </span>
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-800">{time}</p>
-                            <p className="text-xs text-gray-500">{count}件</p>
+              {/* アクセス分析 */}
+              {timeSubTab === 'access' && (
+                <div className="space-y-6">
+                  {/* アクセス統計カード */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">総アクセス数</p>
+                      <p className="text-3xl font-bold text-gray-800">{accessStats.totalAccess.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-1">セッション数</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">ユニーク訪問者</p>
+                      <p className="text-3xl font-bold text-brand">{accessStats.uniqueVisitorCount.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-1">累計</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">モバイル</p>
+                      <p className="text-3xl font-bold text-green-600">{accessStats.deviceTotals.mobile.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {accessStats.totalAccess > 0 ? ((accessStats.deviceTotals.mobile / accessStats.totalAccess) * 100).toFixed(1) : 0}%
+                      </p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-5">
+                      <p className="text-sm text-gray-500 mb-1">PC</p>
+                      <p className="text-3xl font-bold text-blue-500">{accessStats.deviceTotals.desktop.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {accessStats.totalAccess > 0 ? ((accessStats.deviceTotals.desktop / accessStats.totalAccess) * 100).toFixed(1) : 0}%
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ヒートマップ */}
+                  <div>
+                    <h3 className="font-bold text-gray-800 mb-4">曜日×時間帯 アクセスヒートマップ</h3>
+                    <div className="overflow-x-auto">
+                      <div className="min-w-[600px]">
+                        {/* 時間帯ラベル */}
+                        <div className="flex mb-2">
+                          <div className="w-12"></div>
+                          <div className="flex-1 grid grid-cols-12 gap-1 text-xs text-gray-500 text-center">
+                            {[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => (
+                              <span key={hour}>{hour}時</span>
+                            ))}
                           </div>
-                          <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-amber-600' : 'bg-gray-300'}`}
-                              style={{ width: `${percentage}%` }}
-                            />
+                        </div>
+
+                        {/* ヒートマップ本体 */}
+                        <div className="space-y-1">
+                          {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                            <div key={dayIndex} className="flex items-center">
+                              <div className={`w-12 text-sm ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                                {dayNames[dayIndex]}
+                              </div>
+                              <div className="flex-1 grid grid-cols-12 gap-1">
+                                {accessStats.heatmap[dayIndex].map((value, hourIndex) => (
+                                  <div
+                                    key={hourIndex}
+                                    className={`h-8 ${getHeatColor(value, accessStats.maxHeatValue)} rounded cursor-pointer transition-all hover:scale-110`}
+                                    title={`${dayNames[dayIndex]} ${hourIndex * 2}:00-${(hourIndex + 1) * 2}:00: ${value}件`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* 凡例 */}
+                        <div className="flex items-center justify-end gap-2 mt-4 text-xs text-gray-500">
+                          <span>少</span>
+                          <div className="w-4 h-4 bg-gray-100 rounded"></div>
+                          <div className="w-4 h-4 bg-brand-100 rounded"></div>
+                          <div className="w-4 h-4 bg-brand rounded"></div>
+                          <span>多</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* ピーク時間帯 */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h3 className="font-bold text-gray-800 mb-4">ピーク時間帯 TOP5</h3>
+                      <div className="space-y-3">
+                        {accessStats.peakTimes.map(([time, count], index) => {
+                          const maxCount = accessStats.peakTimes[0]?.[1] || 1
+                          const percentage = (count / maxCount * 100).toFixed(0)
+                          const medals = ['bg-yellow-400 text-white', 'bg-gray-400 text-white', 'bg-amber-600 text-white', 'bg-gray-200 text-gray-600', 'bg-gray-200 text-gray-600']
+                          return (
+                            <div key={time} className="flex items-center gap-3">
+                              <span className={`w-6 h-6 ${medals[index]} rounded-full flex items-center justify-center text-xs font-bold`}>
+                                {index + 1}
+                              </span>
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-800">{time}</p>
+                                <p className="text-xs text-gray-500">{count}アクセス</p>
+                              </div>
+                              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-amber-600' : 'bg-gray-300'}`}
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          )
+                        })}
+                        {accessStats.peakTimes.length === 0 && (
+                          <p className="text-gray-500 text-center py-4">データがありません</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* デバイス別内訳 */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h3 className="font-bold text-gray-800 mb-4">デバイス別内訳</h3>
+                      <div className="space-y-3">
+                        {[
+                          { label: 'モバイル', count: accessStats.deviceTotals.mobile, color: 'bg-green-500', icon: '📱' },
+                          { label: 'PC', count: accessStats.deviceTotals.desktop, color: 'bg-blue-500', icon: '💻' },
+                          { label: 'タブレット', count: accessStats.deviceTotals.tablet, color: 'bg-purple-500', icon: '📱' },
+                        ].map((item) => {
+                          const percentage = accessStats.totalAccess > 0
+                            ? (item.count / accessStats.totalAccess * 100).toFixed(1)
+                            : 0
+                          return (
+                            <div key={item.label}>
+                              <div className="flex justify-between text-sm mb-1">
+                                <span className="text-gray-600">{item.icon} {item.label}</span>
+                                <span className="font-medium text-gray-800">{item.count.toLocaleString()}件 ({percentage}%)</span>
+                              </div>
+                              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full ${item.color} rounded-full`}
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 曜日別アクセス数 */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="font-bold text-gray-800 mb-4">曜日別 アクセス数</h3>
+                    {(() => {
+                      const maxDay = Math.max(...accessStats.dayTotals)
+                      return (
+                        <div className="flex">
+                          {/* 縦軸目盛り */}
+                          <div className="w-12 flex-shrink-0 pr-2">
+                            <div className="flex flex-col justify-between h-40 text-right">
+                              <span className="text-xs text-gray-400 leading-none">{maxDay.toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.75).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.5).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.25).toLocaleString()}</span>
+                              <span className="text-xs text-gray-400 leading-none">0</span>
+                            </div>
+                          </div>
+                          {/* グラフ本体 */}
+                          <div className="flex-1 min-w-0">
+                            <div className="relative h-40 border-l border-gray-200">
+                              {/* グリッドライン */}
+                              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                  <div key={i} className="border-t border-gray-200 w-full" />
+                                ))}
+                              </div>
+                              {/* 棒グラフ */}
+                              <div className="flex items-end justify-around h-full relative z-10 px-2">
+                                {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
+                                  const height = maxDay > 0 ? (accessStats.dayTotals[dayIndex] / maxDay * 100) : 0
+                                  return (
+                                    <div key={dayIndex} className="w-[12%] h-full flex items-end justify-center group">
+                                      <div
+                                        className={`w-full rounded-t transition-all relative ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
+                                        style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
+                                      >
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                          {accessStats.dayTotals[dayIndex].toLocaleString()}件
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                            {/* 曜日ラベル */}
+                            <div className="flex justify-around mt-2 px-2">
+                              {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
+                                <span key={dayIndex} className={`w-[12%] text-xs text-center ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                                  {dayNames[dayIndex]}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       )
-                    })}
-                    {timeStats.peakTimes.length === 0 && (
-                      <p className="text-gray-500 text-center py-4">データがありません</p>
-                    )}
+                    })()}
                   </div>
                 </div>
-
-                {/* 曜日別応募数 */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="font-bold text-gray-800 mb-4">曜日別 応募数</h3>
-                  {(() => {
-                    const maxDay = Math.max(...timeStats.dayTotals)
-                    return (
-                      <div className="flex">
-                        {/* 縦軸目盛り */}
-                        <div className="w-12 flex-shrink-0 pr-2">
-                          <div className="flex flex-col justify-between h-40 text-right">
-                            <span className="text-xs text-gray-400 leading-none">{maxDay.toLocaleString()}</span>
-                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.75).toLocaleString()}</span>
-                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.5).toLocaleString()}</span>
-                            <span className="text-xs text-gray-400 leading-none">{Math.round(maxDay * 0.25).toLocaleString()}</span>
-                            <span className="text-xs text-gray-400 leading-none">0</span>
-                          </div>
-                        </div>
-                        {/* グラフ本体 */}
-                        <div className="flex-1 min-w-0">
-                          <div className="relative h-40 border-l border-gray-200">
-                            {/* グリッドライン */}
-                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                              {[0, 1, 2, 3, 4].map((i) => (
-                                <div key={i} className="border-t border-gray-200 w-full" />
-                              ))}
-                            </div>
-                            {/* 棒グラフ */}
-                            <div className="flex items-end justify-around h-full relative z-10 px-2">
-                              {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
-                                const height = maxDay > 0 ? (timeStats.dayTotals[dayIndex] / maxDay * 100) : 0
-                                return (
-                                  <div key={dayIndex} className="w-[12%] h-full flex items-end justify-center group">
-                                    <div
-                                      className={`w-full rounded-t transition-all relative ${dayIndex === 0 || dayIndex === 6 ? 'bg-brand' : 'bg-gray-300'}`}
-                                      style={{ height: `${height}%`, minHeight: height > 0 ? '4px' : '0' }}
-                                    >
-                                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
-                                        {timeStats.dayTotals[dayIndex].toLocaleString()}件
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          </div>
-                          {/* 曜日ラベル */}
-                          <div className="flex justify-around mt-2 px-2">
-                            {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => (
-                              <span key={dayIndex} className={`w-[12%] text-xs text-center ${dayIndex === 0 ? 'text-red-500 font-medium' : dayIndex === 6 ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
-                                {dayNames[dayIndex]}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })()}
-                </div>
-              </div>
+              )}
             </div>
           )}
 

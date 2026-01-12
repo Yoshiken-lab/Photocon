@@ -34,6 +34,13 @@ interface Category {
   name: string
 }
 
+interface PageView {
+  id: string
+  visitor_id: string
+  accessed_at: string
+  device_type: string
+}
+
 export default async function ReportsPage() {
   const supabase = createAdminClient()
 
@@ -50,6 +57,14 @@ export default async function ReportsPage() {
     .from('categories')
     .select('id, name')
   const categoryList = categories as Category[] || []
+
+  // ページビューデータを取得（アクセス分析用）
+  const { data: pageViews } = await supabase
+    .from('page_views')
+    .select('id, visitor_id, accessed_at, device_type')
+    .order('accessed_at', { ascending: false })
+
+  const pageViewList = pageViews as PageView[] || []
 
   // 全エントリーを取得（時間帯分析・ユーザー分析用）
   const { data: allEntries } = await supabase
@@ -167,6 +182,13 @@ export default async function ReportsPage() {
     return { id: category.id, name: category.name, count }
   }).filter(c => c.count > 0)
 
+  // アクセス分析用データ
+  const accessAnalysisData = pageViewList.map(pv => ({
+    date: pv.accessed_at,
+    deviceType: pv.device_type,
+    visitorId: pv.visitor_id,
+  }))
+
   return (
     <div className="space-y-6">
       <div>
@@ -181,6 +203,7 @@ export default async function ReportsPage() {
         timeAnalysisData={timeAnalysisData}
         userStats={userStats}
         categoryStats={categoryStats}
+        accessAnalysisData={accessAnalysisData}
       />
     </div>
   )

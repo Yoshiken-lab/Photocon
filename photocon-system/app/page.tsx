@@ -5,6 +5,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import { FloatingBanner } from '@/components/FloatingBanner'
 import { EventsSection } from '@/components/EventsSection'
 import { FAQSection } from '@/components/FAQSection'
+import { PageViewTracker } from '@/components/PageViewTracker'
 
 interface Contest {
   id: string
@@ -68,6 +69,9 @@ export default async function Home() {
 
   return (
     <>
+      {/* ページビュー記録 */}
+      <PageViewTracker />
+
       {/* トップバナー */}
       <div className="fixed top-0 w-full z-50 bg-brand text-white text-center py-2 text-xs md:text-sm font-bold">
         スクールフォト！会員様限定
