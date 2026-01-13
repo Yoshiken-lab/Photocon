@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Check, X, Clock, User, Tag, Calendar, ExternalLink, ImageOff, ChevronRight, Inbox } from 'lucide-react'
 import { updateEntryStatus } from '@/app/actions/entries'
@@ -53,7 +53,103 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const router = useRouter()
 
+  // 虫眼鏡用のstate
+  const MAGNIFIER_SIZE = 144 // w-36 = 144px
+  const ZOOM_LEVEL = 2.5 // 拡大倍率
+
+  const [magnifier, setMagnifier] = useState<{
+    x: number; y: number;
+    bgX: number; bgY: number;
+    bgWidth: number; bgHeight: number;
+    show: boolean
+  }>({ x: 0, y: 0, bgX: 0, bgY: 0, bgWidth: 0, bgHeight: 0, show: false })
+  const [imageNaturalSize, setImageNaturalSize] = useState<{ width: number; height: number } | null>(null)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
+
   const selectedEntry = entries.find(e => e.id === selectedEntryId)
+
+  // 選択されたエントリーが変わったら画像の自然サイズを取得
+  useEffect(() => {
+    if (selectedEntry?.media_url) {
+      const img = new window.Image()
+      img.onload = () => {
+        setImageNaturalSize({ width: img.naturalWidth, height: img.naturalHeight })
+      }
+      img.src = selectedEntry.media_url
+    }
+    // 虫眼鏡をリセット
+    setMagnifier(prev => ({ ...prev, show: false }))
+  }, [selectedEntry?.media_url])
+
+  // 虫眼鏡のマウスイベントハンドラ
+  const handleMagnifierMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageNaturalSize || !imageContainerRef.current) {
+      setMagnifier(prev => ({ ...prev, show: false }))
+      return
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const containerWidth = rect.width
+    const containerHeight = rect.height
+
+    // 画像の自然なアスペクト比と表示領域のアスペクト比を比較
+    const imageAspect = imageNaturalSize.width / imageNaturalSize.height
+    const containerAspect = containerWidth / containerHeight
+
+    let displayWidth: number, displayHeight: number, offsetX: number, offsetY: number
+
+    if (imageAspect > containerAspect) {
+      // 画像が横長: 幅いっぱいに表示、上下に余白
+      displayWidth = containerWidth
+      displayHeight = containerWidth / imageAspect
+      offsetX = 0
+      offsetY = (containerHeight - displayHeight) / 2
+    } else {
+      // 画像が縦長: 高さいっぱいに表示、左右に余白
+      displayHeight = containerHeight
+      displayWidth = containerHeight * imageAspect
+      offsetX = (containerWidth - displayWidth) / 2
+      offsetY = 0
+    }
+
+    // マウス位置（コンテナ内）
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+
+    // マウスが画像の表示領域内かチェック
+    const isInsideImage =
+      mouseX >= offsetX &&
+      mouseX <= offsetX + displayWidth &&
+      mouseY >= offsetY &&
+      mouseY <= offsetY + displayHeight
+
+    if (!isInsideImage) {
+      setMagnifier(prev => ({ ...prev, show: false }))
+      return
+    }
+
+    // コンテナ内での位置（%）- 虫眼鏡の表示位置
+    const x = (mouseX / containerWidth) * 100
+    const y = (mouseY / containerHeight) * 100
+
+    // 画像内でのマウス位置（画像の左上からの相対位置）
+    const imageMouseX = mouseX - offsetX
+    const imageMouseY = mouseY - offsetY
+
+    // 虫眼鏡内の背景画像サイズ（表示サイズ × ズーム倍率）
+    const bgWidth = displayWidth * ZOOM_LEVEL
+    const bgHeight = displayHeight * ZOOM_LEVEL
+
+    // 背景位置の計算（マウス位置が虫眼鏡の中央に来るように）
+    const bgX = -(imageMouseX * ZOOM_LEVEL) + MAGNIFIER_SIZE / 2
+    const bgY = -(imageMouseY * ZOOM_LEVEL) + MAGNIFIER_SIZE / 2
+
+    setMagnifier({ x, y, bgX, bgY, bgWidth, bgHeight, show: true })
+  }
+
+  const handleMagnifierLeave = () => {
+    setMagnifier(prev => ({ ...prev, show: false }))
+  }
 
   // 承認・却下等の処理
   const handleProcessEntry = async (status: 'approved' | 'rejected') => {
@@ -192,8 +288,13 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
             {/* Main Content Area (Scrollable) */}
             <div className="flex-1 overflow-y-auto p-4 bg-gray-50/50">
               <div className="flex flex-col h-full">
-                {/* Large Image Preview */}
-                <div className="flex-1 flex items-center justify-center min-h-[400px] mb-4 bg-gray-200/50 rounded-xl border border-gray-200 overflow-hidden relative group">
+                {/* Large Image Preview with Magnifier */}
+                <div
+                  ref={imageContainerRef}
+                  className="flex-1 flex items-center justify-center min-h-[400px] mb-4 bg-gray-200/50 rounded-xl border border-gray-200 overflow-hidden relative group cursor-crosshair"
+                  onMouseMove={handleMagnifierMove}
+                  onMouseLeave={handleMagnifierLeave}
+                >
                   <div className="relative w-full h-full">
                     <ImageWithFallback
                       src={selectedEntry.media_url}
@@ -201,6 +302,22 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
                       className="object-contain"
                     />
                   </div>
+
+                  {/* 虫眼鏡 */}
+                  {magnifier.show && selectedEntry.media_url && (
+                    <div
+                      className="absolute w-36 h-36 rounded-full border-4 border-white shadow-2xl pointer-events-none z-10"
+                      style={{
+                        left: `${magnifier.x}%`,
+                        top: `${magnifier.y}%`,
+                        transform: 'translate(-50%, -50%)',
+                        backgroundImage: `url(${selectedEntry.media_url})`,
+                        backgroundSize: `${magnifier.bgWidth}px ${magnifier.bgHeight}px`,
+                        backgroundPosition: `${magnifier.bgX}px ${magnifier.bgY}px`,
+                        backgroundRepeat: 'no-repeat',
+                      }}
+                    />
+                  )}
                 </div>
 
                 {/* Info Cards */}
