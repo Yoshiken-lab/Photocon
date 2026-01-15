@@ -12,9 +12,9 @@ export function FooterF2() {
                     <Image
                         src="/logo.png"
                         alt="スクールフォト!"
-                        width={120}
-                        height={32}
-                        className="h-6 md:h-8 w-auto"
+                        width={180}
+                        height={40}
+                        className="h-8 md:h-10 w-auto"
                     />
                 </div>
 
