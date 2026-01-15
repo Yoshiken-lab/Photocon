@@ -54,7 +54,7 @@ export function ActiveEventF2() {
 
                     {/* Apply Now Badge (Sticker) */}
                     <div className="absolute -bottom-6 -right-2 md:bottom-8 md:-right-12 z-20 transform rotate-12 transition-transform hover:scale-110 hover:rotate-6 cursor-pointer group">
-                        <div className="bg-yellow-400 text-[#E75D2E] p-6 w-32 h-32 md:w-40 md:h-40 rounded-[2rem] shadow-lg flex flex-col items-center justify-center border-4 border-[#E75D2E] text-center relative rotate-3">
+                        <div className="bg-[#E75D2E] text-white p-6 w-32 h-32 md:w-40 md:h-40 rounded-[2rem] shadow-lg flex flex-col items-center justify-center border-4 border-[#E75D2E] text-center relative rotate-3">
                             <span className="text-xl md:text-2xl font-bold font-maru leading-tight drop-shadow-sm">
                                 今すぐ<br />応募する
                             </span>
