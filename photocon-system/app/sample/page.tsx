@@ -3,7 +3,7 @@ import { ActiveEvent } from '@/components/ActiveEvent'
 import { PastEvents } from '@/components/PastEvents'
 import { HowToApply } from '@/components/HowToApply'
 import { Prizes } from '@/components/Prizes'
-import { Requirements } from '@/components/Requirements'
+import { SampleFAQ } from '@/components/sample/SampleFAQ'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -43,7 +43,7 @@ export default function SamplePage() {
 
             <Prizes />
 
-            <Requirements />
+            <SampleFAQ />
 
         </main>
     )
