@@ -32,10 +32,10 @@ export const Hero = () => {
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
                     <div className="absolute top-12 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-12 px-8 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-6 px-24 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
                             あの日の一瞬を
                         </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-12 px-8 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-6 px-24 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
                             未来の宝物に
                         </h1>
                     </div>
