@@ -20,7 +20,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['"Noto Sans JP"', 'sans-serif'],
+        sans: ['"Yu Gothic"', '"Meiryo"', 'sans-serif'],
         maru: ['"Kiwi Maru"', 'serif'],
       },
       borderRadius: {

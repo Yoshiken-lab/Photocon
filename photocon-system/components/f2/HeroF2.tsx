@@ -131,11 +131,13 @@ export function HeroF2() {
 
 
             {/* Scroll Down Indicator */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center gap-2 animate-bounce opacity-80">
-                <div className="bg-white/20 p-2 rounded-full">
-                    <ArrowDown className="w-6 h-6" />
+            <div className="absolute bottom-6 left-0 w-full flex justify-center text-white opacity-80 pointer-events-none">
+                <div className="flex flex-col items-center gap-2 animate-bounce">
+                    <div className="bg-white/20 p-2 rounded-full">
+                        <ArrowDown className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs font-bold tracking-widest uppercase">Scroll Down</span>
                 </div>
-                <span className="text-xs font-bold tracking-widest uppercase">Scroll Down</span>
             </div>
 
             {/* Bottom Curve Divider */}
