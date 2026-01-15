@@ -59,8 +59,8 @@ export function ActiveEventF2() {
                                 今すぐ<br />応募する
                             </span>
                             {/* Star Decoration */}
-                            <Star className="text-white w-8 h-8 absolute -top-4 -right-4 fill-current rotate-12" />
-                            <Star className="text-white w-6 h-6 absolute bottom-2 -left-4 fill-current -rotate-12" />
+                            <Star className="text-yellow-300 w-8 h-8 absolute -top-4 -right-4 fill-current rotate-12" />
+                            <Star className="text-[#FFF4F0] w-6 h-6 absolute bottom-2 -left-4 fill-current -rotate-12" />
                         </div>
                     </div>
                 </div>
