@@ -62,20 +62,29 @@ export function HeroF2() {
                         </div>
                     </div>
 
-                    {/* Main Catchphrase */}
-                    <h1 className="text-4xl md:text-6xl font-bold font-maru leading-tight mt-8 drop-shadow-md">
-                        <span className="inline-block transform hover:scale-110 transition-transform">あ</span>
-                        <span className="inline-block transform hover:scale-110 transition-transform">の</span>
-                        <span className="inline-block transform hover:scale-110 transition-transform">日</span>
-                        <span className="inline-block transform hover:scale-110 transition-transform">の</span>
-                        <span className="inline-block border-2 border-white rounded px-2 mx-1 bg-white/10 rotate-3">一瞬</span>
-                        を<br />
-                        <span className="text-yellow-300">未</span>
-                        <span className="text-yellow-300">来</span>
-                        <span className="text-yellow-300">の</span>
-                        <span className="inline-block transform -rotate-2 origin-bottom-left text-5xl md:text-7xl">宝物</span>
-                        に
-                    </h1>
+                    {/* Main Catchphrase Wrapper for Badge Positioning */}
+                    <div className="relative inline-block mt-8">
+                        <h1 className="text-4xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
+                            <span className="inline-block transform hover:scale-110 transition-transform">あ</span>
+                            <span className="inline-block transform hover:scale-110 transition-transform">の</span>
+                            <span className="inline-block transform hover:scale-110 transition-transform">日</span>
+                            <span className="inline-block transform hover:scale-110 transition-transform">の</span>
+                            <span className="inline-block border-2 border-white rounded px-2 mx-1 bg-white/10 rotate-3">一瞬</span>
+                            を<br />
+                            <span className="text-yellow-300">未</span>
+                            <span className="text-yellow-300">来</span>
+                            <span className="text-yellow-300">の</span>
+                            <span className="inline-block transform -rotate-2 origin-bottom-left text-5xl md:text-7xl">宝物</span>
+                            に
+                        </h1>
+
+                        {/* Campaign Badge (Moved here) */}
+                        <div className="absolute -top-16 -right-12 md:-top-24 md:-right-32 z-20 transform rotate-12 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center border-4 border-white w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
+                            <span className="text-xs md:text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1">THEME</span>
+                            <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1">「桜」</span>
+                            <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1">2026/4/24(金)まで</span>
+                        </div>
+                    </div>
 
                     <p className="mt-8 font-bold text-lg md:text-xl tracking-wide opacity-90">
                         運動会のがんばった顔、お弁当をほおばる笑顔。<br />
@@ -116,13 +125,7 @@ export function HeroF2() {
 
             </div>
 
-            {/* Campaign Badge (Sticker style) */}
-            <div className="absolute top-24 right-4 md:right-20 lg:right-32 z-20 transform rotate-12 bg-yellow-400 text-brand-500 p-6 md:p-8 rounded-full shadow-xl flex flex-col items-center justify-center border-4 border-white w-40 h-40 md:w-48 md:h-48 animate-bounce-slow">
-                <span className="text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1">THEME</span>
-                <span className="text-3xl md:text-4xl font-bold font-maru leading-none mb-1">「桜」</span>
-                <span className="text-xs md:text-sm font-bold border-t-2 border-brand-500/30 pt-1 mt-1">2026/4/24(金)まで</span>
-                {/* Triangle pointer part of speech bubble if needed, but circle sticker is fine */}
-            </div>
+
 
             {/* Scroll Down Indicator */}
             <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center gap-2 animate-bounce opacity-80">
