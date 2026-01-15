@@ -2,7 +2,7 @@
 
 export function PrizesF2() {
     return (
-        <section className="bg-[#FFF5F0] pt-0 pb-20 px-4 relative">
+        <section className="bg-[#FFF5F0] pt-24 md:pt-40 pb-20 px-4 relative">
             <div className="max-w-4xl mx-auto">
 
                 {/* Prizes Card */}

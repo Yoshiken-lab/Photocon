@@ -44,9 +44,7 @@ export default function SampleF2Page() {
             <PastEventsF2 />
             <HowToApplyF2 />
             <FAQF2 />
-            <div className="mt-24 md:mt-40">
-                <PrizesF2 />
-            </div>
+            <PrizesF2 />
             <RequirementsF2 />
 
             {/* Footer space */}
