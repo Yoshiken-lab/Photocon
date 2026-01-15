@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 
 const faqs = [
     {
@@ -27,15 +27,12 @@ const faqs = [
 ]
 
 export const SampleFAQ = () => {
-    // 独立して開閉できるようにstate管理を個別に持つか、単にmap内でstateを持つコンポーネントに分ける
-    // ここではシンプルに各アイテムの状態を配列で持たず、個別のFAQアイテムコンポーネントを作成して状態を閉じ込めるアプローチにします。
-
     return (
         <section id="faq" className="py-20 px-4 scroll-mt-24">
-            <div className="max-w-4xl mx-auto bg-brand-50 p-8 md:p-12 rounded-[2.5rem]">
+            <div className="max-w-3xl mx-auto bg-brand-50 p-8 md:p-12 rounded-[2.5rem]">
                 <h3 className="text-center text-2xl md:text-3xl font-bold text-brand mb-10 font-maru tracking-wider">よくあるご質問</h3>
 
-                <div className="grid md:grid-cols-2 gap-x-6 gap-y-4">
+                <div className="space-y-4">
                     {faqs.map((faq, index) => (
                         <FAQItem key={index} faq={faq} />
                     ))}
@@ -49,28 +46,25 @@ const FAQItem = ({ faq }: { faq: { question: string, answer: string } }) => {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <div className={`bg-white rounded-[2rem] shadow-sm hover:shadow-md transition-all border border-transparent hover:border-brand-100 overflow-hidden flex flex-col h-full duration-300 ${isOpen ? 'ring-2 ring-brand-100' : ''}`}>
+        <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-6 py-5 flex items-start justify-between text-left gap-3 flex-1 group"
+                className="w-full px-6 py-5 flex items-center justify-between text-left gap-4"
             >
-                <span className={`font-bold font-maru text-base md:text-lg transition-colors leading-relaxed ${isOpen ? 'text-brand' : 'text-gray-700'}`}>
-                    {faq.question}
-                </span>
-                <span className={`shrink-0 mt-1 transition-transform duration-300 ${isOpen ? 'text-brand' : 'text-gray-400 group-hover:text-brand-300'}`}>
-                    {isOpen ? (
-                        <ChevronUp className="w-6 h-6" />
-                    ) : (
-                        <ChevronDown className="w-6 h-6" />
-                    )}
-                </span>
+                <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-brand-100 text-brand flex items-center justify-center shrink-0">
+                        <span className="font-bold font-maru">Q</span>
+                    </div>
+                    <span className="font-bold text-gray-700 font-maru md:text-lg">{faq.question}</span>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             <div
                 className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
             >
                 <div className="overflow-hidden">
-                    <div className="bg-brand-50/50 px-6 pb-6 pt-2 text-gray-600 text-sm leading-relaxed border-t border-dashed border-brand-100 mx-4">
+                    <div className="px-6 pb-6 pl-[4.5rem] text-gray-600 leading-relaxed text-sm md:text-base">
                         {faq.answer}
                     </div>
                 </div>
