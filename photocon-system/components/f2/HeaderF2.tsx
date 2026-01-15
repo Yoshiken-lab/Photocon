@@ -26,7 +26,7 @@ export function HeaderF2() {
                 <div className="flex items-center gap-2 relative z-50">
                     <Link href="/">
                         <Image
-                            src="/logo-f2.png"
+                            src="/logo.png"
                             alt="スクールフォト!"
                             width={180}
                             height={40}
