@@ -32,7 +32,7 @@ export const Hero = () => {
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
                     <div className="absolute top-20 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-2">
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 bg-white/90 rounded-full shadow-md mx-2">
                             <span>あ</span>
                             <span>の</span>
                             <span>日</span>
@@ -41,7 +41,7 @@ export const Hero = () => {
                             <span>瞬</span>
                             <span>を</span>
                         </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-2 mt-8 md:mt-12">
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 mt-8 md:mt-12 bg-white/90 rounded-full shadow-md mx-2">
                             <span>未</span>
                             <span>来</span>
                             <span>の</span>
@@ -53,19 +53,23 @@ export const Hero = () => {
                 </div>
 
                 {/* CTA Box - Outside and Below */}
-                <div className="relative w-full max-w-sm md:max-w-lg bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-white z-30 mt-4 ml-auto mr-4 md:mr-12 text-center mb-12">
-                    <p className="text-gray-700 text-sm md:text-base mb-6 font-medium leading-relaxed font-maru">
-                        運動会のがんばった顔、お弁当をほおばる笑顔。<br />
-                        スマホの中に眠っているお子さまのベストショットを<br />
-                        みんなでシェアして楽しみませんか？
-                    </p>
-                    <button className="w-full bg-brand hover:bg-brand-600 text-white font-bold py-4 px-6 rounded-full flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                        <span>写真を応募する</span>
-                        <div className="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </div>
-                    </button>
-                    <p className="text-xs text-right text-gray-400 mt-2">※登録は無料です。1分で完了します。</p>
+                <div className="relative w-full max-w-4xl mx-auto bg-white rounded-3xl p-6 md:p-10 shadow-xl border-4 border-white z-30 mt-4 text-left mb-12 flex flex-col md:flex-row items-center gap-8">
+                    <div className="flex-1">
+                        <p className="text-gray-700 text-sm md:text-lg mb-2 font-bold font-maru leading-relaxed">
+                            運動会のがんばった顔、お弁当をほおばる笑顔。<br />
+                            スマホの中に眠っているお子さまのベストショットを<br />
+                            みんなでシェアして楽しみませんか？
+                        </p>
+                        <p className="text-xs text-gray-400">※登録は無料です。1分で完了します。</p>
+                    </div>
+                    <div className="w-full md:w-auto shrink-0">
+                        <button className="w-full md:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-full flex items-center justify-center gap-3 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 text-lg whitespace-nowrap">
+                            <span>写真を応募する</span>
+                            <div className="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-white"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Add some bottom margin to account for the overlapping CTA */}
