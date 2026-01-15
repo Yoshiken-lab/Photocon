@@ -96,7 +96,7 @@ export function HeroF2() {
                     </p>
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-col md:flex-row gap-6 justify-center mt-12">
+                    <div className="hidden lg:flex flex-row gap-6 justify-center mt-12">
                         <button className="bg-brand-500 text-white border-4 border-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-brand-600 hover:scale-105 transition-all transform hover:-rotate-1">
                             写真を応募する
                         </button>
