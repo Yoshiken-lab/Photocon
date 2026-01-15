@@ -10,9 +10,9 @@ import Image from 'next/image'
 
 export default function SampleF2Page() {
     return (
-        <main className="min-h-screen bg-white font-sans overflow-x-hidden">
+        <main className="min-h-screen bg-white font-sans overflow-x-hidden pt-20">
             {/* Header - Simple Version for Sample F-2 */}
-            <header className="bg-brand text-white py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50 shadow-md">
+            <header className="bg-brand text-white py-4 px-6 md:px-12 flex justify-between items-center fixed top-0 w-full z-50 shadow-md">
                 <div className="flex items-center gap-2">
                     <Link href="/">
                         <Image

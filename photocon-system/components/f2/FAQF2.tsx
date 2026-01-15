@@ -57,7 +57,7 @@ const faqs = [
 
 export function FAQF2() {
     return (
-        <section className="bg-yellow-50 py-20 px-4">
+        <section className="bg-white py-20 px-4">
             <div className="max-w-5xl mx-auto">
                 {/* Section Title */}
                 <div className="text-center mb-12">
