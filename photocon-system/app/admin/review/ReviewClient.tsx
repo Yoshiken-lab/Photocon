@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import { Check, X, Clock, User, Tag, Calendar, ExternalLink, ImageOff, ChevronRight, Inbox } from 'lucide-react'
-import { updateEntryStatus } from '@/app/actions/entries'
+import { useState, useRef, MouseEvent, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { updateEntryStatus } from '@/app/actions/entries'
+import { Check, X, Inbox, User, Tag, ExternalLink, Clock, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
+import Image from 'next/image'
 
 // 画像読み込みエラー時のフォールバックコンポーネント
 function ImageWithFallback({ src, alt, className }: { src: string; alt: string; fill?: boolean; className?: string }) {
@@ -45,13 +45,24 @@ interface Entry {
 
 interface ReviewClientProps {
   entries: Entry[]
+  totalCount?: number
+  currentPage?: number
+  perPage?: number
 }
 
-export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
+export function ReviewClient({
+  entries: initialEntries,
+  totalCount = 0,
+  currentPage = 1,
+  perPage = 20
+}: ReviewClientProps) {
   const [entries, setEntries] = useState<Entry[]>(initialEntries)
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(initialEntries[0]?.id || null)
   const [isProcessing, setIsProcessing] = useState(false)
+
   const router = useRouter()
+
+  const totalPages = Math.ceil(totalCount / perPage)
 
   // 虫眼鏡用のstate
   const MAGNIFIER_SIZE = 144 // w-36 = 144px
@@ -151,6 +162,12 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
     setMagnifier(prev => ({ ...prev, show: false }))
   }
 
+  // ページ変更ハンドラ
+  const handlePageChange = (newPage: number) => {
+    router.push(`/admin/review?page=${newPage}`)
+    router.refresh()
+  }
+
   // 承認・却下等の処理
   const handleProcessEntry = async (status: 'approved' | 'rejected') => {
     if (!selectedEntryId || isProcessing) return
@@ -171,6 +188,11 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
         setSelectedEntryId(nextEntry.id)
       } else {
         setSelectedEntryId(null)
+        // ページ内のアイテムがなくなった場合、かつ次のページがあるならリロード等の処理が理想的
+        // ここではシンプルに router.refresh() することで、データが再フェッチされるのを期待する
+        if (totalPages > 1) {
+          router.refresh()
+        }
       }
 
       router.refresh()
@@ -191,6 +213,18 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
         </div>
         <h2 className="text-2xl font-bold text-gray-800 mb-2 font-maru">全て完了しました！</h2>
         <p className="text-gray-500">現在審査待ちのエントリーはありません。</p>
+
+        {/* Pagination controls even if empty (e.g. if we are on page 2 but all items processed) */}
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <button
+              onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
+              className="text-brand hover:underline"
+            >
+              前のページへ戻る
+            </button>
+          </div>
+        )}
       </div>
     )
   }
@@ -204,7 +238,7 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
           <div className="flex items-center gap-2">
             <Inbox className="w-4 h-4 text-gray-500" />
             <span className="font-bold text-gray-700">審査待ち</span>
-            <span className="bg-brand text-white text-xs px-2 py-0.5 rounded-full font-bold">{entries.length}</span>
+            <span className="bg-brand text-white text-xs px-2 py-0.5 rounded-full font-bold">{totalCount}</span>
           </div>
         </div>
 
@@ -246,6 +280,29 @@ export function ReviewClient({ entries: initialEntries }: ReviewClientProps) {
               </div>
             </button>
           ))}
+
+          {/* Pagination Controls in List Footer */}
+          {totalPages > 1 && (
+            <div className="p-4 border-t border-gray-200 flex justify-between items-center bg-gray-50 text-xs">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className="px-2 py-1 rounded bg-white border border-gray-200 disabled:opacity-50 hover:bg-gray-100"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-gray-500">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className="px-2 py-1 rounded bg-white border border-gray-200 disabled:opacity-50 hover:bg-gray-100"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

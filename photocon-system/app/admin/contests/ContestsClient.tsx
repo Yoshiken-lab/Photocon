@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Calendar, Hash, Users, Search, Filter, ChevronDown, List, LayoutGrid, Trophy, CheckCircle2, Clock } from 'lucide-react'
+import { Calendar, Hash, Users, Search, Filter, ChevronDown, List, LayoutGrid, Trophy, CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import ContestForm from './ContestForm'
 
 type Contest = {
@@ -125,13 +125,20 @@ export default function ContestsClient({ contests }: Props) {
     return counts
   }, [contests])
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+
+  // フィルタリング・ソート済みコンテスト
   const filteredContests = useMemo(() => {
     let result = [...(contests || [])]
 
+    // ステータスフィルター
     if (statusFilter) {
       result = result.filter(c => c.status === statusFilter)
     }
 
+    // テキスト検索
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(c =>
@@ -141,6 +148,7 @@ export default function ContestsClient({ contests }: Props) {
       )
     }
 
+    // ソート
     result.sort((a, b) => {
       switch (sortBy) {
         case 'created_desc': return new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
@@ -157,6 +165,41 @@ export default function ContestsClient({ contests }: Props) {
 
     return result
   }, [contests, statusFilter, searchQuery, sortBy])
+
+  // Reset page when filters change
+  // Note: we can use useEffect or just reset in handlers. useEffect is safer here to catch all changes.
+  // Using useMemo for displayedContests depends on filteredContests and currentPage.
+
+  // ページ変更時に検索条件が変わったら1ページ目に戻すためのエフェクトは、
+  // useMemoの依存配列に検索条件を入れているので、ここで明示的にsetCurrentPage(1)する必要があるか？
+  // 今回はハンドラーでセットするシンプルな方針にするか、useEffectを使うか。
+  // ここではuseEffectで reset するのが確実。
+
+  // However, cannot use useEffect inside this replace block easily if not imported.
+  // Assuming useEffect is not imported? I need to check imports.
+  // Previous file content showed `import { useState, useMemo } from 'react'`.
+  // I should update imports if I use useEffect. Or just set page to 1 in handlers.
+  // Let's modify handlers: setStatusFilter, setSearchQuery. 
+  // But wait, the handlers are inline in the JSX below.
+
+  // Better approach: Calculate displayed contests here.
+  const totalPages = Math.ceil(filteredContests.length / itemsPerPage)
+
+  // Safe page check
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), Math.max(1, totalPages === 0 ? 1 : totalPages)) // Ensure at least 1 if no items
+  if (safeCurrentPage !== currentPage && totalPages > 0) {
+    // Avoid loop, but strictly, should be handled via effect or just using safeCurrentPage for slicing.
+    // We will use safeCurrentPage for calculation.
+  }
+
+  const paginatedContests = filteredContests.slice(
+    (safeCurrentPage - 1) * itemsPerPage,
+    safeCurrentPage * itemsPerPage
+  )
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
 
   const getStatusBadge = (status: string) => {
     const option = STATUS_OPTIONS.find(o => o.value === status)
@@ -199,10 +242,13 @@ export default function ContestsClient({ contests }: Props) {
             {STATUS_OPTIONS.map((option) => (
               <button
                 key={option.value || 'all'}
-                onClick={() => setStatusFilter(option.value)}
+                onClick={() => {
+                  setStatusFilter(option.value)
+                  setCurrentPage(1) // Reset page
+                }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${statusFilter === option.value
-                    ? 'bg-brand text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-brand text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
               >
                 {option.label} ({option.value ? statusCounts[option.value] || 0 : statusCounts.all || 0})
@@ -217,7 +263,10 @@ export default function ContestsClient({ contests }: Props) {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setCurrentPage(1) // Reset page
+              }}
               placeholder="コンテスト名・テーマで検索..."
               className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand"
             />
@@ -268,8 +317,8 @@ export default function ContestsClient({ contests }: Props) {
           ? 'flex flex-col gap-6'
           : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start' // Grid layout
       }>
-        {filteredContests.length > 0 ? (
-          filteredContests.map((contest) => {
+        {paginatedContests.length > 0 ? (
+          paginatedContests.map((contest) => {
             const { phases, currentPhaseId, progressInPhase, remainingDays } = getContestProgress(contest)
 
             return (
@@ -334,8 +383,8 @@ export default function ContestsClient({ contests }: Props) {
 
                   {/* Part 2: Stepper */}
                   <div className={`flex-1 ${viewType === 'list'
-                      ? 'border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6'
-                      : 'border-t border-gray-100 pt-4 w-full'
+                    ? 'border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6'
+                    : 'border-t border-gray-100 pt-4 w-full'
                     }`}>
                     {viewType === 'list' && (
                       <div className="flex items-center justify-between mb-4">
@@ -436,6 +485,30 @@ export default function ContestsClient({ contests }: Props) {
         )}
       </div>
 
+      {/* Control Footer */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <div className="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+              className="p-2 rounded hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </button>
+            <div className="px-4 text-sm font-bold text-gray-700">
+              {safeCurrentPage} / {totalPages}
+            </div>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={safeCurrentPage >= totalPages}
+              className="p-2 rounded hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
+      )}
       <ContestForm isOpen={isFormOpen} onClose={handleClose} contest={editingContest} />
     </div>
   )

@@ -1,17 +1,26 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { ReviewClient } from './ReviewClient'
 
-export default async function ReviewPage() {
+export default async function ReviewPage({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) {
   const supabase = createAdminClient()
+  const page = Number(searchParams.page) || 1
+  const perPage = 20
+  const from = (page - 1) * perPage
+  const to = from + perPage - 1
 
-  // 審査待ちのエントリーを取得
+  // 審査待ちのエントリーを取得 (Pagination)
   const { data: entries } = await supabase
     .from('entries')
     .select('*, contests(name, theme), categories(name)')
     .eq('status', 'pending')
     .order('collected_at', { ascending: true })
+    .range(from, to)
 
-  // 審査待ち件数を取得
+  // 審査待ち総件数を取得
   const { count: pendingCount } = await supabase
     .from('entries')
     .select('*', { count: 'exact', head: true })
@@ -31,7 +40,12 @@ export default async function ReviewPage() {
         </p>
       </div>
 
-      <ReviewClient entries={entries || []} />
+      <ReviewClient
+        entries={entries || []}
+        totalCount={pendingCount || 0}
+        currentPage={page}
+        perPage={perPage}
+      />
     </div>
   )
 }
