@@ -16,9 +16,9 @@ export function PastEventsF2() {
         <section className="bg-white pb-20 px-4 overflow-hidden">
             <div className="max-w-6xl mx-auto">
                 {/* Section Title */}
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="w-6 h-6 rounded-full bg-brand-400"></div>
-                    <h2 className="text-3xl md:text-4xl font-bold font-maru text-brand-500">
+                <div className="flex items-center justify-center gap-3 mb-8">
+                    <div className="w-6 h-6 rounded-full bg-[#E75D2E]"></div>
+                    <h2 className="text-3xl md:text-4xl font-bold font-maru text-[#E75D2E]">
                         過去のイベント情報
                     </h2>
                 </div>

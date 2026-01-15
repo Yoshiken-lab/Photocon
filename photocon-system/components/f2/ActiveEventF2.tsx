@@ -8,9 +8,9 @@ export function ActiveEventF2() {
             <div className="max-w-6xl mx-auto">
 
                 {/* Section Title */}
-                <div className="flex items-center gap-3 mb-12">
-                    <div className="w-6 h-6 rounded-full bg-brand-400"></div>
-                    <h2 className="text-3xl md:text-4xl font-bold font-maru text-brand-500">
+                <div className="flex items-center justify-center gap-3 mb-12">
+                    <div className="w-6 h-6 rounded-full bg-[#E75D2E]"></div>
+                    <h2 className="text-3xl md:text-4xl font-bold font-maru text-[#E75D2E]">
                         開催中のイベント
                     </h2>
                 </div>

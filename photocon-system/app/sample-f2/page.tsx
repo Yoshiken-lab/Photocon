@@ -14,16 +14,13 @@ export default function SampleF2Page() {
             <header className="bg-brand text-white py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50 shadow-md">
                 <div className="flex items-center gap-2">
                     <Link href="/">
-                        {/* Assuming white logo variant or using text if not available, will use filter for now or just text if logo is image */}
-                        <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <Image
-                                src="/logo.png"
-                                alt="スクールフォト!"
-                                width={120}
-                                height={30}
-                                className="h-8 w-auto brightness-0 invert"
-                            />
-                        </div>
+                        <Image
+                            src="/logo.png"
+                            alt="スクールフォト!"
+                            width={180}
+                            height={40}
+                            className="h-10 w-auto"
+                        />
                     </Link>
                 </div>
                 <nav className="hidden md:flex gap-6 font-bold text-sm tracking-wider">
