@@ -85,7 +85,7 @@ export function HeroF2() {
                             <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
 
                             {/* Speech Bubble Tail (Small Triangle) */}
-                            <div className="absolute bottom-4 -left-1 w-0 h-0 border-t-[24px] border-t-yellow-400 border-x-[12px] border-x-transparent rotate-[60deg]"></div>
+                            <div className="absolute bottom-7 left-1 w-0 h-0 border-t-[24px] border-t-yellow-400 border-x-[12px] border-x-transparent rotate-[60deg]"></div>
                         </div>
                     </div>
 
