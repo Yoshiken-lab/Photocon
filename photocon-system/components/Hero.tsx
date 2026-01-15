@@ -1,6 +1,6 @@
 'use client'
 
-import { Camera } from 'lucide-react'
+import { Camera, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 
 export const Hero = () => {
