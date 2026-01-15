@@ -5,28 +5,28 @@ import Image from 'next/image'
 
 export function HeroF2() {
     return (
-        <section className="relative bg-[#FFF4F0] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center py-20">
+        <section className="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center py-20">
 
             {/* Decorative Stars (Background) */}
-            <div className="absolute top-10 right-10 text-brand-200 transform rotate-12">
+            <div className="absolute top-10 right-10 text-white/20 transform rotate-12">
                 <StarIcon size={120} />
             </div>
-            <div className="absolute top-1/4 right-32 text-yellow-400/40 transform -rotate-12">
+            <div className="absolute top-1/4 right-32 text-yellow-300/40 transform -rotate-12">
                 <StarIcon size={40} filled />
             </div>
-            <div className="absolute bottom-20 left-10 text-brand-200 transform -rotate-12">
+            <div className="absolute bottom-20 left-10 text-white/20 transform -rotate-12">
                 <StarIcon size={80} />
             </div>
-            <div className="absolute bottom-40 left-32 text-brand-100 transform rotate-45">
+            <div className="absolute bottom-40 left-32 text-white/10 transform rotate-45">
                 <StarIcon size={50} />
             </div>
-            <div className="absolute top-20 left-1/4 text-brand-100 transform rotate-45">
+            <div className="absolute top-20 left-1/4 text-white/10 transform rotate-45">
                 <StarIcon size={30} />
             </div>
             <div className="absolute top-40 left-20 text-yellow-400/80 transform rotate-45 animate-pulse">
                 <StarIcon size={40} />
             </div>
-            <div className="absolute bottom-1/3 right-10 text-brand-100 transform rotate-12">
+            <div className="absolute bottom-1/3 right-10 text-white/10 transform rotate-12">
                 <StarIcon size={60} />
             </div>
 
@@ -47,7 +47,7 @@ export function HeroF2() {
                 </div>
 
                 {/* Center Text Area */}
-                <div className="flex-1 text-center text-gray-700 relative">
+                <div className="flex-1 text-center text-white relative">
 
                     {/* Floating Camera Illustration (Center Top) */}
                     <div className="mb-0 mx-auto w-32 h-32 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
@@ -57,23 +57,23 @@ export function HeroF2() {
                         {/* Flash/Button details */}
                         <div className="absolute -top-2 right-4 w-6 h-4 bg-red-500 rounded-t-lg"></div>
                         {/* Shine marks */}
-                        <div className="absolute -top-8 -right-8 text-yellow-500">
+                        <div className="absolute -top-8 -right-8 text-yellow-400">
                             <SparkleIcon />
                         </div>
                     </div>
 
                     {/* Main Catchphrase Wrapper for Badge Positioning */}
                     <div className="relative inline-block mt-8">
-                        <h1 className="text-4xl md:text-6xl font-bold font-maru leading-tight drop-shadow-sm text-brand-500">
+                        <h1 className="text-4xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
                             <span className="inline-block transform hover:scale-110 transition-transform">あ</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">の</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">日</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">の</span>
                             <span className="inline-block mx-1 rotate-3">一瞬</span>
                             を<br />
-                            <span className="text-yellow-500">未</span>
-                            <span className="text-yellow-500">来</span>
-                            <span className="text-yellow-500">の</span>
+                            <span className="text-yellow-300">未</span>
+                            <span className="text-yellow-300">来</span>
+                            <span className="text-yellow-300">の</span>
                             <span className="inline-block transform -rotate-2 origin-bottom-left text-5xl md:text-7xl">宝物</span>
                             に
                         </h1>
@@ -89,7 +89,7 @@ export function HeroF2() {
                         </div>
                     </div>
 
-                    <p className="mt-8 font-bold text-lg md:text-xl tracking-wide text-gray-600">
+                    <p className="mt-8 font-bold text-lg md:text-xl tracking-wide opacity-90">
                         運動会のがんばった顔、お弁当をほおばる笑顔。<br />
                         スマホの中に眠っているお子さまのベストショットを<br />
                         みんなでシェアして楽しみませんか？
@@ -100,12 +100,12 @@ export function HeroF2() {
                         <button className="bg-brand-500 text-white border-4 border-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-brand-600 hover:scale-105 transition-all transform hover:-rotate-1">
                             写真を応募する
                         </button>
-                        <button className="bg-white text-brand-500 border-2 border-brand-500 px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-gray-50 hover:scale-105 transition-all transform hover:rotate-1">
+                        <button className="bg-white text-brand px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-gray-100 hover:scale-105 transition-all transform hover:rotate-1">
                             作品を見る
                         </button>
                     </div>
 
-                    <p className="mt-4 text-sm text-gray-500 font-bold">
+                    <p className="mt-4 text-sm text-white/80 font-bold">
                         ※登録は無料です。1分で完了します。
                     </p>
 
@@ -131,8 +131,8 @@ export function HeroF2() {
 
 
             {/* Scroll Down Indicator */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-brand-300 flex flex-col items-center gap-2 animate-bounce opacity-80">
-                <div className="bg-brand-100 p-2 rounded-full">
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center gap-2 animate-bounce opacity-80">
+                <div className="bg-white/20 p-2 rounded-full">
                     <ArrowDown className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-bold tracking-widest uppercase">Scroll Down</span>
