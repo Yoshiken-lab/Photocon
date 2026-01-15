@@ -71,6 +71,7 @@ export const Hero = () => {
                 {/* Add some bottom margin to account for the overlapping CTA */}
                 <div className="h-20"></div>
 
+            </div>
         </section>
     )
 }
