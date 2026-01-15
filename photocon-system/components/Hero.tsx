@@ -49,23 +49,23 @@ export const Hero = () => {
                     </div>
                 </div>
 
-                {/* CTA Box - Outside and Below */}
-                <div className="relative w-full max-w-4xl ml-auto mr-4 md:mr-12 bg-white rounded-3xl p-6 md:p-10 shadow-xl border-4 border-white z-30 mt-4 text-left mb-12 flex flex-col md:flex-row items-center gap-8">
-                    <div className="flex-1">
-                        <p className="text-gray-700 text-sm md:text-lg mb-2 font-bold font-maru leading-relaxed">
-                            運動会のがんばった顔、お弁当をほおばる笑顔。<br />
-                            スマホの中に眠っているお子さまのベストショットを<br />
-                            みんなでシェアして楽しみませんか？
-                        </p>
-                        <p className="text-xs text-gray-400">※登録は無料です。1分で完了します。</p>
-                    </div>
-                    <div className="w-full md:w-auto shrink-0">
-                        <button className="w-full md:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-full flex items-center justify-center gap-3 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 text-lg whitespace-nowrap">
-                            <span>写真を応募する</span>
-                            <div className="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-white"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </div>
-                        </button>
+                {/* CTA Section - Option 3: Glass Float Compact */}
+                <div className="relative z-20 mt-4 ml-auto mr-4 md:mr-12 max-w-3xl">
+                    <div className="bg-white/95 backdrop-blur-sm border border-white/50 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-center gap-6">
+                        <div className="flex-1 space-y-1 text-center md:text-left">
+                            <p className="font-bold text-gray-700 text-sm md:text-base leading-relaxed">
+                                運動会のがんばった顔、お弁当をほおばる笑顔。<br className="hidden md:block" />
+                                スマホの中に眠っているお子さまのベストショットを<br className="hidden md:block" />
+                                みんなでシェアして楽しみませんか？
+                            </p>
+                            <p className="text-[10px] md:text-xs text-gray-500">※登録は無料です。1分で完了します。</p>
+                        </div>
+                        <div className="w-full md:w-auto shrink-0">
+                            <button className="w-full md:w-auto bg-brand text-white px-6 py-2.5 rounded-lg font-bold text-sm md:text-base shadow-sm hover:bg-brand-600 transition-colors flex items-center justify-center gap-2">
+                                写真を応募する
+                                <ArrowRight className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
