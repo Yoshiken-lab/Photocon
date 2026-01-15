@@ -79,13 +79,13 @@ export function HeroF2() {
                         </h1>
 
                         {/* Campaign Badge (Speech Bubble Style) */}
-                        <div className="absolute -top-24 -right-8 md:-top-32 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
+                        <div className="absolute -top-32 -right-8 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
                             <span className="text-xs md:text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1 relative z-10">THEME</span>
                             <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
                             <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
 
-                            {/* Speech Bubble Tail (Small Triangle) */}
-                            <div className="absolute bottom-7 left-1 w-0 h-0 border-t-[24px] border-t-yellow-400 border-x-[12px] border-x-transparent rotate-[60deg]"></div>
+                            {/* Speech Bubble Tail (Large Triangle) */}
+                            <div className="absolute bottom-10 -left-6 w-0 h-0 border-t-[72px] border-t-yellow-400 border-x-[36px] border-x-transparent rotate-[60deg]"></div>
                         </div>
                     </div>
 
