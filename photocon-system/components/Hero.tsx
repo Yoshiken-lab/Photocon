@@ -31,16 +31,8 @@ export const Hero = () => {
                     </div>
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
-                    <div className="absolute top-12 left-10 md:top-16 md:left-20 z-10 flex gap-6 md:gap-8 select-none pointer-events-none" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm flex gap-6 text-gray-800 py-2">
-                            <span>未</span>
-                            <span>来</span>
-                            <span>の</span>
-                            <span>宝</span>
-                            <span>物</span>
-                            <span>に</span>
-                        </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm flex gap-6 text-gray-800 mt-12 md:mt-20 py-2">
+                    <div className="absolute top-20 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-2">
                             <span>あ</span>
                             <span>の</span>
                             <span>日</span>
@@ -49,11 +41,19 @@ export const Hero = () => {
                             <span>瞬</span>
                             <span>を</span>
                         </h1>
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-2 mt-8 md:mt-12">
+                            <span>未</span>
+                            <span>来</span>
+                            <span>の</span>
+                            <span>宝</span>
+                            <span>物</span>
+                            <span>に</span>
+                        </h1>
                     </div>
                 </div>
 
-                {/* CTA Box - Outside and Below with overlap */}
-                <div className="relative w-full max-w-sm md:max-w-lg bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-white z-30 -mt-24 ml-auto mr-4 md:mr-12 text-center">
+                {/* CTA Box - Outside and Below */}
+                <div className="relative w-full max-w-sm md:max-w-lg bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-white z-30 mt-4 ml-auto mr-4 md:mr-12 text-center mb-12">
                     <p className="text-gray-700 text-sm md:text-base mb-6 font-medium leading-relaxed font-maru">
                         運動会のがんばった顔、お弁当をほおばる笑顔。<br />
                         スマホの中に眠っているお子さまのベストショットを<br />
