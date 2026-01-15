@@ -18,7 +18,7 @@ export const Hero = () => {
             <div className="max-w-6xl mx-auto relative">
                 <div className="bg-gray-200 rounded-[3rem] overflow-hidden shadow-lg relative h-[500px] md:h-[600px] w-full">
                     {/* Decorative Camera */}
-                    <div className="absolute bottom-10 left-10 md:left-20 transform -rotate-12 z-20">
+                    <div className="absolute bottom-6 left-10 md:left-20 transform -rotate-12 z-20">
                         <div className="relative w-32 h-24 bg-gray-700 rounded-xl flex items-center justify-center">
                             <div className="w-12 h-12 rounded-full border-4 border-white bg-gray-600"></div>
                             <div className="absolute -top-3 right-4 w-8 h-3 bg-gray-700 rounded-t"></div>
@@ -31,11 +31,11 @@ export const Hero = () => {
                     </div>
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
-                    <div className="absolute top-20 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
+                    <div className="absolute top-12 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-8 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
                             あの日の一瞬を
                         </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-8 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
                             未来の宝物に
                         </h1>
                     </div>
