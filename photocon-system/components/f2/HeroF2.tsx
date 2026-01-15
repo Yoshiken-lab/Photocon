@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export function HeroF2() {
     return (
-        <section className="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center pt-32 pb-20">
+        <section className="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center pt-20 pb-16 md:pt-32 md:pb-20">
 
             {/* Decorative Stars (Background) */}
             <div className="absolute top-10 right-10 text-white/20 transform rotate-12">
@@ -31,40 +31,39 @@ export function HeroF2() {
             </div>
 
             {/* Main Content Container */}
-            <div className="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
 
                 {/* Left Polaroid (Desktop) / Top (Mobile) */}
-                <div className="relative transform -rotate-6 md:-rotate-12 transition-transform hover:rotate-0 duration-500 w-64 md:w-80 shrink-0">
-                    <div className="bg-white p-4 pb-12 shadow-xl rotate-3">
+                <div className="relative transform -rotate-6 md:-rotate-12 transition-transform hover:rotate-0 duration-500 w-40 md:w-80 shrink-0">
+                    <div className="bg-white p-3 md:p-4 pb-10 md:pb-12 shadow-xl rotate-3">
                         <div className="bg-gray-200 w-full aspect-[3/4] overflow-hidden relative">
                             {/* Placeholder for joyful kid photo */}
                             <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                                <Camera className="w-12 h-12 opacity-50" />
+                                <Camera className="w-8 h-8 md:w-12 md:h-12 opacity-50" />
                             </div>
                         </div>
                     </div>
-                    {/* Tape or detail could go here */}
                 </div>
 
                 {/* Center Text Area */}
                 <div className="flex-1 text-center text-white relative">
 
                     {/* Floating Camera Illustration (Center Top) */}
-                    <div className="mb-0 mx-auto w-32 h-32 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
-                        <div className="w-20 h-20 bg-gray-900 rounded-full border-4 border-gray-700 flex items-center justify-center">
-                            <div className="w-8 h-8 bg-gray-900 rounded-full bg-white/20"></div>
+                    <div className="mb-0 mx-auto w-24 h-24 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-900 rounded-full border-4 border-gray-700 flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-900 rounded-full bg-white/20"></div>
                         </div>
                         {/* Flash/Button details */}
-                        <div className="absolute -top-2 right-4 w-6 h-4 bg-red-500 rounded-t-lg"></div>
+                        <div className="absolute -top-2 right-4 w-4 h-3 md:w-6 md:h-4 bg-red-500 rounded-t-lg"></div>
                         {/* Shine marks */}
-                        <div className="absolute -top-8 -right-8 text-yellow-400">
+                        <div className="absolute -top-6 -right-6 md:-top-8 md:-right-8 text-yellow-400">
                             <SparkleIcon />
                         </div>
                     </div>
 
                     {/* Main Catchphrase Wrapper for Badge Positioning */}
-                    <div className="relative inline-block mt-8">
-                        <h1 className="text-4xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
+                    <div className="relative inline-block mt-4 md:mt-8">
+                        <h1 className="text-3xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
                             <span className="inline-block transform hover:scale-110 transition-transform">あ</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">の</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">日</span>
@@ -74,26 +73,32 @@ export function HeroF2() {
                             <span className="text-yellow-300">未</span>
                             <span className="text-yellow-300">来</span>
                             <span className="text-yellow-300">の</span>
-                            <span className="inline-block transform -rotate-2 origin-bottom-left text-5xl md:text-7xl">宝物</span>
+                            <span className="inline-block transform -rotate-2 origin-bottom-left text-4xl md:text-7xl">宝物</span>
                             に
                         </h1>
 
                         {/* Campaign Badge (Speech Bubble Style) */}
-                        <div className="absolute -top-32 -right-8 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
-                            <span className="text-xs md:text-sm font-bold tracking-widest mb-1 relative z-10">テーマ</span>
-                            <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
-                            <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
+                        <div className="absolute -top-24 -right-4 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-3 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-24 h-24 md:w-44 md:h-44 animate-bounce-slow">
+                            <span className="text-[10px] md:text-sm font-bold tracking-widest mb-1 relative z-10">テーマ</span>
+                            <span className="text-lg md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
+                            <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">4/24まで</span>
 
                             {/* Speech Bubble Tail (Large Triangle) */}
-                            <div className="absolute -bottom-2 left-4 w-0 h-0 border-t-[72px] border-t-yellow-400 border-x-[36px] border-x-transparent rotate-[15deg]"></div>
+                            <div className="absolute -bottom-2 left-4 w-0 h-0 border-t-[48px] md:border-t-[72px] border-t-yellow-400 border-x-[24px] md:border-x-[36px] border-x-transparent rotate-[15deg]"></div>
                         </div>
                     </div>
 
-                    <p className="mt-8 font-bold text-lg md:text-xl tracking-wide opacity-90">
+                    <p className="mt-4 md:mt-8 font-bold text-sm md:text-xl tracking-wide opacity-90 hidden md:block">
                         運動会のがんばった顔、お弁当をほおばる笑顔。<br />
                         スマホの中に眠っているお子さまのベストショットを<br />
                         みんなでシェアして楽しみませんか？
                     </p>
+                    {/* Mobile simplified text */}
+                    <p className="mt-4 font-bold text-sm tracking-wide opacity-90 md:hidden">
+                        スマホの中のベストショットを<br />
+                        みんなでシェアしませんか？
+                    </p>
+
 
                     {/* CTA Buttons */}
                     <div className="hidden lg:flex flex-row gap-6 justify-center mt-12">
@@ -105,7 +110,7 @@ export function HeroF2() {
                         </button>
                     </div>
 
-                    <p className="mt-4 text-sm text-white/80 font-bold">
+                    <p className="mt-4 text-xs md:text-sm text-white/80 font-bold">
                         ※登録は無料です。1分で完了します。
                     </p>
 
