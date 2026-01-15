@@ -33,11 +33,10 @@ export function HeroF2() {
             {/* Main Content Container */}
             <div className="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
 
-                {/* Left Polaroid (Desktop) / Top (Mobile) */}
-                <div className="relative transform -rotate-6 md:-rotate-12 transition-transform hover:rotate-0 duration-500 w-40 md:w-80 shrink-0">
-                    <div className="bg-white p-3 md:p-4 pb-10 md:pb-12 shadow-xl rotate-3">
+                {/* Left Polaroid */}
+                <div className="absolute top-24 -left-6 md:relative md:top-auto md:left-auto md:transform md:-rotate-12 transition-transform hover:rotate-0 duration-500 w-44 md:w-80 shrink-0 z-0 md:z-auto rotate-[-15deg] opacity-80 md:opacity-100">
+                    <div className="bg-white p-2 md:p-4 pb-8 md:pb-12 shadow-xl">
                         <div className="bg-gray-200 w-full aspect-[3/4] overflow-hidden relative">
-                            {/* Placeholder for joyful kid photo */}
                             <div className="absolute inset-0 flex items-center justify-center text-gray-400">
                                 <Camera className="w-8 h-8 md:w-12 md:h-12 opacity-50" />
                             </div>
@@ -46,7 +45,7 @@ export function HeroF2() {
                 </div>
 
                 {/* Center Text Area */}
-                <div className="flex-1 text-center text-white relative">
+                <div className="flex-1 text-center text-white relative z-10">
 
                     {/* Floating Camera Illustration (Center Top) */}
                     <div className="mb-0 mx-auto w-24 h-24 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
@@ -111,17 +110,13 @@ export function HeroF2() {
                 </div>
 
                 {/* Right Polaroid */}
-                <div className="relative transform rotate-6 md:rotate-12 transition-transform hover:rotate-0 duration-500 w-64 md:w-80 shrink-0 hidden md:block">
-                    <div className="bg-white p-4 pb-12 shadow-xl -rotate-2">
+                <div className="absolute top-32 -right-6 md:relative md:top-auto md:left-auto md:transform md:rotate-12 transition-transform hover:rotate-0 duration-500 w-44 md:w-80 shrink-0 z-0 md:z-auto rotate-[10deg] opacity-80 md:opacity-100 md:block">
+                    <div className="bg-white p-2 md:p-4 pb-8 md:pb-12 shadow-xl md:-rotate-2">
                         <div className="bg-gray-200 w-full aspect-[3/4] overflow-hidden relative">
                             <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                                <Camera className="w-12 h-12 opacity-50" />
+                                <Camera className="w-8 h-8 md:w-12 md:h-12 opacity-50" />
                             </div>
                         </div>
-                    </div>
-                    {/* Sticker decoration */}
-                    <div className="absolute -top-4 -right-4 text-yellow-400 transform rotate-12">
-                        <StarIcon size={64} filled />
                     </div>
                 </div>
 
