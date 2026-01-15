@@ -54,14 +54,12 @@ export const Hero = () => {
                     <div className="bg-white/95 backdrop-blur-sm border border-white/50 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-center gap-6">
                         <div className="flex-1 space-y-1 text-center md:text-left">
                             <p className="font-bold text-gray-700 text-sm md:text-base leading-relaxed">
-                                運動会のがんばった顔、お弁当をほおばる笑顔。<br className="hidden md:block" />
-                                スマホの中に眠っているお子さまのベストショットを<br className="hidden md:block" />
-                                みんなでシェアして楽しみませんか？
+                                スマホに眠るお子さまのベストショットをシェアしませんか？
                             </p>
                             <p className="text-[10px] md:text-xs text-gray-500">※登録は無料です。1分で完了します。</p>
                         </div>
                         <div className="w-full md:w-auto shrink-0">
-                            <button className="w-full md:w-auto bg-brand text-white px-6 py-2.5 rounded-lg font-bold text-sm md:text-base shadow-sm hover:bg-brand-600 transition-colors flex items-center justify-center gap-2">
+                            <button className="w-full md:w-auto bg-brand text-white px-6 py-2.5 rounded-full font-bold text-sm md:text-base shadow-sm hover:bg-brand-600 transition-colors flex items-center justify-center gap-2">
                                 写真を応募する
                                 <ArrowRight className="w-4 h-4" />
                             </button>
