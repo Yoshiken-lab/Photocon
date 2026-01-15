@@ -9,6 +9,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import { HeaderF2 } from '@/components/f2/HeaderF2'
+import { FooterF2 } from '@/components/f2/FooterF2'
 
 export default function SampleF2Page() {
     return (
@@ -25,9 +26,7 @@ export default function SampleF2Page() {
             <PrizesF2 />
             <RequirementsF2 />
 
-            {/* Footer space */}
-            <div className="pb-20 bg-[#FFF5F0]"></div>
-
+            <FooterF2 />
         </main>
     )
 }
