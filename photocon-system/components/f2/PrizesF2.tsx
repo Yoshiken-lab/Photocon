@@ -13,7 +13,7 @@ export function PrizesF2() {
 
                     {/* Ribbon/Title */}
                     <div className="text-3xl md:text-4xl font-bold font-maru text-brand-500 mb-12 relative z-10">
-                        入選特典
+                        入賞特典
                     </div>
 
                     {/* Badge */}
@@ -24,7 +24,7 @@ export function PrizesF2() {
 
                     <div className="space-y-2">
                         <h3 className="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-relaxed">
-                            「家族で使えるお食事券」など
+                            入賞者には「スクールフォト！お値引きクーポン」など
                         </h3>
                         <p className="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-relaxed">
                             素敵なプレゼントをご用意しています。

@@ -29,7 +29,7 @@ export function PastEventsF2() {
                         {pastEvents.map((event, index) => (
                             <div
                                 key={index}
-                                className="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-300 rounded-3xl p-6 bg-white hover:shadow-lg transition-shadow flex flex-col justify-between min-h-[280px]"
+                                className="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white hover:shadow-lg transition-shadow flex flex-col justify-between min-h-[280px]"
                             >
                                 <div>
                                     <h3 className="text-xl md:text-2xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru truncate">

@@ -69,7 +69,7 @@ export function HeroF2() {
                             <span className="inline-block transform hover:scale-110 transition-transform">の</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">日</span>
                             <span className="inline-block transform hover:scale-110 transition-transform">の</span>
-                            <span className="inline-block border-2 border-white rounded px-2 mx-1 bg-white/10 rotate-3">一瞬</span>
+                            <span className="inline-block mx-1 rotate-3">一瞬</span>
                             を<br />
                             <span className="text-yellow-300">未</span>
                             <span className="text-yellow-300">来</span>
@@ -80,7 +80,7 @@ export function HeroF2() {
 
                         {/* Campaign Badge (Speech Bubble Style) */}
                         <div className="absolute -top-32 -right-8 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
-                            <span className="text-xs md:text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1 relative z-10">THEME</span>
+                            <span className="text-xs md:text-sm font-bold tracking-widest mb-1 relative z-10">テーマ</span>
                             <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
                             <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
 

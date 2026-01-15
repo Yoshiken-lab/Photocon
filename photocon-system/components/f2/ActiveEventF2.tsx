@@ -17,7 +17,7 @@ export function ActiveEventF2() {
 
                 {/* Main Event Card */}
                 <div className="relative">
-                    <div className="border-4 border-brand-300 rounded-[3rem] p-8 md:p-12 relative bg-white z-10 flex flex-col md:flex-row gap-8 items-stretch">
+                    <div className="border-4 border-brand-200 rounded-[3rem] p-8 md:p-12 relative bg-white z-10 flex flex-col md:flex-row gap-8 items-stretch">
 
                         {/* Text Content */}
                         <div className="flex-1 space-y-6">
