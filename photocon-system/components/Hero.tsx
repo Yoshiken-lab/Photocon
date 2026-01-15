@@ -32,28 +32,17 @@ export const Hero = () => {
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
                     <div className="absolute top-20 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 bg-white/90 rounded-full shadow-md mx-2">
-                            <span>あ</span>
-                            <span>の</span>
-                            <span>日</span>
-                            <span>の</span>
-                            <span>一</span>
-                            <span>瞬</span>
-                            <span>を</span>
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 bg-white/90 rounded-lg shadow-md mx-2">
+                            あの日の一瞬を
                         </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 mt-8 md:mt-12 bg-white/90 rounded-full shadow-md mx-2">
-                            <span>未</span>
-                            <span>来</span>
-                            <span>の</span>
-                            <span>宝</span>
-                            <span>物</span>
-                            <span>に</span>
+                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-3 px-6 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2">
+                            未来の宝物に
                         </h1>
                     </div>
                 </div>
 
                 {/* CTA Box - Outside and Below */}
-                <div className="relative w-full max-w-4xl mx-auto bg-white rounded-3xl p-6 md:p-10 shadow-xl border-4 border-white z-30 mt-4 text-left mb-12 flex flex-col md:flex-row items-center gap-8">
+                <div className="relative w-full max-w-4xl ml-auto mr-4 md:mr-12 bg-white rounded-3xl p-6 md:p-10 shadow-xl border-4 border-white z-30 mt-4 text-left mb-12 flex flex-col md:flex-row items-center gap-8">
                     <div className="flex-1">
                         <p className="text-gray-700 text-sm md:text-lg mb-2 font-bold font-maru leading-relaxed">
                             運動会のがんばった顔、お弁当をほおばる笑顔。<br />
