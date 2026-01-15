@@ -11,11 +11,23 @@ export function HeroF2() {
             <div className="absolute top-10 right-10 text-white/20 transform rotate-12">
                 <StarIcon size={120} />
             </div>
+            <div className="absolute top-1/4 right-32 text-yellow-300/40 transform -rotate-12">
+                <StarIcon size={40} filled />
+            </div>
             <div className="absolute bottom-20 left-10 text-white/20 transform -rotate-12">
                 <StarIcon size={80} />
             </div>
+            <div className="absolute bottom-40 left-32 text-white/10 transform rotate-45">
+                <StarIcon size={50} />
+            </div>
+            <div className="absolute top-20 left-1/4 text-white/10 transform rotate-45">
+                <StarIcon size={30} />
+            </div>
             <div className="absolute top-40 left-20 text-yellow-400/80 transform rotate-45 animate-pulse">
                 <StarIcon size={40} />
+            </div>
+            <div className="absolute bottom-1/3 right-10 text-white/10 transform rotate-12">
+                <StarIcon size={60} />
             </div>
 
             {/* Main Content Container */}
