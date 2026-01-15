@@ -88,15 +88,9 @@ export function HeroF2() {
                         </div>
                     </div>
 
-                    <p className="mt-4 md:mt-8 font-bold text-sm md:text-xl tracking-wide opacity-90 hidden md:block">
-                        運動会のがんばった顔、お弁当をほおばる笑顔。<br />
+                    <p className="mt-4 md:mt-8 font-bold text-sm md:text-xl tracking-wide opacity-90">
                         スマホの中に眠っているお子さまのベストショットを<br />
                         みんなでシェアして楽しみませんか？
-                    </p>
-                    {/* Mobile simplified text */}
-                    <p className="mt-4 font-bold text-sm tracking-wide opacity-90 md:hidden">
-                        スマホの中のベストショットを<br />
-                        みんなでシェアしませんか？
                     </p>
 
 
