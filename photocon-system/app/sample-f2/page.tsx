@@ -41,6 +41,7 @@ export default function SampleF2Page() {
             <ActiveEventF2 />
             <PastEventsF2 />
             <HowToApplyF2 />
+            <FAQF2 />
             <PrizesF2 />
             <RequirementsF2 />
 
