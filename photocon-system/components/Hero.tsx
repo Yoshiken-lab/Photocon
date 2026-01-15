@@ -34,14 +34,14 @@ export const Hero = () => {
                     <div className="absolute top-12 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
                         {/* First Line */}
                         <div className="relative mx-2">
-                            <div className="absolute inset-y-0 inset-x-[-1.5rem] bg-white/90 rounded-lg shadow-md"></div>
+                            <div className="absolute inset-y-2 inset-x-[-1.5rem] bg-white/90 rounded-lg shadow-md"></div>
                             <h1 className="relative text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-6 whitespace-nowrap">
                                 あの日の一瞬を
                             </h1>
                         </div>
                         {/* Second Line */}
                         <div className="relative mx-2 mt-8 md:mt-12">
-                            <div className="absolute inset-y-0 inset-x-[-1.5rem] bg-white/90 rounded-lg shadow-md"></div>
+                            <div className="absolute inset-y-2 inset-x-[-1.5rem] bg-white/90 rounded-lg shadow-md"></div>
                             <h1 className="relative text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-6 whitespace-nowrap">
                                 未来の宝物に
                             </h1>
