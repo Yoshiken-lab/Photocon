@@ -13,10 +13,15 @@ export default function SamplePage() {
             {/* Sample Header (Simplified) */}
             <header className="bg-white py-4 px-6 md:px-12 flex justify-between items-center shadow-sm sticky top-0 z-50">
                 <div className="flex items-center gap-2">
-                    {/* Logo Placeholder */}
-                    <div className="text-xl md:text-2xl font-bold font-maru text-gray-800 flex items-center gap-2">
-                        <span className="text-brand">📷</span> スクールフォト！<span className="text-blue-500 text-sm md:text-xl">フォトコンテスト</span>
-                    </div>
+                    <Link href="/">
+                        <Image
+                            src="/logo.png"
+                            alt="スクールフォト!"
+                            width={160}
+                            height={40}
+                            className="h-8 md:h-10 w-auto"
+                        />
+                    </Link>
                 </div>
                 <div className="flex gap-4">
                     <button className="bg-brand text-white px-4 py-2 md:px-8 md:py-3 rounded-full font-bold hover:bg-brand-600 transition-colors text-sm md:text-base border-2 border-white shadow-md">
