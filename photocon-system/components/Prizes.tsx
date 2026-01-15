@@ -25,16 +25,17 @@ export const Prizes = () => {
                         </svg>
                     </div>
 
-                    <div className="mt-12 mb-8">
-                        <div className="inline-block bg-yellow-400 text-white font-bold py-2 px-8 rounded-full mb-6 relative shadow-md">
-                            入選者 ● 名様に
-                            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-yellow-400 rotate-45"></div>
-                        </div>
-
-                        <h3 className="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-loose">
-                            「家族で使えるお食事券」など<br />
+                    {/* タイトル */}
+                    <div className="text-center mb-16 relative z-10 mt-12">
+                        <span className="block text-xl font-bold text-brand font-maru mb-2 tracking-widest">PRIZES</span>
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 font-maru tracking-wider">
+                            入賞特典
+                        </h2>
+                        <div className="w-16 h-1 bg-brand mx-auto mt-6 rounded-full"></div>
+                        <p className="mt-6 text-gray-600 font-medium">
+                            スクールフォトでご利用可能なお得なクーポンなど、<br className="hidden md:block" />
                             素敵なプレゼントをご用意しています。
-                        </h3>
+                        </p>
                     </div>
 
                     {/* Confetti squares */}
