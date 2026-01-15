@@ -78,11 +78,14 @@ export function HeroF2() {
                             に
                         </h1>
 
-                        {/* Campaign Badge (Moved here) */}
-                        <div className="absolute -top-16 -right-12 md:-top-24 md:-right-32 z-20 transform rotate-12 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center border-4 border-white w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
-                            <span className="text-xs md:text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1">THEME</span>
-                            <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1">「桜」</span>
-                            <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1">2026/4/24(金)まで</span>
+                        {/* Campaign Badge (Speech Bubble Style) */}
+                        <div className="absolute -top-24 -right-8 md:-top-32 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-brand-500 p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center border-4 border-white w-32 h-32 md:w-44 md:h-44 animate-bounce-slow">
+                            <span className="text-xs md:text-sm font-bold tracking-widest bg-white/50 px-2 py-0.5 rounded mb-1 relative z-10">THEME</span>
+                            <span className="text-2xl md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
+                            <span className="text-[10px] md:text-xs font-bold border-t-2 border-brand-500/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
+
+                            {/* Speech Bubble Tail */}
+                            <div className="absolute bottom-4 -left-2 w-8 h-8 bg-yellow-400 rotate-45 border-l-4 border-b-4 border-white"></div>
                         </div>
                     </div>
 
