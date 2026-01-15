@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 export default function SampleF2Page() {
     return (
-        <main className="min-h-screen bg-white font-sans overflow-x-hidden pt-20">
+        <main className="min-h-screen bg-white font-sans overflow-x-hidden">
             {/* Header - Simple Version for Sample F-2 */}
             {/* Header - Simple Version for Sample F-2 */}
             <header className="bg-white/90 backdrop-blur-md text-gray-800 py-4 px-6 md:px-12 flex justify-between items-center fixed top-0 w-full z-50 shadow-sm">

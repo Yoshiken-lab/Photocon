@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export function HeroF2() {
     return (
-        <section className="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center py-20">
+        <section className="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center pt-32 pb-20">
 
             {/* Decorative Stars (Background) */}
             <div className="absolute top-10 right-10 text-white/20 transform rotate-12">
