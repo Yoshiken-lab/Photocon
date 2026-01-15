@@ -32,12 +32,20 @@ export const Hero = () => {
 
                     {/* Vertical Text - Using writing-mode: vertical-rl */}
                     <div className="absolute top-12 left-10 md:left-24 z-10 select-none pointer-events-none h-[400px]" style={{ writingMode: 'vertical-rl' }}>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-6 px-24 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
-                            あの日の一瞬を
-                        </h1>
-                        <h1 className="text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-6 px-24 mt-8 md:mt-12 bg-white/90 rounded-lg shadow-md mx-2 whitespace-nowrap">
-                            未来の宝物に
-                        </h1>
+                        {/* First Line */}
+                        <div className="relative mx-2">
+                            <div className="absolute inset-y-[-2rem] inset-x-0 bg-white/90 rounded-lg shadow-md"></div>
+                            <h1 className="relative text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-6 whitespace-nowrap">
+                                あの日の一瞬を
+                            </h1>
+                        </div>
+                        {/* Second Line */}
+                        <div className="relative mx-2 mt-8 md:mt-12">
+                            <div className="absolute inset-y-[-2rem] inset-x-0 bg-white/90 rounded-lg shadow-md"></div>
+                            <h1 className="relative text-4xl md:text-5xl font-bold font-maru tracking-widest leading-relaxed drop-shadow-sm text-gray-800 py-4 px-6 whitespace-nowrap">
+                                未来の宝物に
+                            </h1>
+                        </div>
                     </div>
                 </div>
 
