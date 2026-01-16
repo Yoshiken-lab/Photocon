@@ -18,6 +18,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'kjxdxoubwsazllutefgv.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
     ],
   },
 }
