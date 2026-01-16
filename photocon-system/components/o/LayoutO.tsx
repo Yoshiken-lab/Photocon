@@ -13,9 +13,16 @@ const LeftSidebar = () => (
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         className="hidden md:block w-64 pt-10 sticky top-28 self-start h-fit z-20"
     >
-        <div className="bg-white rounded-[2rem] p-6 shadow-xl w-full">
-            <div className="text-brand-500 font-bold mb-4 border-b-2 border-brand-100 pb-2">機能マップ</div>
-            <ul className="space-y-4 font-bold text-gray-600 text-sm">
+        {/* Redesigned Sidebar: Blends into background */}
+        <div className="w-full pl-4">
+            {/* Logo */}
+            <div className="mb-8 relative z-10 w-40">
+                <Link href="/sample-o" className="block hover:opacity-80 transition-opacity">
+                    <img src="/logo.png" alt="スクールフォト！" className="w-full h-auto brightness-0 invert" />
+                </Link>
+            </div>
+
+            <ul className="space-y-5 font-bold text-stone-800 text-sm tracking-wide">
                 {[
                     { href: "#howto", label: "応募方法" },
                     { href: "#events", label: "開催イベント" },
@@ -23,17 +30,19 @@ const LeftSidebar = () => (
                     { href: "#contact", label: "お問い合わせ" }
                 ].map((item, i) => (
                     <li key={item.href}>
-                        <Link href={item.href} className="hover:text-brand-500 flex items-center gap-2 group">
-                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        <Link href={item.href} className="hover:text-white flex items-center gap-3 group transition-colors">
+                            <span className="bg-stone-800/10 p-1.5 rounded-full group-hover:bg-white group-hover:text-brand-600 transition-all text-stone-800">
+                                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                            </span>
                             {item.label}
                         </Link>
                     </li>
                 ))}
             </ul>
-            <div className="mt-8 flex justify-center opacity-50">
-                {/* Stamp Icon */}
-                <div className="border-4 border-brand-200 rounded-full p-2 rotate-12">
-                    <Stamp className="text-brand-300 w-12 h-12" />
+            <div className="mt-12 flex justify-start opacity-60 pl-2">
+                {/* Stamp Icon - Dark version */}
+                <div className="border-4 border-stone-800/20 rounded-full p-2 rotate-12">
+                    <Stamp className="text-stone-800/40 w-12 h-12" />
                 </div>
             </div>
         </div>
@@ -61,7 +70,7 @@ const RightSidebar = () => (
         {/* Vertical Catchphrase */}
         <div className="h-[400px] relative flex justify-end">
             <h1
-                className="text-white font-maru font-bold text-4xl tracking-widest leading-relaxed drop-shadow-md opacity-90 select-none pointer-events-none"
+                className="text-stone-800 font-maru font-bold text-4xl tracking-widest leading-relaxed drop-shadow-sm opacity-90 select-none pointer-events-none"
                 style={{ writingMode: 'vertical-rl' }}
             >
                 あの日の一瞬を、<br />
