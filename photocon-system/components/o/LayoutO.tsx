@@ -11,7 +11,7 @@ const LeftSidebar = () => (
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        className="hidden md:block w-64 pt-10 sticky top-28 h-fit z-20"
+        className="hidden md:block w-64 pt-10 sticky top-28 self-start h-fit z-20"
     >
         <div className="bg-white rounded-[2rem] p-6 shadow-xl w-full">
             <div className="text-brand-500 font-bold mb-4 border-b-2 border-brand-100 pb-2">機能マップ</div>
@@ -56,11 +56,14 @@ const RightSidebar = () => (
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        className="hidden md:block w-64 pt-20 sticky top-28 h-fit z-20 pl-8 pointer-events-none"
+        className="hidden md:block w-64 pt-20 sticky top-28 self-start h-fit z-20 pl-8 pointer-events-none"
     >
         {/* Vertical Catchphrase */}
-        <div className="h-[400px] relative">
-            <h1 className="writing-vertical-rl text-white font-maru font-bold text-4xl tracking-widest leading-relaxed drop-shadow-md opacity-90">
+        <div className="h-[400px] relative flex justify-end">
+            <h1
+                className="text-white font-maru font-bold text-4xl tracking-widest leading-relaxed drop-shadow-md opacity-90 select-none pointer-events-none"
+                style={{ writingMode: 'vertical-rl' }}
+            >
                 あの日の一瞬を、<br />
                 未来の宝物に。
             </h1>
@@ -91,8 +94,8 @@ const RightSidebar = () => (
 
 export const LayoutO = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="relative w-full bg-brand-500 min-h-screen overflow-x-hidden flex justify-center pt-20 pb-20">
-            <div className="relative w-full max-w-[1600px] flex justify-center md:justify-between px-4 md:px-12">
+        <div className="relative w-full bg-brand-500 min-h-screen flex justify-center pt-20 pb-20">
+            <div className="relative w-full max-w-[1600px] flex justify-center md:justify-between items-start px-4 md:px-12">
                 <LeftSidebar />
 
                 {/* Central Content Column */}
