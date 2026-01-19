@@ -30,7 +30,7 @@ export const HeaderO = () => {
                     Let's assume standard logo placement for now.
                 */}
                 <div className="relative z-50 pointer-events-auto">
-                    <Link href="/sample-o" className="block w-32 md:w-40 hover:opacity-80 transition-opacity">
+                    <Link href="/sample-o" className="block w-40 md:w-64 hover:opacity-80 transition-opacity">
                         {/* Placeholder Logo Text if image missing, or use standard logo path */}
                         <img src="/logo.png" alt="スクールフォト！" className="w-full h-auto" />
                     </Link>
