@@ -34,7 +34,7 @@ export const HeaderO = () => {
             {/* Mobile Menu Overlay - Glassmorphism Style */}
             <div className={`fixed inset-0 z-40 transition-all duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} md:hidden`}>
                 {/* Backdrop with Blur */}
-                <div className="absolute inset-0 bg-white/90 backdrop-blur-md"></div>
+                <div className="absolute inset-0 bg-white/70 backdrop-blur-md"></div>
 
                 {/* Close Button Positioned absolutely */}
                 <button
