@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Stamp } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { ArrowRight, Stamp, ArrowUp } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
 
 // --- Side Content Components ---
 
@@ -67,15 +68,8 @@ const RightSidebar = () => (
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         className="hidden md:block w-64 pt-20 sticky top-28 self-start h-fit z-20 pl-8 pointer-events-none"
     >
-        {/* Vertical Catchphrase */}
+        {/* Vertical Catchphrase - Removed as per request */}
         <div className="h-[400px] relative flex justify-end">
-            <h1
-                className="text-stone-800 font-maru font-bold text-4xl tracking-widest leading-relaxed drop-shadow-sm opacity-90 select-none pointer-events-none"
-                style={{ writingMode: 'vertical-rl' }}
-            >
-                あの日の一瞬を、<br />
-                未来の宝物に。
-            </h1>
         </div>
 
         {/* Floating Polaroids Right */}
@@ -102,6 +96,28 @@ const RightSidebar = () => (
 )
 
 export const LayoutO = ({ children }: { children: React.ReactNode }) => {
+    const [showScrollTop, setShowScrollTop] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                setShowScrollTop(true)
+            } else {
+                setShowScrollTop(false)
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    }
+
     return (
         <div className="relative w-full bg-brand-500 min-h-screen flex justify-center pt-20 pb-20">
             <div className="relative w-full max-w-[1600px] flex justify-center md:justify-between items-start px-4 md:px-12">
@@ -119,6 +135,23 @@ export const LayoutO = ({ children }: { children: React.ReactNode }) => {
 
                 <RightSidebar />
             </div>
+
+            {/* Scroll to Top Button */}
+            <AnimatePresence>
+                {showScrollTop && (
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={scrollToTop}
+                        className="fixed bottom-8 right-8 z-50 bg-white text-brand-500 p-4 rounded-full shadow-lg border-2 border-brand-100 hover:shadow-xl transition-shadow"
+                    >
+                        <ArrowUp size={24} strokeWidth={3} />
+                    </motion.button>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

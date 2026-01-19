@@ -5,10 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample F-2 - スクールフォト！</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,32 +14,34 @@
                 extend: {
                     colors: {
                         brand: {
-                            DEFAULT: '#E75D2E',
                             50: '#FFF5F2',
                             100: '#FFE8E0',
                             200: '#FFD4C4',
-                            500: '#E75D2E',
+                            500: '#E84D1C',
                             600: '#D63E0F',
-                        },
+                        }
                     },
                     fontFamily: {
                         sans: ['"Yu Gothic"', '"Meiryo"', 'sans-serif'],
                         maru: ['"Kiwi Maru"', 'serif'],
-                    },
-                    borderRadius: {
-                        '4xl': '2.5rem',
-                    },
-                },
-            },
+                    }
+                }
+            }
         }
     </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: "Yu Gothic", "Meiryo", sans-serif;
         }
 
         .font-maru {
-            font-family: 'Kiwi Maru', serif;
+            font-family: "Kiwi Maru", serif;
         }
 
         .scrollbar-hide::-webkit-scrollbar {
@@ -54,195 +52,165 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(-5%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
     </style>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
+<body class="bg-white text-gray-800 antialiased overflow-x-hidden">
 
-<body class="bg-white font-sans overflow-x-hidden antialiased">
-
-    <!-- Header -->
-    <div id="header-container"></div>
-    <script>
-        const headerHTML = `
-        <header class="bg-white/90 backdrop-blur-md text-gray-800 py-4 px-6 md:px-8 flex justify-between items-center fixed top-0 w-full z-50 shadow-sm transition-all duration-300">
-            <div class="flex items-center gap-2 relative z-50">
-                <a href="#">
-                    <img src="logo.png" alt="スクールフォト!" class="h-8 md:h-10 w-auto" width="180" height="40">
-                </a>
-            </div>
-            <nav class="hidden lg:flex gap-6 font-bold text-sm tracking-wider">
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">トップ</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">応募方法</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">開催イベント</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">過去イベント</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">Q&A</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">お問い合わせ</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">写真ギャラリー</a>
-            </nav>
-            <div class="hidden lg:flex gap-4">
-                <button class="bg-[#E75D2E] text-white px-6 py-2 rounded-full font-bold hover:bg-[#c9451b] transition-colors shadow-md">
-                    ログイン | 応募
-                </button>
-            </div>
-            <button id="menu-btn" class="lg:hidden relative z-50 p-2 text-gray-800 hover:text-[#E75D2E] transition-colors" aria-label="Menu">
-                <i data-lucide="menu" class="w-8 h-8"></i>
-            </button>
-        </header>
-
-        <div id="mobile-menu" class="fixed inset-0 bg-[#FFF5F0] z-40 transition-transform duration-300 ease-in-out lg:hidden flex flex-col justify-center items-center translate-x-full">
-            <nav class="flex flex-col gap-8 text-center">
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">トップ</a>
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">応募方法</a>
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">開催イベント</a>
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">過去イベント</a>
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">Q&A</a>
-                <a href="#" class="mobile-link text-2xl font-bold font-maru text-gray-800 hover:text-[#E75D2E] transition-colors">お問い合わせ</a>
-                <div class="mt-8">
-                    <button class="bg-[#E75D2E] text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-[#c9451b] transition-colors w-full">
-                        ログイン | 応募
-                    </button>
-                </div>
-            </nav>
+    <!-- HeaderF2 -->
+    <header
+        class="bg-white/90 backdrop-blur-md text-gray-800 py-4 px-6 md:px-8 flex justify-between items-center fixed top-0 w-full z-50 shadow-sm transition-all duration-300">
+        <div class="flex items-center gap-2 relative z-50">
+            <a href="#">
+                <img src="/logo.png" alt="スクールフォト!" class="h-8 md:h-10 w-auto" />
+            </a>
         </div>
-        `;
-        document.getElementById('header-container').innerHTML = headerHTML;
+        <nav class="hidden lg:flex gap-6 font-bold text-sm tracking-wider">
+            <a href="#" class="hover:text-[#E75D2E] transition-colors">応募方法</a>
+            <a href="#" class="hover:text-[#E75D2E] transition-colors">開催イベント</a>
+            <a href="#" class="hover:text-[#E75D2E] transition-colors">過去イベント</a>
+            <a href="#" class="hover:text-[#E75D2E] transition-colors">Q&A</a>
+            <a href="#" class="hover:text-[#E75D2E] transition-colors">写真ギャラリー</a>
+        </nav>
+        <div class="hidden lg:flex gap-4">
+            <button
+                class="bg-[#E75D2E] text-white px-6 py-2 rounded-full font-bold hover:bg-[#c9451b] transition-colors shadow-md">
+                ログイン | 応募
+            </button>
+        </div>
+        <button class="lg:hidden relative z-50 p-2 text-gray-800 hover:text-[#E75D2E] transition-colors">
+            <!-- Menu Icon -->
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+    </header>
 
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        let isMenuOpen = false;
-
-        menuBtn.addEventListener('click', () => {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileMenu.classList.remove('translate-x-full');
-                mobileMenu.classList.add('translate-x-0');
-                menuBtn.innerHTML = '<i data-lucide="x" class="w-8 h-8"></i>';
-            } else {
-                mobileMenu.classList.add('translate-x-full');
-                mobileMenu.classList.remove('translate-x-0');
-                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8"></i>';
-            }
-            lucide.createIcons();
-        });
-
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                isMenuOpen = false;
-                mobileMenu.classList.add('translate-x-full');
-                mobileMenu.classList.remove('translate-x-0');
-                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8"></i>';
-                lucide.createIcons();
-            });
-        });
-    </script>
-
-    <!-- Hero Section -->
+    <!-- HeroF2 -->
     <section
-        class="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center pt-32 pb-20">
-        <div class="absolute top-10 right-10 text-white/20 transform rotate-12"><i data-lucide="star"
-                class="w-32 h-32"></i></div>
-        <div class="absolute top-1/4 right-32 text-yellow-300/40 transform -rotate-12"><i data-lucide="star"
-                class="w-10 h-10 fill-current"></i></div>
-        <div class="absolute bottom-20 left-10 text-white/20 transform -rotate-12"><i data-lucide="star"
-                class="w-20 h-20"></i></div>
-        <div class="absolute bottom-40 left-32 text-white/10 transform rotate-45"><i data-lucide="star"
-                class="w-12 h-12"></i></div>
-        <div class="absolute top-20 left-1/4 text-white/10 transform rotate-45"><i data-lucide="star"
-                class="w-8 h-8"></i></div>
-        <div class="absolute top-40 left-20 text-yellow-400/80 transform rotate-45 animate-pulse"><i data-lucide="star"
-                class="w-10 h-10"></i></div>
-        <div class="absolute bottom-1/3 right-10 text-white/10 transform rotate-12"><i data-lucide="star"
-                class="w-16 h-16"></i></div>
+        class="relative bg-[#E75D2E] min-h-[calc(100vh-80px)] overflow-hidden flex flex-col items-center justify-center pt-20 pb-16 md:pt-32 md:pb-20">
+        <!-- Stars -->
+        <div class="absolute top-10 right-10 text-white/20 transform rotate-12"><svg width="120" height="120"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg></div>
+        <div class="absolute bottom-20 left-10 text-white/20 transform -rotate-12"><svg width="80" height="80"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg></div>
+        <div class="absolute top-1/4 right-32 text-yellow-300/40 transform -rotate-12"><svg width="40" height="40"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg></div>
+        <div class="absolute left-32 top-40 text-yellow-400/80 transform rotate-45"><svg width="40" height="40"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg></div>
 
         <div
-            class="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            class="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
+            <!-- Left Polaroid -->
             <div
-                class="relative transform -rotate-6 md:-rotate-12 transition-transform hover:rotate-0 duration-500 w-64 md:w-80 shrink-0">
-                <div class="bg-white p-4 pb-12 shadow-xl rotate-3">
-                    <div
-                        class="bg-gray-200 w-full aspect-[3/4] overflow-hidden relative flex items-center justify-center">
-                        <i data-lucide="camera" class="w-12 h-12 text-gray-400 opacity-50"></i>
-                    </div>
+                class="absolute top-24 -left-6 md:relative md:top-auto md:left-auto transform rotate-[-15deg] md:-rotate-12 w-44 md:w-80 shrink-0 opacity-80 md:opacity-100 bg-white p-2 md:p-4 pb-8 md:pb-12 shadow-xl">
+                <div
+                    class="bg-gray-200 w-full aspect-[3/4] overflow-hidden flex items-center justify-center text-gray-400">
+                    <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
                 </div>
             </div>
 
-            <div class="flex-1 text-center text-white relative">
+            <!-- Center Text -->
+            <div class="flex-1 text-center text-white relative z-10">
+                <!-- Camera Illus -->
                 <div
-                    class="mb-0 mx-auto w-32 h-32 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
+                    class="mb-0 mx-auto w-24 h-24 md:w-40 md:h-40 bg-gray-800 rounded-3xl border-4 border-white transform -rotate-6 flex items-center justify-center shadow-lg relative z-20">
                     <div
-                        class="w-20 h-20 bg-gray-900 rounded-full border-4 border-gray-700 flex items-center justify-center">
-                        <div class="w-8 h-8 bg-gray-900 rounded-full bg-white/20"></div>
+                        class="w-16 h-16 md:w-20 md:h-20 bg-gray-900 rounded-full border-4 border-gray-700 flex items-center justify-center">
+                        <div class="w-6 h-6 md:w-8 md:h-8 bg-white/20 rounded-full"></div>
                     </div>
-                    <div class="absolute -top-2 right-4 w-6 h-4 bg-red-500 rounded-t-lg"></div>
+                    <div class="absolute -top-2 right-4 w-4 h-3 md:w-6 md:h-4 bg-red-500 rounded-t-lg"></div>
                 </div>
 
                 <div class="relative inline-block mt-8">
-                    <h1 class="text-4xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
-                        <span class="inline-block transform hover:scale-110 transition-transform">あ</span>
-                        <span class="inline-block transform hover:scale-110 transition-transform">の</span>
-                        <span class="inline-block transform hover:scale-110 transition-transform">日</span>
-                        <span class="inline-block transform hover:scale-110 transition-transform">の</span>
-                        <span class="inline-block mx-1 rotate-3">一瞬</span>
-                        を<br />
-                        <span class="text-yellow-300">未</span>
-                        <span class="text-yellow-300">来</span>
-                        <span class="text-yellow-300">の</span>
-                        <span class="inline-block transform -rotate-2 origin-bottom-left text-5xl md:text-7xl">宝物</span>
-                        に
+                    <h1 class="text-3xl md:text-6xl font-bold font-maru leading-tight drop-shadow-md">
+                        あの日の一瞬を、<br />
+                        <span class="text-yellow-300">未来の</span><span class="text-4xl md:text-7xl">宝物</span>に
                     </h1>
+                    <!-- Badge -->
                     <div
-                        class="absolute -top-32 -right-8 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-[#E75D2E] p-4 md:p-6 rounded-full shadow-xl flex flex-col items-center justify-center w-32 h-32 md:w-44 md:h-44 hover:animate-bounce">
-                        <span class="text-xs md:text-sm font-bold tracking-widest mb-1 relative z-10">テーマ</span>
+                        class="absolute -top-24 -right-4 md:-top-48 md:-right-24 z-20 transform rotate-6 bg-yellow-400 text-[#E75D2E] p-3 md:p-6 rounded-full shadow-xl w-24 h-24 md:w-44 md:h-44 flex flex-col items-center justify-center animate-bounce-slow">
+                        <span class="text-xs md:text-sm font-bold tracking-widest relative z-10">テーマ</span>
+                        <span class="text-xl md:text-4xl font-bold font-maru relative z-10">「桜」</span>
                         <span
-                            class="text-2xl md:text-4xl font-bold font-maru leading-none mb-1 relative z-10">「桜」</span>
-                        <span
-                            class="text-[10px] md:text-xs font-bold border-t-2 border-[#E75D2E]/30 pt-1 mt-1 relative z-10">2026/4/24(金)まで</span>
+                            class="text-[10px] md:text-xs font-bold border-t-2 border-[#E75D2E]/30 pt-1 mt-1 relative z-10">4/24まで</span>
                         <div
-                            class="absolute -bottom-2 left-4 w-0 h-0 border-t-[72px] border-t-yellow-400 border-x-[36px] border-x-transparent rotate-[15deg]">
+                            class="absolute -bottom-2 left-4 w-0 h-0 border-t-[48px] border-t-yellow-400 border-x-[24px] border-x-transparent rotate-[15deg]">
                         </div>
                     </div>
                 </div>
 
-                <p class="mt-8 font-bold text-lg md:text-xl tracking-wide opacity-90">
-                    運動会のがんばった顔、お弁当をほおばる笑顔。<br />
-                    スマホの中に眠っているお子さまのベストショットを<br />
-                    みんなでシェアして楽しみませんか？
-                </p>
+                <p class="mt-8 font-bold text-sm md:text-xl tracking-wide opacity-90">
+                    スマホの中に眠っているお子さまのベストショットを<br>みんなでシェアして楽しみませんか？</p>
 
                 <div class="hidden lg:flex flex-row gap-6 justify-center mt-12">
                     <button
-                        class="bg-[#E75D2E] text-white border-4 border-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-[#D63E0F] hover:scale-105 transition-all transform hover:-rotate-1">
-                        写真を応募する
-                    </button>
+                        class="bg-[#E75D2E] text-white border-4 border-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-[#c9451b] transition-transform hover:scale-105">写真を応募する</button>
                     <button
-                        class="bg-white text-[#E75D2E] px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-gray-100 hover:scale-105 transition-all transform hover:rotate-1">
-                        作品を見る
-                    </button>
+                        class="bg-white text-[#E75D2E] px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-gray-100 transition-transform hover:scale-105">作品を見る</button>
                 </div>
-                <p class="mt-4 text-sm text-white/80 font-bold">
-                    ※登録は無料です。1分で完了します。
-                </p>
             </div>
 
+            <!-- Right Polaroid -->
             <div
-                class="relative transform rotate-6 md:rotate-12 transition-transform hover:rotate-0 duration-500 w-64 md:w-80 shrink-0 hidden md:block">
-                <div class="bg-white p-4 pb-12 shadow-xl -rotate-2">
-                    <div
-                        class="bg-gray-200 w-full aspect-[3/4] overflow-hidden relative flex items-center justify-center">
-                        <i data-lucide="camera" class="w-12 h-12 text-gray-400 opacity-50"></i>
-                    </div>
-                </div>
-                <div class="absolute -top-4 -right-4 text-yellow-400 transform rotate-12">
-                    <i data-lucide="star" class="w-16 h-16 fill-current"></i>
+                class="absolute top-32 -right-6 md:relative md:top-auto md:left-auto transform rotate-[10deg] md:rotate-12 w-44 md:w-80 shrink-0 opacity-80 md:opacity-100 bg-white p-2 md:p-4 pb-8 md:pb-12 shadow-xl">
+                <div
+                    class="bg-gray-200 w-full aspect-[3/4] overflow-hidden flex items-center justify-center text-gray-400">
+                    <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                        </path>
+                    </svg>
                 </div>
             </div>
         </div>
 
+        <!-- Scroll Down Indicator -->
         <div class="absolute bottom-6 left-0 w-full flex justify-center text-white opacity-80 pointer-events-none">
             <div class="flex flex-col items-center gap-2 animate-bounce">
-                <div class="bg-white/20 p-2 rounded-full"><i data-lucide="arrow-down" class="w-6 h-6"></i></div>
+                <div class="bg-white/20 p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
                 <span class="text-xs font-bold tracking-widest uppercase">Scroll Down</span>
             </div>
         </div>
@@ -254,247 +222,243 @@
         </div>
     </section>
 
-    <!-- Active Event -->
-    <section class="bg-white py-20 px-4 relative">
+    <!-- ActiveEventF2 -->
+    <section class="bg-white py-20 px-4">
         <div class="max-w-6xl mx-auto">
             <div class="flex items-center justify-center gap-3 mb-12">
                 <div class="w-6 h-6 rounded-full bg-[#E75D2E]"></div>
                 <h2 class="text-3xl md:text-4xl font-bold font-maru text-[#E75D2E]">開催中のイベント</h2>
             </div>
+
             <div class="relative">
                 <div
                     class="border-4 border-brand-200 rounded-[3rem] p-8 md:p-12 relative bg-white z-10 flex flex-col md:flex-row gap-8 items-stretch">
                     <div class="flex-1 space-y-6">
-                        <div>
-                            <h3
-                                class="text-2xl md:text-3xl font-bold text-gray-700 border-b-2 border-gray-200 pb-4 inline-block pr-12 font-maru">
-                                2026年春のフォトコンテスト
-                            </h3>
-                        </div>
+                        <h3
+                            class="text-2xl md:text-3xl font-bold text-gray-700 border-b-2 border-gray-200 pb-4 inline-block pr-12 font-maru">
+                            2026年春のフォトコンテスト</h3>
                         <div class="space-y-4">
-                            <div class="flex items-center gap-4">
-                                <span class="font-bold text-gray-500 w-24 shrink-0">テーマ</span>
-                                <span class="text-2xl font-bold font-maru text-gray-800">「桜」</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm md:text-base">
-                                <span class="font-bold text-gray-500 w-24 shrink-0">開催日時</span>
-                                <span class="font-bold font-sans text-gray-700">2026年4月10日(金) 〜 2026年4月24日(金)</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm md:text-base">
-                                <span class="font-bold text-gray-500 w-24 shrink-0">応募件数</span>
-                                <span class="font-bold font-sans text-gray-700 font-maru">2件</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm md:text-base">
-                                <span class="font-bold text-gray-500 w-24 shrink-0">残り</span>
-                                <span class="font-bold font-sans text-gray-700 font-maru">残り0日</span>
-                            </div>
+                            <div class="flex items-center gap-4"><span
+                                    class="font-bold text-gray-500 w-24 shrink-0">テーマ</span><span
+                                    class="text-2xl font-bold font-maru text-gray-800">「桜」</span></div>
+                            <div class="flex items-center gap-4"><span
+                                    class="font-bold text-gray-500 w-24 shrink-0">期間</span><span
+                                    class="font-bold font-sans text-gray-700">2026/4/10 - 4/24</span></div>
                         </div>
                     </div>
-                    <div class="w-full md:w-80 shrink-0 bg-gray-200 rounded-3xl min-h-[200px] md:min-h-auto"></div>
+                    <div class="w-full md:w-80 shrink-0 bg-gray-200 rounded-3xl min-h-[200px]"></div>
                 </div>
+                <!-- Badge -->
                 <div
-                    class="absolute -bottom-6 -right-2 md:bottom-8 md:-right-12 z-20 transform rotate-12 transition-transform hover:scale-110 hover:rotate-6 cursor-pointer group">
-                    <div
-                        class="bg-[#E75D2E] text-white p-6 w-32 h-32 md:w-40 md:h-40 rounded-[2rem] shadow-lg flex flex-col items-center justify-center border-4 border-[#E75D2E] text-center relative rotate-3">
-                        <span
-                            class="text-xl md:text-2xl font-bold font-maru leading-tight drop-shadow-sm">今すぐ<br />応募する</span>
-                        <div class="absolute -top-4 -right-4 text-yellow-300 transform rotate-12"><i data-lucide="star"
-                                class="w-8 h-8 fill-current"></i></div>
-                        <div class="absolute bottom-2 -left-4 text-[#FFF4F0] transform -rotate-12"><i data-lucide="star"
-                                class="w-6 h-6 fill-current"></i></div>
-                    </div>
+                    class="absolute -bottom-6 -right-2 md:bottom-8 md:-right-12 z-20 transform rotate-12 hover:scale-110 transition-transform bg-[#E75D2E] text-white p-6 w-32 h-32 md:w-40 md:h-40 rounded-[2rem] shadow-lg flex flex-col items-center justify-center border-4 border-[#E75D2E]">
+                    <span
+                        class="text-xl md:text-2xl font-bold font-maru leading-tight drop-shadow-sm">今すぐ<br />応募する</span>
+                    <!-- Star Decorations -->
+                    <svg class="text-yellow-300 w-8 h-8 absolute -top-4 -right-4 fill-current rotate-12"
+                        viewBox="0 0 24 24" stroke="none">
+                        <path
+                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
+                        </path>
+                    </svg>
+                    <svg class="text-[#FFF4F0] w-6 h-6 absolute bottom-2 -left-4 fill-current -rotate-12"
+                        viewBox="0 0 24 24" stroke="none">
+                        <path
+                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
+                        </path>
+                    </svg>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Past Events -->
+    <!-- PastEventsF2 -->
     <section class="bg-white pb-20 px-4 overflow-hidden">
         <div class="max-w-6xl mx-auto">
             <div class="flex items-center justify-center gap-3 mb-8">
                 <div class="w-6 h-6 rounded-full bg-[#E75D2E]"></div>
                 <h2 class="text-3xl md:text-4xl font-bold font-maru text-[#E75D2E]">過去のイベント情報</h2>
             </div>
-            <div class="relative -mx-4 px-4 md:mx-0 md:px-0">
-                <div class="flex gap-6 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory scrollbar-hide">
-                    <div
-                        class="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white hover:shadow-lg transition-shadow flex flex-col justify-between min-h-[280px]">
-                        <div>
-                            <h3
-                                class="text-xl md:text-2xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru truncate">
-                                2025年春のフォトコンテスト</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-2"><span
-                                        class="font-bold text-gray-500 w-20 shrink-0">テーマ</span><span
-                                        class="text-xl font-bold text-gray-800 font-maru">「●●●」</span></div>
-                                <div class="text-sm font-bold text-gray-500">開催日時：<span
-                                        class="font-sans text-gray-700">2025年12月1日開催</span></div>
-                                <div class="text-sm font-bold text-gray-500">応募件数：<span
-                                        class="font-sans text-gray-700">20件</span></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <div class="flex bg-gray-200 p-2 rounded-lg gap-1">
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white hover:shadow-lg transition-shadow flex flex-col justify-between min-h-[280px]">
-                        <div>
-                            <h3
-                                class="text-xl md:text-2xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru truncate">
-                                2024年秋のフォトコンテスト</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-2"><span
-                                        class="font-bold text-gray-500 w-20 shrink-0">テーマ</span><span
-                                        class="text-xl font-bold text-gray-800 font-maru">「運動会」</span></div>
-                                <div class="text-sm font-bold text-gray-500">開催日時：<span
-                                        class="font-sans text-gray-700">2024年10月10日開催</span></div>
-                                <div class="text-sm font-bold text-gray-500">応募件数：<span
-                                        class="font-sans text-gray-700">45件</span></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <div class="flex bg-gray-200 p-2 rounded-lg gap-1">
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                                <div class="w-2 h-2 bg-white rounded-full"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How To Apply -->
-    <section class="bg-[#FFF5F0] py-20 px-4 relative overflow-hidden">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="mb-16 relative">
+            <div class="flex gap-6 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory scrollbar-hide">
+                <!-- Card 1 -->
                 <div
-                    class="inline-block bg-yellow-400 text-white font-bold py-2 px-8 rounded-full mb-6 relative shadow-md text-lg tracking-wider">
-                    かんたん<span class="text-2xl mx-1">3</span>ステップ
-                    <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-yellow-400 rotate-45">
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru">
+                            2025年春のフォトコンテスト</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-gray-500 w-20 shrink-0">テーマ</span>
+                                <span class="text-xl font-bold text-gray-800 font-maru">「●●●」</span>
+                            </div>
+                            <div class="text-sm font-bold text-gray-500">開催日時：<span
+                                    class="font-sans text-gray-700">2025年12月1日開催</span></div>
+                            <div class="text-sm font-bold text-gray-500">応募件数：<span
+                                    class="font-sans text-gray-700">20件</span></div>
+                        </div>
                     </div>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-bold font-maru text-[#E75D2E] mb-4">応募方法</h2>
-                <h3 class="text-xl md:text-2xl font-bold text-gray-600 font-maru">ママ・パパのための<br
-                        class="md:hidden" />やさしいコンテスト</h3>
-                <p class="mt-4 text-sm text-gray-500">難しい操作はいりません。<br />いつものスマホ操作だけで参加できます。</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8 md:gap-4 relative z-10">
-                <div class="bg-brand-50/50 p-8 rounded-3xl relative flex flex-col items-center">
-                    <div class="text-6xl font-black text-brand-200 mb-4 font-maru">01</div>
-                    <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-sm mb-6"><i
-                            data-lucide="image" class="w-12 h-12 text-brand-200"></i></div>
-                    <h4 class="text-xl font-bold text-gray-700 mb-3 font-maru">写真を選ぶ</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed font-bold">スマホのアルバムから、お気に入りの1枚を選びます。</p>
+                <!-- Card 2 -->
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru">
+                            2024年秋のフォトコンテスト</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-gray-500 w-20 shrink-0">テーマ</span>
+                                <span class="text-xl font-bold text-gray-800 font-maru">「運動会」</span>
+                            </div>
+                            <div class="text-sm font-bold text-gray-500">開催日時：<span
+                                    class="font-sans text-gray-700">2024年10月10日開催</span></div>
+                            <div class="text-sm font-bold text-gray-500">応募件数：<span
+                                    class="font-sans text-gray-700">45件</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-brand-50/50 p-8 rounded-3xl relative flex flex-col items-center">
-                    <div class="text-6xl font-black text-brand-200 mb-4 font-maru">02</div>
-                    <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-sm mb-6"><i
-                            data-lucide="upload-cloud" class="w-12 h-12 text-brand-200"></i></div>
-                    <h4 class="text-xl font-bold text-gray-700 mb-3 font-maru">アップロード</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed font-bold">そのままアップロードするか、Instagramでタグ付け投稿でもOK。</p>
-                </div>
-                <div class="bg-brand-50/50 p-8 rounded-3xl relative flex flex-col items-center">
-                    <div class="text-6xl font-black text-brand-200 mb-4 font-maru">03</div>
-                    <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-sm mb-6"><i
-                            data-lucide="heart" class="w-12 h-12 text-brand-200"></i></div>
-                    <h4 class="text-xl font-bold text-gray-700 mb-3 font-maru">みんなで応援</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed font-bold">素敵な作品にハートを送ろう。入賞作品はサイトで表彰！</p>
+                <!-- Card 3 -->
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] border-2 border-brand-200 rounded-3xl p-6 bg-white flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-600 border-b-2 border-gray-200 pb-2 mb-4 font-maru">
+                            2024年夏のフォトコンテスト</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-gray-500 w-20 shrink-0">テーマ</span>
+                                <span class="text-xl font-bold text-gray-800 font-maru">「プール」</span>
+                            </div>
+                            <div class="text-sm font-bold text-gray-500">開催日時：<span
+                                    class="font-sans text-gray-700">2024年7月20日開催</span></div>
+                            <div class="text-sm font-bold text-gray-500">応募件数：<span
+                                    class="font-sans text-gray-700">32件</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- HowToApplyF2 -->
+    <section class="bg-[#FFF5F0] py-20 px-4">
+        <div class="max-w-6xl mx-auto relative pt-8">
+            <div
+                class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-white px-16 py-5 rounded-t-[2rem] shadow-sm z-10 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold font-maru text-[#E75D2E]">応募方法</h2>
+            </div>
+            <div class="bg-white rounded-[3rem] p-8 md:p-20 shadow-sm relative z-0 pt-24 text-center">
+                <div class="mb-16">
+                    <div class="inline-block bg-[#F4B207] text-white font-bold py-2 px-10 rounded-full mb-8 text-lg">
+                        かんたん3ステップ</div>
+                    <h3 class="text-2xl md:text-4xl font-bold text-gray-600 font-maru mb-6">ママ・パパのためのやさしいコンテスト</h3>
+                    <p class="mt-4 text-sm md:text-base text-gray-500 font-medium">難しい操作はいりません。<br />いつものスマホ操作だけで参加できます。
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <!-- Step 1 -->
+                    <div
+                        class="bg-[#FFF5F0] p-8 rounded-[2rem] w-full md:w-1/3 min-h-[320px] flex flex-col items-center justify-center relative">
+                        <div class="absolute -top-6 left-6 text-6xl font-black text-[#E75D2E]/80 font-maru">01</div>
+                        <div class="bg-white w-24 h-24 rounded-full mb-6"></div>
+                        <h4 class="text-xl font-bold text-gray-700 mb-4 font-maru">写真を選ぶ</h4>
+                        <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-bold">
+                            スマホのアルバムから、<br />お気に入りの1枚を選びます。</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div
+                        class="bg-[#FFF5F0] p-8 rounded-[2rem] w-full md:w-1/3 min-h-[320px] flex flex-col items-center justify-center relative">
+                        <div class="absolute -top-6 left-6 text-6xl font-black text-[#E75D2E]/80 font-maru">02</div>
+                        <div class="bg-white w-24 h-24 rounded-full mb-6"></div>
+                        <h4 class="text-xl font-bold text-gray-700 mb-4 font-maru">アップロード</h4>
+                        <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-bold">
+                            そのままアップロードするか、<br />Instagramでタグ付け投稿でもOK。</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div
+                        class="bg-[#FFF5F0] p-8 rounded-[2rem] w-full md:w-1/3 min-h-[320px] flex flex-col items-center justify-center relative">
+                        <div class="absolute -top-6 left-6 text-6xl font-black text-[#E75D2E]/80 font-maru">03</div>
+                        <div class="bg-white w-24 h-24 rounded-full mb-6"></div>
+                        <h4 class="text-xl font-bold text-gray-700 mb-4 font-maru">みんなで応援</h4>
+                        <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-bold">
+                            素敵な作品にハートを送ろう。<br />入賞作品はサイトで表彰！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQF2 -->
     <section class="bg-white py-20 px-4">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-12">
-                <h3 class="text-4xl md:text-5xl font-black text-gray-800 tracking-wider mb-2 font-maru opacity-10">Q&A
-                </h3>
-                <p className="text-[#E75D2E] font-bold text-2xl md:text-3xl font-maru -mt-8 relative z-10"
-                    style="color:#E75D2E; margin-top:-2rem;">よくあるご質問</p>
+                <h3 class="text-5xl font-black text-gray-800 opacity-10 font-maru">Q&A</h3>
+                <p class="text-[#E75D2E] font-bold text-3xl font-maru -mt-8 relative z-10">よくあるご質問</p>
             </div>
             <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-                <!-- Item 1 -->
+                <!-- Q1 -->
                 <div
-                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-brand-200 hover:border-brand-400 transition-all duration-300 shadow-sm hover:-translate-y-1">
-                    <div class="flex items-start gap-4">
+                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-brand-200 hover:border-brand-400 transition-all">
+                    <div class="flex gap-4">
                         <div
-                            class="bg-brand-100 text-brand-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black flex-shrink-0 text-lg">
+                            class="bg-brand-100 text-brand-600 w-12 h-12 rounded-full flex items-center justify-center font-black shrink-0">
                             Q</div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg md:text-xl mb-3 font-maru">無料で応募できますか？</h4>
-                            <p
-                                class="text-gray-600 text-sm md:text-base leading-relaxed border-t-2 border-dashed border-gray-100 pt-3">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg mb-3 font-maru">無料で応募できますか？</h4>
+                            <p class="text-gray-600 text-sm border-t-2 border-dashed border-gray-100 pt-3">
                                 スマートフォンやパソコンがあれば無料で応募できます。テーマに沿ったお写真をご用意の上、ぜひご参加ください。</p>
                         </div>
                     </div>
                 </div>
-                <!-- Item 2 -->
+                <!-- Q2 -->
                 <div
-                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-yellow-200 hover:border-yellow-400 transition-all duration-300 shadow-sm hover:-translate-y-1">
-                    <div class="flex items-start gap-4">
+                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-yellow-200 hover:border-yellow-400 transition-all">
+                    <div class="flex gap-4">
                         <div
-                            class="bg-yellow-100 text-yellow-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black flex-shrink-0 text-lg">
+                            class="bg-yellow-100 text-yellow-600 w-12 h-12 rounded-full flex items-center justify-center font-black shrink-0">
                             Q</div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg md:text-xl mb-3 font-maru">写真の形式やサイズに制限はありますか？
-                            </h4>
-                            <p
-                                class="text-gray-600 text-sm md:text-base leading-relaxed border-t-2 border-dashed border-gray-100 pt-3">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg mb-3 font-maru">写真の形式やサイズに制限はありますか？</h4>
+                            <p class="text-gray-600 text-sm border-t-2 border-dashed border-gray-100 pt-3">
                                 JPEG・JPG・PNGのみ対応しております。また、サイズに関しては15MBまで受け付けております。</p>
                         </div>
                     </div>
                 </div>
-                <!-- Item 3 -->
+                <!-- Q3 -->
                 <div
-                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-sm hover:-translate-y-1">
-                    <div class="flex items-start gap-4">
+                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-blue-200 hover:border-blue-400 transition-all">
+                    <div class="flex gap-4">
                         <div
-                            class="bg-blue-100 text-blue-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black flex-shrink-0 text-lg">
+                            class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center font-black shrink-0">
                             Q</div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg md:text-xl mb-3 font-maru">
-                                子ども以外の写真（風景や動物など）も応募できますか？</h4>
-                            <p
-                                class="text-gray-600 text-sm md:text-base leading-relaxed border-t-2 border-dashed border-gray-100 pt-3">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg mb-3 font-maru">子ども以外の写真（風景や動物など）も応募できますか？</h4>
+                            <p class="text-gray-600 text-sm border-t-2 border-dashed border-gray-100 pt-3">
                                 お子様が写っているお写真でご応募ください。</p>
                         </div>
                     </div>
                 </div>
-                <!-- Item 4 -->
+                <!-- Q4 -->
                 <div
-                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-green-200 hover:border-green-400 transition-all duration-300 shadow-sm hover:-translate-y-1">
-                    <div class="flex items-start gap-4">
+                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-green-200 hover:border-green-400 transition-all">
+                    <div class="flex gap-4">
                         <div
-                            class="bg-green-100 text-green-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black flex-shrink-0 text-lg">
+                            class="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center font-black shrink-0">
                             Q</div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg md:text-xl mb-3 font-maru">一人何枚まで応募できますか？</h4>
-                            <p
-                                class="text-gray-600 text-sm md:text-base leading-relaxed border-t-2 border-dashed border-gray-100 pt-3">
-                                何枚でも応募できます。</p>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg mb-3 font-maru">一人何枚まで応募できますか？</h4>
+                            <p class="text-gray-600 text-sm border-t-2 border-dashed border-gray-100 pt-3">何枚でも応募できます。
+                            </p>
                         </div>
                     </div>
                 </div>
-                <!-- Item 5 -->
+                <!-- Q5 -->
                 <div
-                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:-translate-y-1">
-                    <div class="flex items-start gap-4">
+                    class="bg-white p-6 md:p-8 rounded-[2rem] border-b-8 border-r-8 border-purple-200 hover:border-purple-400 transition-all">
+                    <div class="flex gap-4">
                         <div
-                            class="bg-purple-100 text-purple-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black flex-shrink-0 text-lg">
+                            class="bg-purple-100 text-purple-600 w-12 h-12 rounded-full flex items-center justify-center font-black shrink-0">
                             Q</div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg md:text-xl mb-3 font-maru">応募した写真を後から削除できますか？
-                            </h4>
-                            <p
-                                class="text-gray-600 text-sm md:text-base leading-relaxed border-t-2 border-dashed border-gray-100 pt-3">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg mb-3 font-maru">応募した写真を後から削除できますか？</h4>
+                            <p class="text-gray-600 text-sm border-t-2 border-dashed border-gray-100 pt-3">
                                 お写真の削除依頼に関しましては、「お問い合わせ」からお問い合わせください。</p>
                         </div>
                     </div>
@@ -504,94 +468,65 @@
     </section>
 
     <!-- Prizes & Requirements -->
-    <section class="bg-[#FFF5F0] pt-24 md:pt-40 pb-20 px-4 relative">
+    <section class="bg-[#FFF5F0] pt-24 md:pt-40 pb-20 px-4">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-[2rem] p-8 md:p-16 text-center shadow-sm relative overflow-hidden mb-20">
-                <div class="absolute top-10 left-10 w-4 h-4 bg-gray-200 rotate-12"></div>
-                <div class="absolute top-20 right-20 w-4 h-4 bg-gray-300 -rotate-12 opacity-50"></div>
-
-                <div class="text-3xl md:text-4xl font-bold font-maru text-brand-500 mb-12 relative z-10">入賞特典</div>
-                <div
-                    class="inline-block bg-yellow-400 text-white font-bold py-3 px-10 rounded-full mb-8 relative shadow-md text-lg">
-                    入選者 ● 名様に
-                    <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-yellow-400 rotate-45">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <h3 class="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-relaxed">
-                        入賞者には「スクールフォト！お値引きクーポン」など</h3>
-                    <p class="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-relaxed">素敵なプレゼントをご用意しています。
-                    </p>
-                </div>
+            <div class="bg-white rounded-[2rem] p-8 md:p-16 text-center shadow-sm mb-20">
+                <div class="text-3xl md:text-4xl font-bold font-maru text-brand-500 mb-12">入賞特典</div>
+                <div class="inline-block bg-yellow-400 text-white font-bold py-3 px-10 rounded-full mb-8 text-lg">入選者 ●
+                    名様に</div>
+                <h3 class="text-xl md:text-3xl font-bold text-gray-600 font-maru leading-relaxed">
+                    入賞者には「スクールフォト！お値引きクーポン」など<br />素敵なプレゼントをご用意しています。</h3>
             </div>
-        </div>
-    </section>
 
-    <!-- Requirements Detail -->
-    <section class="bg-[#FFF5F0] pt-0 pb-20 px-4 relative">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold font-maru text-brand-500">募集要項</h2>
-            </div>
             <div class="bg-[#FFF5F0] rounded-xl overflow-hidden">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold font-maru text-brand-500">募集要項</h2>
+                </div>
                 <table class="w-full text-left border-collapse">
                     <tbody class="divide-y-2 divide-gray-300 border-t-2 border-b-2 border-gray-300">
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募期間</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">各イベントの情報をご確認ください。
-                            </td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募期間</th>
+                            <td class="py-6 px-4">各イベントの情報をご確認ください。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">入選発表・作品掲載入選
-                            </th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">イベント毎●名様 ※該当者なしの場合あり
-                            </td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">入選発表・作品掲載入選</th>
+                            <td class="py-6 px-4">イベント毎●名様 ※該当者なしの場合あり</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">掲載</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                掲載に問題が無いかを審査し、問題が無ければ随時掲載</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">掲載</th>
+                            <td class="py-6 px-4">掲載に問題が無いかを審査し、問題が無ければ随時掲載</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募資格</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                プロ、アマチュア、年齢を問わず、どなたでも応募できます。</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募資格</th>
+                            <td class="py-6 px-4">プロ、アマチュア、年齢を問わず、どなたでも応募できます。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募作品</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                デジタルカメラやスマホ等で撮影されたデジタル画像データのみ（ファイルサイズ：5MB 以内、ファイル形式：JPEG）</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募作品</th>
+                            <td class="py-6 px-4">デジタルカメラやスマホ等で撮影されたデジタル画像データのみ（ファイルサイズ：5MB 以内、ファイル形式：JPEG）</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募方法</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                コンテストホームページの応募フォームから応募してください。</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募方法</th>
+                            <td class="py-6 px-4">コンテストホームページの応募フォームから応募してください。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募点数</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                応募点数についての制限は特に無し（複数応募可）</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募点数</th>
+                            <td class="py-6 px-4">応募点数についての制限は特に無し（複数応募可）</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">審査発表</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                本コンテストホームページ上で発表いたします。※入選者および当選者の方へはメールにてご連絡いたします。</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">審査発表</th>
+                            <td class="py-6 px-4">本コンテストホームページ上で発表いたします。※入選者および当選者の方へはメールにてご連絡いたします。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">応募作品について
-                            </th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                応募作品及び入選作品応募作品はギャラリーの掲載に使用します。</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">応募作品について</th>
+                            <td class="py-6 px-4">応募作品及び入選作品応募作品はギャラリーの掲載に使用します。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">審査方法</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">
-                                スクールフォト！にて厳正なる審査を行います。</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">審査方法</th>
+                            <td class="py-6 px-4">スクールフォト！にて厳正なる審査を行います。</td>
                         </tr>
                         <tr>
-                            <th class="py-6 px-4 md:px-8 font-bold text-brand-500 w-1/3 md:w-1/4 align-top">開催主催</th>
-                            <td class="py-6 px-4 md:px-8 text-gray-600 font-medium leading-relaxed">スクールフォト！</td>
+                            <th class="py-6 px-4 font-bold text-brand-500 w-1/4 align-top">開催主催</th>
+                            <td class="py-6 px-4">スクールフォト！</td>
                         </tr>
                     </tbody>
                 </table>
@@ -599,25 +534,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-white text-gray-500 py-12 border-t border-[#E75D2E]/20 text-sm relative z-10">
+    <!-- FooterF2 -->
+    <footer class="bg-white text-gray-500 py-12 border-t border-[#E75D2E]/20 text-sm">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center">
-                <img src="logo.png" alt="スクールフォト!" class="h-8 md:h-10 w-auto" width="180" height="40">
-            </div>
-            <div class="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-bold">
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">よくある質問</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">利用規約</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">プライバシーポリシー</a>
-                <a href="#" class="hover:text-[#E75D2E] transition-colors">運営会社</a>
+            <img src="/logo.png" alt="Logo" class="h-8 md:h-10 w-auto" />
+            <div class="flex gap-6 font-bold">
+                <a href="#" class="hover:text-[#E75D2E]">よくある質問</a>
+                <a href="#" class="hover:text-[#E75D2E]">利用規約</a>
+                <a href="#" class="hover:text-[#E75D2E]">プライバシーポリシー</a>
+                <a href="#" class="hover:text-[#E75D2E]">運営会社</a>
             </div>
             <p class="text-xs text-gray-400 font-bold">&copy; 2025 スクールフォト!</p>
         </div>
     </footer>
 
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 
 </html>
