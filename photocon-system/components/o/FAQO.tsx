@@ -1,18 +1,30 @@
-import { Plus } from 'lucide-react'
+'use client'
 
-const FAQItem = ({ q, a }: { q: string, a: string }) => (
-    <div className="bg-white border-2 border-brand-100 rounded-2xl p-6 relative overflow-hidden group hover:border-brand-300 transition-colors">
-        <div className="flex items-start gap-4">
-            <div className="bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-1">
-                Q
-            </div>
-            <div className="flex-1">
-                <h3 className="font-bold text-gray-800 text-lg mb-2">{q}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
-            </div>
-        </div>
-    </div>
-)
+import { motion } from 'framer-motion'
+import { MessageCircle, Smile } from 'lucide-react'
+
+const faqs = [
+    {
+        q: "無料で応募できますか？",
+        a: "スマートフォンやパソコンがあれば無料で応募できます。テーマに沿ったお写真をご用意の上、ぜひご参加ください。"
+    },
+    {
+        q: "子ども以外の写真（風景や動物など）も応募できますか？",
+        a: "お子様が写っているお写真でご応募ください。"
+    },
+    {
+        q: "一人何枚まで応募できますか？",
+        a: "何枚でも応募できます。"
+    },
+    {
+        q: "写真の形式や写真のサイズに制限はありますか？",
+        a: "JPEG・JPG・PNGのみ対応しております。また、サイズに関しては15MBまで受け付けております。"
+    },
+    {
+        q: "応募した写真を後から削除できますか？",
+        a: "お写真の削除依頼に関しましては、「お問い合わせ」からお問い合わせください。"
+    }
+]
 
 export const FAQO = () => {
     return (
@@ -20,24 +32,61 @@ export const FAQO = () => {
             {/* Diagonal Header Decoration - Matching ActiveEvents Background (Brand-50 / #FFF5F0) */}
             <div className="absolute top-0 left-0 w-full h-[80px] bg-[#FFF5F0] skew-y-2 origin-top-right transform -translate-y-10 z-0"></div>
 
-            <div className="text-center mb-12 relative z-10">
-                <h2 className="text-3xl font-bold text-brand-500 font-maru mb-2">よくあるご質問</h2>
-                <p className="text-gray-400 text-xs font-bold tracking-widest">FAQ</p>
-            </div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="text-center mb-16 relative z-10"
+            >
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-100 text-brand-600 mb-4">
+                    <MessageCircle size={24} />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800 font-maru mb-2">よくあるご質問</h2>
+                <div className="h-1 w-16 bg-brand-500 mx-auto rounded-full"></div>
+            </motion.div>
 
-            <div className="space-y-4 max-w-sm mx-auto relative z-10">
-                <FAQItem
-                    q="誰でも参加できますか？"
-                    a="はい、スマートフォンをお持ちの方ならどなたでもご参加いただけます。"
-                />
-                <FAQItem
-                    q="参加費はかかりますか？"
-                    a="完全無料です。入賞者には素敵なプレゼントもご用意しています！"
-                />
-                <FAQItem
-                    q="写真は公開されますか？"
-                    a="コンテストページにて公開されます。ニックネームでの参加も可能です。"
-                />
+            <div className="max-w-md mx-auto relative z-10 space-y-8">
+                {faqs.map((faq, index) => (
+                    <div key={index} className="space-y-4">
+                        {/* Question (User) - Left Side */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ once: true }}
+                            className="flex gap-2"
+                        >
+                            <div className="bg-brand-100 text-gray-800 text-sm py-3 px-4 rounded-xl rounded-tl-sm shadow-sm max-w-[85%] relative">
+                                <p className="font-bold text-brand-600 text-[10px] mb-1">Q.</p>
+                                {faq.q}
+                                {/* Tail CSS Mockup using ClipPath or Border would be nice but rounded-tl-sm handles the 'bubble' look enough for now, or add specific tail if needed. 
+                                    Using CSS border trick for tail:
+                                */}
+                                <div className="absolute top-[0px] left-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-r-[8px] border-r-brand-100 border-b-[8px] border-b-transparent"></div>
+                            </div>
+                        </motion.div>
+
+                        {/* Answer (Admin) - Right Side */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 + 0.05 }}
+                            viewport={{ once: true }}
+                            className="flex gap-3 justify-end"
+                        >
+                            <div className="bg-white border-2 border-brand-50 text-gray-700 text-sm py-3 px-4 rounded-xl rounded-tr-sm shadow-sm max-w-[85%] relative text-left">
+                                <span className="block text-[10px] text-brand-400 font-bold mb-1">Answer</span>
+                                {faq.a}
+                                <div className="absolute top-[-2px] right-[-10px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[10px] border-l-brand-50 border-b-[10px] border-b-transparent z-0"></div>
+                                <div className="absolute top-[0px] right-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[8px] border-l-white border-b-[8px] border-b-transparent z-10"></div>
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                <Smile size={20} className="text-brand-400" />
+                            </div>
+                        </motion.div>
+                    </div>
+                ))}
             </div>
         </div>
     )
