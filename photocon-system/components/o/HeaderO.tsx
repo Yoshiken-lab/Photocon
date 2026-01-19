@@ -31,13 +31,31 @@ export const HeaderO = () => {
             </header>
 
             {/* Mobile Menu Overlay */}
-            <div className={`fixed inset-0 bg-[#E84D1C] z-40 transition-transform duration-300 flex flex-col items-center justify-center ${isOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-                <nav className="flex flex-col gap-8 text-center text-white font-bold text-xl">
-                    <Link href="/sample-o" onClick={() => setIsOpen(false)}>トップ</Link>
-                    <Link href="#howto" onClick={() => setIsOpen(false)}>応募方法</Link>
-                    <Link href="#events" onClick={() => setIsOpen(false)}>開催イベント</Link>
-                    <Link href="#faq" onClick={() => setIsOpen(false)}>Q&A</Link>
-                    <Link href="#contact" onClick={() => setIsOpen(false)}>お問い合わせ</Link>
+            {/* Mobile Menu Overlay - Glassmorphism Style */}
+            <div className={`fixed inset-0 z-40 transition-all duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} md:hidden`}>
+                {/* Backdrop with Blur */}
+                <div className="absolute inset-0 bg-white/90 backdrop-blur-md"></div>
+
+                {/* Close Button Positioned absolutely */}
+                <button
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-4 right-6 p-2 text-gray-500 hover:text-gray-800 z-50"
+                >
+                    <X size={32} />
+                </button>
+
+                {/* Menu Content */}
+                <nav className="relative z-50 flex flex-col items-center justify-center h-full gap-8">
+                    <Link href="/sample-o" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">トップ</Link>
+                    <Link href="#howto" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">応募方法</Link>
+                    <Link href="#events" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">開催イベント</Link>
+                    <Link href="#faq" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">Q&A</Link>
+
+                    <div className="w-16 h-1 bg-brand-200 rounded-full my-2"></div>
+
+                    <Link href="#contact" onClick={() => setIsOpen(false)} className="text-lg font-bold text-white bg-brand-500 px-10 py-3 rounded-full shadow-lg hover:bg-brand-600 transition-colors">
+                        お問い合わせ
+                    </Link>
                 </nav>
             </div>
         </>
