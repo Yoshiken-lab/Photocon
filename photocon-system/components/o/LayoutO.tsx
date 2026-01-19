@@ -145,7 +145,7 @@ export const LayoutO = ({ children }: { children: React.ReactNode }) => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-8 right-8 z-50 bg-white text-brand-500 p-4 rounded-full shadow-lg border-2 border-brand-100 hover:shadow-xl transition-shadow"
+                        className="fixed bottom-8 right-8 z-50 bg-white text-brand-500 p-4 rounded-full shadow-lg border-2 border-brand-100 hover:shadow-xl transition-shadow [.mobile-menu-open_&]:hidden"
                     >
                         <ArrowUp size={24} strokeWidth={3} />
                     </motion.button>

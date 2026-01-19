@@ -1,11 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 
 export const HeaderO = () => {
     const [isOpen, setIsOpen] = useState(false)
+
+    // Scroll Lock & Body Class Toggle
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden'
+            document.body.classList.add('mobile-menu-open')
+        } else {
+            document.body.style.overflow = 'unset'
+            document.body.classList.remove('mobile-menu-open')
+        }
+        return () => {
+            document.body.style.overflow = 'unset'
+            document.body.classList.remove('mobile-menu-open')
+        }
+    }, [isOpen])
 
     return (
         <>
