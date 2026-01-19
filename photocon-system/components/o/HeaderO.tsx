@@ -51,9 +51,9 @@ export const HeaderO = () => {
                     <Link href="#events" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">開催イベント</Link>
                     <Link href="#faq" onClick={() => setIsOpen(false)} className="text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">Q&A</Link>
 
-                    <div className="w-16 h-1 bg-brand-200 rounded-full my-2"></div>
+                    <div className="w-16 h-1 bg-[#ffdbc7] rounded-full my-2"></div>
 
-                    <Link href="#contact" onClick={() => setIsOpen(false)} className="text-lg font-bold text-white bg-brand-500 px-10 py-3 rounded-full shadow-lg hover:bg-brand-600 transition-colors">
+                    <Link href="#contact" onClick={() => setIsOpen(false)} className="text-lg font-bold text-white bg-[#E84D1C] px-10 py-3 rounded-full shadow-lg hover:bg-[#D63E0F] transition-colors">
                         お問い合わせ
                     </Link>
                 </nav>
