@@ -28,13 +28,13 @@ export const HowToApplyO = () => {
             <div className="space-y-6 max-w-sm mx-auto relative z-10">
                 {/* Step 1 */}
                 <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    viewport={{ once: true }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
                 >
-                    <div className="absolute -top-3 -left-3 bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">1</div>
+                    <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">1</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
                         <Camera size={32} />
                     </div>
@@ -49,19 +49,19 @@ export const HowToApplyO = () => {
                     initial={{ height: 0 }}
                     whileInView={{ height: 24 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className="w-0.5 bg-brand-200 mx-auto"
                 ></motion.div>
 
                 {/* Step 2 */}
                 <motion.div
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    viewport={{ once: true }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
                 >
-                    <div className="absolute -top-3 -left-3 bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">2</div>
+                    <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">2</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
                         <Upload size={32} />
                     </div>
@@ -75,20 +75,20 @@ export const HowToApplyO = () => {
                 <motion.div
                     initial={{ height: 0 }}
                     whileInView={{ height: 24 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className="w-0.5 bg-brand-200 mx-auto"
                 ></motion.div>
 
                 {/* Step 3 */}
                 <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    viewport={{ once: true }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
                 >
-                    <div className="absolute -top-3 -left-3 bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">3</div>
+                    <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">3</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
                         <Heart size={32} />
                     </div>

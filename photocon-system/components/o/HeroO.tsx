@@ -128,6 +128,11 @@ export const HeroO = () => {
             {/* CTA Section */}
             <div className="text-center pb-12 px-6 relative z-30">
 
+                <p className="text-gray-600 font-medium leading-relaxed font-maru mb-10">
+                    スマホの中に眠っている<br className="md:hidden" />お子さまのベストショット。<br />
+                    <span className="bg-yellow-100 px-1">未来の宝物</span> として残しませんか？
+                </p>
+
                 <div className="inline-block relative group">
                     <button className="bg-[#E84D1C] text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-[#D63E0F] hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/30 relative z-10 overflow-hidden">
                         {/* Shimmer Effect */}
@@ -139,11 +144,6 @@ export const HeroO = () => {
                     {/* Button Glow */}
                     <div className="absolute top-2 left-0 w-full h-full bg-brand-500 blur-xl opacity-40 group-hover:opacity-60 transition-opacity rounded-full z-0"></div>
                 </div>
-
-                <p className="mt-10 text-gray-600 font-medium leading-relaxed font-maru">
-                    スマホの中に眠っている<br className="md:hidden" />お子さまのベストショット。<br />
-                    <span className="bg-yellow-100 px-1">未来の宝物</span> として残しませんか？
-                </p>
             </div>
 
             {/* Dotted Divider */}
