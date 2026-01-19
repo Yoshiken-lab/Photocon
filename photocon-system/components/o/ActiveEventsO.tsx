@@ -36,7 +36,7 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
             </div>
 
             <button className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${isBrand
-                ? "bg-brand-500 text-white border-2 border-brand-500 group-hover:bg-brand-600"
+                ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
                 : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
                 }`}>
                 {status === "Active" ? "詳細・応募はこちら" : "結果を見る"}
@@ -48,7 +48,10 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
 
 export const ActiveEventsO = () => {
     return (
-        <div id="events" className="w-full bg-white py-16 px-6">
+        <div id="events" className="w-full bg-[#FFF5F0] py-24 px-6 relative overflow-hidden">
+            {/* Diagonal Header Decoration - Matching HowToApply Background (White) */}
+            <div className="absolute top-0 left-0 w-full h-[80px] bg-white skew-y-[-2] origin-top-left transform -translate-y-10 z-0"></div>
+
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}

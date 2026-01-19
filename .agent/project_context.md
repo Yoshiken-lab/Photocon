@@ -104,6 +104,14 @@ photocon/
     - その他コンポーネント: `ActiveEvent`, `PastEvents`, `HowToApply`, `Prizes`, `Requirements` 作成済み。
 - **デザイン調整**: ロゴ画像への差し替え、縦書きテキストの文字修正、CTAのレイアウト調整（枠外配置）を実施。
 
+### 最新の変更: Sample O の改修 (2026-01-19)
+- **URL**: `http://localhost:3000/sample-o`
+- **デザイン**:
+    - 全体をフラットデザインに変更。
+    - **背景デザイン**: `Brand-50 (#FFF5F0)` と `White (#FFFFFF)` を交互に配置し、**斜めのディバイダー**で区切るデザインを実装。
+    - **カラー**: ボタン色を `#E84D1C` に統一（Tailwind設定の問題回避のためハードコード対応中）。
+- **コンポーネント**: `HeroO`, `ActiveEventsO`, `HowToApplyO`, `FAQO` 等を更新。
+
 ## 6. 今後の課題 / TODO
 - サンプルデザインの本番適用（ユーザー指示待ち）。
 - 既存ページ (`/`) との統合検討。

@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 
 export const HowToApplyO = () => {
     return (
-        <div id="howto" className="w-full bg-orange-50 py-16 px-6 relative overflow-hidden">
-            {/* Diagonal Header Decoration */}
-            <div className="absolute top-0 left-0 w-full h-12 bg-white skew-y-2 origin-top-right transform -translate-y-6"></div>
+        <div id="howto" className="w-full bg-white py-24 px-6 relative overflow-hidden">
+            {/* Diagonal Header Decoration - Matching Hero Background (Brand-50) */}
+            <div className="absolute top-0 left-0 w-full h-[80px] bg-[#FFF5F0] skew-y-2 origin-top-right transform -translate-y-10 z-0"></div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -99,8 +99,7 @@ export const HowToApplyO = () => {
                 </motion.div>
             </div>
 
-            {/* Footer Decoration */}
-            <div className="absolute bottom-0 left-0 w-full h-12 bg-white skew-y-[-2deg] origin-bottom-left transform translate-y-6"></div>
+            {/* Footer Decoration - Removed, handled by next section's top divider */}
         </div>
     )
 }
