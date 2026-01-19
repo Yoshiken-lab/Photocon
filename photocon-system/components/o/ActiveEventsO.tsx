@@ -13,9 +13,10 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -5, boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)" }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`w-full ${bgColor} border-2 ${borderColor} rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-all`}
+            className={`w-full ${bgColor} border-2 ${borderColor} rounded-2xl p-6 relative overflow-hidden group`}
         >
             {status === "Active" && (
                 <div className="absolute top-0 right-0 bg-yellow-400 text-brand-600 text-xs font-bold px-3 py-1 rounded-bl-xl">
