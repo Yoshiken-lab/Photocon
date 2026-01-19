@@ -39,7 +39,6 @@ const HERO_SLIDES = [
 // Placeholder for the "School Photo! Photo Contest" Logo/Badge
 const ContestLogoBadge = () => (
     <div className="bg-white rounded-full p-4 md:p-8 shadow-2xl flex flex-col items-center justify-center aspect-square w-48 h-48 md:w-64 md:h-64 mx-auto relative z-20 border-4 border-brand-500 transform rotate-[-5deg] animate-float">
-        <span className="bg-brand-500 text-white text-xs md:text-sm px-3 py-1 rounded-full font-bold mb-2">スマホで参加！体験型</span>
         <div className="text-center">
             {/* Simple Text Logo approximation */}
             <div className="text-brand-500 font-extrabold text-xl md:text-3xl leading-tight font-sans tracking-tighter">
@@ -102,8 +101,14 @@ export const HeroO = () => {
                 {/* Overlays & Floating Decorations */}
 
                 {/* Central Logo Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none translate-y-12">
                     <ContestLogoBadge />
+
+                    {/* Scroll Indicator - Relocated */}
+                    <div className="mt-12 flex flex-col items-center gap-2 opacity-80 animate-bounce">
+                        <span className="text-[10px] font-bold tracking-[0.2em] text-white shadow-black drop-shadow-md">SCROLL</span>
+                        <div className="w-0.5 h-12 bg-white shadow-black drop-shadow-md"></div>
+                    </div>
                 </div>
 
                 {/* Floating Elements (Animated) */}
@@ -139,12 +144,6 @@ export const HeroO = () => {
                     スマホの中に眠っている<br className="md:hidden" />お子さまのベストショット。<br />
                     <span className="bg-yellow-100 px-1">未来の宝物</span> として残しませんか？
                 </p>
-
-                {/* Scroll Indicator */}
-                <div className="mt-8 flex flex-col items-center gap-2 opacity-60 animate-bounce">
-                    <span className="text-[10px] font-bold tracking-[0.2em] text-brand-400">SCROLL</span>
-                    <div className="w-0.5 h-8 bg-brand-200"></div>
-                </div>
             </div>
 
             {/* Dotted Divider */}
