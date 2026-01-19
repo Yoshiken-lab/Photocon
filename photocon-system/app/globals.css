@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-brand-50: #FFF5F2;

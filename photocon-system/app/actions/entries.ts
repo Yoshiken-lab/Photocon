@@ -8,7 +8,7 @@ export async function updateEntryStatus(id: string, status: 'approved' | 'reject
 
   const { error } = await supabase
     .from('entries')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status, updated_at: new Date().toISOString() } as any)
     .eq('id', id)
 
   if (error) {
