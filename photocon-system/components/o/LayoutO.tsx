@@ -17,10 +17,9 @@ const LeftSidebar = () => (
         {/* Redesigned Sidebar: Blends into background */}
         <div className="w-full pl-4">
             {/* Logo */}
+            {/* Logo - Removed as per request */}
             <div className="mb-8 relative z-10 w-40">
-                <Link href="/sample-o" className="block hover:opacity-80 transition-opacity">
-                    <img src="/logo.png" alt="スクールフォト！" className="w-full h-auto brightness-0 invert" />
-                </Link>
+                {/* Empty or removed */}
             </div>
 
             <ul className="space-y-5 font-bold text-stone-800 text-sm tracking-wide">
@@ -31,8 +30,8 @@ const LeftSidebar = () => (
                     { href: "#contact", label: "お問い合わせ" }
                 ].map((item, i) => (
                     <li key={item.href}>
-                        <Link href={item.href} className="hover:text-white flex items-center gap-3 group transition-colors">
-                            <span className="bg-stone-800/10 p-1.5 rounded-full group-hover:bg-white group-hover:text-brand-600 transition-all text-stone-800">
+                        <Link href={item.href} className="hover:text-brand-600 flex items-center gap-3 group transition-colors">
+                            <span className="bg-stone-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-stone-800">
                                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                             </span>
                             {item.label}
@@ -119,16 +118,16 @@ export const LayoutO = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <div className="relative w-full bg-brand-500 min-h-screen flex justify-center pt-20 pb-20">
+        <div className="relative w-full bg-[#FFF5F0] min-h-screen flex justify-center pt-20 pb-20">
             <div className="relative w-full max-w-[1600px] flex justify-center md:justify-between items-start px-4 md:px-12">
                 <LeftSidebar />
 
-                {/* Central Content Column */}
+                {/* Central Content Column - Flat & Integrated */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="w-full md:w-[600px] lg:w-[700px] bg-white rounded-3xl shadow-2xl relative z-10 flex flex-col items-center overflow-hidden"
+                    className="w-full md:w-[600px] lg:w-[700px] relative z-10 flex flex-col items-center"
                 >
                     {children}
                 </motion.div>

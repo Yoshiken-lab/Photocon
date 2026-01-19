@@ -36,8 +36,8 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
             </div>
 
             <button className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${isBrand
-                    ? "bg-brand-500 text-white group-hover:bg-brand-600"
-                    : "bg-white border border-gray-300 text-gray-600 group-hover:bg-gray-100"
+                ? "bg-brand-500 text-white border-2 border-brand-500 group-hover:bg-brand-600"
+                : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
                 }`}>
                 {status === "Active" ? "詳細・応募はこちら" : "結果を見る"}
                 <ArrowRight size={16} />

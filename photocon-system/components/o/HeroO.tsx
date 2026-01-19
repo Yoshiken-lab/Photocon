@@ -124,7 +124,7 @@ export const HeroO = () => {
             <div className="text-center pb-12 px-6 relative z-30">
 
                 <div className="inline-block relative group">
-                    <button className="bg-brand-500 text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-brand-600 hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/50 relative z-10 overflow-hidden">
+                    <button className="bg-brand-500 text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-brand-600 hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/30 relative z-10 overflow-hidden">
                         {/* Shimmer Effect */}
                         <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover:animate-shimmer" />
 
