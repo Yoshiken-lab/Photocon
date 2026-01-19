@@ -29,7 +29,7 @@ const faqs = [
 export const FAQO = () => {
     return (
         <div id="faq" className="w-full bg-white py-24 px-6 relative overflow-hidden">
-            {/* Diagonal Header Decoration - Matching ActiveEvents Background (Brand-50 / #FFF5F0) */}
+            {/* Diagonal Header Decoration */}
             <div className="absolute top-0 left-0 w-full h-[80px] bg-[#FFF5F0] skew-y-2 origin-top-right transform -translate-y-10 z-0"></div>
 
             <motion.div
@@ -46,24 +46,24 @@ export const FAQO = () => {
                 <div className="h-1 w-16 bg-brand-500 mx-auto rounded-full"></div>
             </motion.div>
 
-            <div className="max-w-md mx-auto relative z-10 space-y-8">
+            <div className="max-w-md mx-auto relative z-10 space-y-10">
                 {faqs.map((faq, index) => (
-                    <div key={index} className="space-y-4">
+                    <div key={index} className="space-y-6">
                         {/* Question (User) - Left Side */}
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="flex gap-2"
+                            className="flex items-end"
                         >
-                            <div className="bg-brand-100 text-gray-800 text-sm py-3 px-4 rounded-xl rounded-tl-sm shadow-sm max-w-[85%] relative">
-                                <p className="font-bold text-brand-600 text-[10px] mb-1">Q.</p>
+                            <div className="bg-brand-100 text-gray-800 text-sm py-4 px-5 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%] relative mt-2">
+                                <span className="absolute -top-3 -left-2 bg-white text-[#E84D1C] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#ffe8e0] shadow-sm z-10">
+                                    Question
+                                </span>
                                 {faq.q}
-                                {/* Tail CSS Mockup using ClipPath or Border would be nice but rounded-tl-sm handles the 'bubble' look enough for now, or add specific tail if needed. 
-                                    Using CSS border trick for tail:
-                                */}
-                                <div className="absolute top-[0px] left-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-r-[8px] border-r-brand-100 border-b-[8px] border-b-transparent"></div>
+                                {/* Tail */}
+                                <div className="absolute bottom-[0px] left-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-r-[8px] border-r-brand-100 border-b-[8px] border-b-transparent"></div>
                             </div>
                         </motion.div>
 
@@ -73,16 +73,16 @@ export const FAQO = () => {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 + 0.05 }}
                             viewport={{ once: true }}
-                            className="flex gap-3 justify-end"
+                            className="flex justify-end items-end"
                         >
-                            <div className="bg-white border-2 border-brand-50 text-gray-700 text-sm py-3 px-4 rounded-xl rounded-tr-sm shadow-sm max-w-[85%] relative text-left">
-                                <span className="block text-[10px] text-brand-400 font-bold mb-1">Answer</span>
+                            <div className="bg-white border-2 border-brand-50 text-gray-700 text-sm py-4 px-5 rounded-2xl rounded-br-sm shadow-sm max-w-[85%] relative text-left">
+                                <span className="absolute -top-3 -right-2 bg-white text-[#E84D1C] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#E84D1C] shadow-sm z-10">
+                                    Answer
+                                </span>
                                 {faq.a}
-                                <div className="absolute top-[-2px] right-[-10px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[10px] border-l-brand-50 border-b-[10px] border-b-transparent z-0"></div>
-                                <div className="absolute top-[0px] right-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[8px] border-l-white border-b-[8px] border-b-transparent z-10"></div>
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center flex-shrink-0 shadow-sm">
-                                <Smile size={20} className="text-brand-400" />
+                                {/* Tail */}
+                                <div className="absolute bottom-[-2px] right-[-10px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[10px] border-l-brand-50 border-b-[10px] border-b-transparent z-0"></div>
+                                <div className="absolute bottom-[0px] right-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[8px] border-l-white border-b-[8px] border-b-transparent z-10"></div>
                             </div>
                         </motion.div>
                     </div>
