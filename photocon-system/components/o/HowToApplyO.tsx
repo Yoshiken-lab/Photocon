@@ -28,11 +28,12 @@ export const HowToApplyO = () => {
             <div className="space-y-6 max-w-sm mx-auto relative z-10">
                 {/* Step 1 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    whileHover={{ y: -5 }}
                     transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                     viewport={{ once: true, margin: "-50px" }}
-                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
+                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group"
                 >
                     <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">1</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
@@ -55,11 +56,12 @@ export const HowToApplyO = () => {
 
                 {/* Step 2 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    whileHover={{ y: -5 }}
                     transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
                     viewport={{ once: true, margin: "-50px" }}
-                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
+                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group"
                 >
                     <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">2</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
@@ -82,11 +84,12 @@ export const HowToApplyO = () => {
 
                 {/* Step 3 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    whileHover={{ y: -5 }}
                     transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
                     viewport={{ once: true, margin: "-50px" }}
-                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform"
+                    className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group"
                 >
                     <div className="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">3</div>
                     <div className="bg-orange-100 p-4 rounded-full text-brand-500">
