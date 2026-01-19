@@ -40,7 +40,7 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
                 ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
                 : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
                 }`}>
-                {status === "Active" ? "詳細・応募はこちら" : "結果を見る"}
+                {status === "Active" ? "応募する→" : "結果を見る"}
                 <ArrowRight size={16} />
             </button>
         </motion.div>
