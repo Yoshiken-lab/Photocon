@@ -31,7 +31,7 @@ export const HeaderO = () => {
             </header>
 
             {/* Mobile Menu Overlay */}
-            <div className={`fixed inset-0 bg-brand-500 z-40 transition-transform duration-300 flex flex-col items-center justify-center ${isOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
+            <div className={`fixed inset-0 bg-[#E84D1C] z-40 transition-transform duration-300 flex flex-col items-center justify-center ${isOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
                 <nav className="flex flex-col gap-8 text-center text-white font-bold text-xl">
                     <Link href="/sample-o" onClick={() => setIsOpen(false)}>トップ</Link>
                     <Link href="#howto" onClick={() => setIsOpen(false)}>応募方法</Link>
