@@ -58,7 +58,7 @@ export const FAQO = () => {
                             className="flex items-end"
                         >
                             <div className="bg-brand-100 text-gray-800 text-sm py-4 px-5 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%] relative mt-2">
-                                <span className="absolute -top-4 -left-2 bg-white text-[#E84D1C] text-xs font-bold px-3 py-1 rounded-full border border-[#ffe8e0] shadow-sm z-10">
+                                <span className="absolute -top-4 -left-2 bg-white text-[#E84D1C] text-xs font-extrabold px-3 py-1 rounded-full border border-[#ffe8e0] shadow-sm z-10">
                                     Question
                                 </span>
                                 {faq.q}
@@ -76,7 +76,7 @@ export const FAQO = () => {
                             className="flex justify-end items-end"
                         >
                             <div className="bg-white border-2 border-brand-50 text-gray-700 text-sm py-4 px-5 rounded-2xl rounded-br-sm shadow-sm max-w-[85%] relative text-left">
-                                <span className="absolute -top-4 -right-2 bg-white text-[#E84D1C] text-xs font-bold px-3 py-1 rounded-full border border-[#E84D1C] shadow-sm z-10">
+                                <span className="absolute -top-4 -right-2 bg-white text-[#E84D1C] text-xs font-extrabold px-3 py-1 rounded-full border border-[#E84D1C] shadow-sm z-10">
                                     Answer
                                 </span>
                                 {faq.a}
