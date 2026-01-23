@@ -108,6 +108,18 @@ export const ActiveEventsO = () => {
                             color="gray"
                         />
                     </div>
+
+                    <div className="mt-8 text-center">
+                        <Link
+                            href="/sample-o/archive"
+                            className="inline-flex items-center gap-2 text-gray-500 font-bold hover:text-[#E84D1C] transition-colors group"
+                        >
+                            <span>もっと見る</span>
+                            <div className="bg-white p-1 rounded-full shadow-sm group-hover:shadow-md transition-shadow">
+                                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                            </div>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
