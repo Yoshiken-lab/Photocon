@@ -2,6 +2,7 @@
 
 import { Camera, Sparkles } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import Link from 'next/link'
 import { Autoplay, EffectFade } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
@@ -134,13 +135,13 @@ export const HeroO = () => {
                 </p>
 
                 <div className="inline-block relative group">
-                    <button className="bg-[#E84D1C] text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-[#D63E0F] hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/30 relative z-10 overflow-hidden">
+                    <Link href="/sample-o/apply" className="bg-[#E84D1C] text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-[#D63E0F] hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/30 relative z-10 overflow-hidden block w-fit">
                         {/* Shimmer Effect */}
                         <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover:animate-shimmer" />
 
                         <Camera size={28} className="animate-pulse" />
                         <span>応募する</span>
-                    </button>
+                    </Link>
                     {/* Button Glow */}
                     <div className="absolute top-2 left-0 w-full h-full bg-brand-500 blur-xl opacity-40 group-hover:opacity-60 transition-opacity rounded-full z-0"></div>
                 </div>

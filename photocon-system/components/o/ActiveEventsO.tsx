@@ -2,6 +2,7 @@
 
 import { ArrowRight, Calendar } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 const EventCard = ({ year, title, period, status, color = "brand", index }: { year: string, title: string, period: string, status: "Active" | "Closed", color?: "brand" | "gray", index: number }) => {
     const isBrand = color === "brand"
@@ -36,13 +37,26 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
                 <span>{period}</span>
             </div>
 
-            <button className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${isBrand
-                ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
-                : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
-                }`}>
-                {status === "Active" ? "応募する" : "結果を見る"}
-                <ArrowRight size={16} />
-            </button>
+            {status === "Active" ? (
+                <Link
+                    href="/sample-o/apply"
+                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors block ${isBrand
+                        ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
+                        : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
+                        }`}
+                >
+                    応募する
+                    <ArrowRight size={16} />
+                </Link>
+            ) : (
+                <button className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${isBrand
+                    ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
+                    : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
+                    }`}>
+                    結果を見る
+                    <ArrowRight size={16} />
+                </button>
+            )}
         </motion.div>
     )
 }
