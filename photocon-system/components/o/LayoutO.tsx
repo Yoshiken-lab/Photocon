@@ -118,7 +118,7 @@ export const LayoutO = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <div className="relative w-full bg-white min-h-screen flex justify-center pt-20 pb-20">
+        <div className="relative w-full bg-white min-h-screen flex justify-center pb-20">
             <div className="relative w-full max-w-[1600px] flex justify-center md:justify-between items-start px-4 md:px-12">
                 <LeftSidebar />
 
@@ -127,7 +127,7 @@ export const LayoutO = ({ children }: { children: React.ReactNode }) => {
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="w-full md:w-[600px] lg:w-[700px] relative z-10 flex flex-col items-center bg-[#FFF5F0] min-h-screen shadow-2xl shadow-brand-100/10 rounded-3xl overflow-hidden"
+                    className="w-full md:w-[600px] lg:w-[700px] relative z-10 flex flex-col items-center bg-[#FFF5F0] min-h-screen shadow-2xl shadow-brand-100/10 rounded-b-3xl overflow-hidden"
                 >
                     {children}
                 </motion.div>
