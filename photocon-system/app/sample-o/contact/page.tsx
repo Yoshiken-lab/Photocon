@@ -57,9 +57,10 @@ export default function ContactPageO() {
                                         <label className="block text-xs font-bold text-gray-400 mb-2 font-maru">件名を選んでください</label>
                                         <div className="relative">
                                             <select
+                                                defaultValue=""
                                                 className="w-full appearance-none bg-white/50 border-2 border-gray-300 rounded-lg p-3 text-sm font-bold text-gray-600 outline-none focus:border-[#E84D1C] focus:bg-white transition-colors cursor-pointer"
                                             >
-                                                <option value="" disabled selected>選択してください...</option>
+                                                <option value="" disabled>選択してください...</option>
                                                 <option value="contest">📷 フォトコンテストについて</option>
                                                 <option value="system">🔧 システムの不具合報告</option>
                                                 <option value="other">📝 その他・ご感想</option>

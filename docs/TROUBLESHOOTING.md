@@ -62,6 +62,17 @@
     - **「挨拶（インポート）は最初にするのが礼儀！！！！」**
     - 基本的なCSS構文ルールを軽視するべからず。
 
+### 5. React Select `defaultValue` 警告
+- **事象**:
+    - コンソールに `Use the defaultValue or value props on <select> instead of setting selected on <option>` という警告が出現。
+- **原因**:
+    - Reactでは `<option selected>` ではなく、親の `<select>` タグあるいは `value/defaultValue` プロップで初期値を制御するのが作法であるため。
+- **解決策**:
+    - `<option selected>` を削除し、`<select defaultValue="">` を設定。
+- **教訓**:
+    - **「Reactの作法（流儀）を守れ！！！！」**
+    - HTMLの常識が通用しないこともある。郷に入っては郷に従え。
+
 ---
 
 *これからも壁にぶち当たったら、ここに傷跡（ログ）を残していくこととする！！！！以上！！！！*

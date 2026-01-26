@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { MessageCircle, Smile } from 'lucide-react'
+import Link from 'next/link'
 
 const faqs = [
     {
@@ -22,7 +23,15 @@ const faqs = [
     },
     {
         q: "応募した写真を後から削除できますか？",
-        a: "お写真の削除依頼に関しましては、「お問い合わせ」からお問い合わせください。"
+        a: (
+            <>
+                お写真の削除依頼に関しましては、
+                <Link href="/sample-o/contact" className="text-blue-600 underline hover:text-[#E84D1C] transition-colors font-bold">
+                    「お問い合わせ」
+                </Link>
+                からお問い合わせください。
+            </>
+        )
     }
 ]
 
