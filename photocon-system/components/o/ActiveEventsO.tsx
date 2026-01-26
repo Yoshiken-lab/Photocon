@@ -49,13 +49,16 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
                     <ArrowRight size={16} />
                 </Link>
             ) : (
-                <button className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${isBrand
-                    ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
-                    : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
-                    }`}>
+                <Link
+                    href="/sample-o/result/1" // Mock ID for now
+                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors block ${isBrand
+                        ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
+                        : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
+                        }`}
+                >
                     結果を見る
                     <ArrowRight size={16} />
-                </button>
+                </Link>
             )}
         </motion.div>
     )
