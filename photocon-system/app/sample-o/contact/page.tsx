@@ -6,10 +6,10 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function ContactPageO() {
     return (
-        <div className="min-h-screen bg-[#FFF5F0] font-sans pb-20">
+        <div className="min-h-screen bg-white font-sans pb-20">
 
             {/* Mobile Container (Max 600px) */}
-            <div className="w-full md:max-w-[600px] mx-auto min-h-screen border-x border-brand-100/50 relative shadow-2xl pb-20 bg-[#FFF5F0]">
+            <div className="w-full md:max-w-[600px] mx-auto min-h-screen border-x border-brand-100/50 relative shadow-2xl pb-20 bg-[#FFF5F0] shadow-brand-100/20">
 
                 {/* Header */}
                 <header className="p-4 flex justify-between items-center bg-[#FFF5F0]/90 backdrop-blur sticky top-0 z-50">

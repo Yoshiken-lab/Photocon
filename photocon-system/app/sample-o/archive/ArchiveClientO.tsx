@@ -48,7 +48,7 @@ export default function ArchiveClientO({ contests }: { contests: Contest[] }) {
     }
 
     return (
-        <div className="min-h-screen bg-[#FFF5F0] font-sans pb-20">
+        <div className="min-h-screen bg-white font-sans pb-20">
 
             {/* Mobile Container Wrapper (Max 600px centered) */}
             <div className="w-full md:max-w-[600px] mx-auto min-h-screen bg-[#FFF5F0] border-x border-brand-100/50 relative overflow-hidden shadow-2xl shadow-brand-100/20">
