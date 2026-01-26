@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Settings, LogOut, Mail } from 'lucide-react'
 
 const menuItems = [
   { href: '/admin', icon: LayoutDashboard, label: 'ダッシュボード', group: 'main' },
   { href: '/admin/review', icon: ClipboardCheck, label: '審査待ち', group: 'manage', showBadge: true },
   { href: '/admin/entries', icon: Images, label: '応募一覧', group: 'manage' },
+  { href: '/admin/inquiries', icon: Mail, label: 'お問い合わせ', group: 'manage' },
   { href: '/admin/ranking', icon: Award, label: 'ランキング', group: 'manage' },
   { href: '/admin/contests', icon: Trophy, label: 'コンテスト管理', group: 'settings' },
   { href: '/admin/reports', icon: BarChart3, label: 'レポート', group: 'settings' },
@@ -46,11 +47,10 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                    isActive
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
                       ? 'bg-brand text-white'
                       : 'text-gray-600 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <item.icon className="w-5 h-5" />
                   {item.label}
@@ -71,18 +71,16 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                      isActive
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
                         ? 'bg-brand text-white'
                         : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <item.icon className="w-5 h-5" />
                     <span className="flex-1">{item.label}</span>
                     {showBadge && (
-                      <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold flex items-center justify-center ${
-                        isActive ? 'bg-white text-brand' : 'bg-red-500 text-white'
-                      }`}>
+                      <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold flex items-center justify-center ${isActive ? 'bg-white text-brand' : 'bg-red-500 text-white'
+                        }`}>
                         {pendingCount > 99 ? '99+' : pendingCount}
                       </span>
                     )}
@@ -103,11 +101,10 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                      isActive
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
                         ? 'bg-brand text-white'
                         : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <item.icon className="w-5 h-5" />
                     {item.label}

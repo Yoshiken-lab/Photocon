@@ -170,6 +170,38 @@ export interface Database {
           created_at?: string
         }
       }
+      inquiries: {
+        Row: {
+          id: string
+          category: 'contest' | 'delete' | 'system' | 'other'
+          name: string
+          email: string
+          message: string
+          status: 'pending' | 'done'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          category: 'contest' | 'delete' | 'system' | 'other'
+          name: string
+          email: string
+          message: string
+          status?: 'pending' | 'done'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          category?: 'contest' | 'delete' | 'system' | 'other'
+          name?: string
+          email?: string
+          message?: string
+          status?: 'pending' | 'done'
+          created_at?: string
+          updated_at?: string
+        }
+      }
       collection_logs: {
         Row: {
           id: string
