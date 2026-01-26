@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Send } from 'lucide-react'
 
 export default function ContactPageO() {
     return (
@@ -17,7 +17,7 @@ export default function ContactPageO() {
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         TOP
                     </Link>
-                    <div className="font-maru font-bold text-gray-700">お手紙（お問い合わせ）</div>
+                    <div className="font-maru font-bold text-gray-700"></div>
                     <div className="w-12"></div>
                 </header>
 
@@ -28,7 +28,7 @@ export default function ContactPageO() {
                             <span className="text-3xl">✉️</span>
                         </div>
                         <h1 className="text-2xl font-bold font-maru text-[#E84D1C]">お問い合わせ</h1>
-                        <p className="text-xs text-gray-500 mt-2">どのようなご用件でしょうか？</p>
+                        <p className="text-xs text-gray-500 mt-2"></p>
                     </div>
 
                     {/* Envelope Container */}
@@ -61,9 +61,10 @@ export default function ContactPageO() {
                                                 className="w-full appearance-none bg-white/50 border-2 border-gray-300 rounded-lg p-3 text-sm font-bold text-gray-600 outline-none focus:border-[#E84D1C] focus:bg-white transition-colors cursor-pointer"
                                             >
                                                 <option value="" disabled>選択してください...</option>
-                                                <option value="contest">📷 フォトコンテストについて</option>
-                                                <option value="system">🔧 システムの不具合報告</option>
-                                                <option value="other">📝 その他・ご感想</option>
+                                                <option value="contest">フォトコンテストについて</option>
+                                                <option value="delete">投稿写真の削除</option>
+                                                <option value="system">システムの不具合報告</option>
+                                                <option value="other">その他・ご感想</option>
                                             </select>
                                             {/* Custom Arrow */}
                                             <div className="absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -109,8 +110,8 @@ export default function ContactPageO() {
                         {/* Submit Area */}
                         <div className="bg-gray-50 p-6 text-center border-t border-gray-100">
                             <button className="bg-[#E84D1C] text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-[#D63E0F] hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto w-full max-w-[280px]">
-                                <span>ポストに入れる</span>
-                                <span className="text-xl">📮</span>
+                                <span>送信する</span>
+                                <Send size={20} />
                             </button>
                             <p className="text-[10px] text-gray-400 mt-4">
                                 ご入力いただいた個人情報は、お問い合わせ対応のみに使用します。
