@@ -30,14 +30,13 @@ export default function SubmitPageO() {
     useEffect(() => {
         const fetchContests = async () => {
             try {
-                const response = await fetch('/api/contests')
-                if (response.ok) {
-                    const data = await response.json()
-                    setContests(data)
-                    if (data.length > 0) {
-                        // Default select the first active contest if available
-                        setSelectedContest(data[0].id)
-                    }
+                // Use Server Action instead of fetch('/api/contests')
+                const { getActiveContests } = await import('@/app/actions/sample-o')
+                const data = await getActiveContests()
+
+                setContests(data)
+                if (data.length > 0) {
+                    setSelectedContest(data[0].id)
                 }
             } catch (e) {
                 console.error("Failed to fetch contests", e)
