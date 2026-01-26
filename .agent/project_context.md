@@ -128,6 +128,7 @@ photocon/
 - **コンポーネント**: `HeroO`, `ActiveEventsO` (もっと見るリンク追加・結果リンク修正), `HowToApplyO`, `FAQO`, `HeaderO` 等を更新。
     - **お問い合わせフォーム実装**: `/sample-o/contact` にServer Actions (`app/actions/inquiry.ts`) を用いた本格的な問い合わせフォームを実装。DB (`inquiries` table) 保存、バリデーション、送信成功アニメーション（修正済み）を完備。
     - **管理画面拡張**: `/admin/inquiries` に問い合わせ管理機能を追加。ステータス管理（未対応/完了）が可能。
+    - **リアルタイム更新機能**: Supabase Realtimeを導入し、新規問い合わせ受信時に管理画面のバッジとリストが即座に更新される仕組みを実装！！！！
 
 ## 6. 今後の課題 / TODO
 - サンプルデザインの本番適用（ユーザー指示待ち）。

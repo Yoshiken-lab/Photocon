@@ -4,12 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Settings, LogOut, Mail } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
 
 const menuItems = [
   { href: '/admin', icon: LayoutDashboard, label: 'ダッシュボード', group: 'main' },
   { href: '/admin/review', icon: ClipboardCheck, label: '審査待ち', group: 'manage', showBadge: true },
   { href: '/admin/entries', icon: Images, label: '応募一覧', group: 'manage' },
-  { href: '/admin/inquiries', icon: Mail, label: 'お問い合わせ', group: 'manage' },
+  { href: '/admin/inquiries', icon: Mail, label: 'お問い合わせ', group: 'manage', showInquiryBadge: true },
   { href: '/admin/ranking', icon: Award, label: 'ランキング', group: 'manage' },
   { href: '/admin/contests', icon: Trophy, label: 'コンテスト管理', group: 'settings' },
   { href: '/admin/reports', icon: BarChart3, label: 'レポート', group: 'settings' },
@@ -22,6 +24,43 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
   const pathname = usePathname()
+  const [inquiryCount, setInquiryCount] = useState(0)
+  const supabase = createClient()
+
+  useEffect(() => {
+    // 初回取得
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from('inquiries')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending')
+
+      setInquiryCount(count || 0)
+    }
+
+    fetchCount()
+
+    // リアルタイム購読
+    const channel = supabase
+      .channel('inquiries-sidebar-badge')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'inquiries',
+        },
+        () => {
+          // 何か変更があったらカウントを再取得 (INSERT/UPDATE/DELETEすべて)
+          fetchCount()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
@@ -48,8 +87,8 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                      ? 'bg-brand text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-brand text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
                     }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -66,14 +105,20 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
           <ul className="space-y-1">
             {menuItems.filter(item => item.group === 'manage').map((item) => {
               const isActive = pathname === item.href
-              const showBadge = 'showBadge' in item && item.showBadge && pendingCount > 0
+              // 'showBadge' exists -> Entries Pending Count
+              // 'showInquiryBadge' exists -> Inquiries Pending Count
+              const showBadge = ('showBadge' in item && item.showBadge && pendingCount > 0) || ('showInquiryBadge' in item && item.showInquiryBadge && inquiryCount > 0)
+
+              // 表示するカウント
+              const countDisplay = 'showInquiryBadge' in item ? inquiryCount : pendingCount
+
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                        ? 'bg-brand text-white'
-                        : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-brand text-white'
+                      : 'text-gray-600 hover:bg-gray-50'
                       }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -81,7 +126,7 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                     {showBadge && (
                       <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold flex items-center justify-center ${isActive ? 'bg-white text-brand' : 'bg-red-500 text-white'
                         }`}>
-                        {pendingCount > 99 ? '99+' : pendingCount}
+                        {countDisplay > 99 ? '99+' : countDisplay}
                       </span>
                     )}
                   </Link>
@@ -102,8 +147,8 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                   <Link
                     href={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                        ? 'bg-brand text-white'
-                        : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-brand text-white'
+                      : 'text-gray-600 hover:bg-gray-50'
                       }`}
                   >
                     <item.icon className="w-5 h-5" />
