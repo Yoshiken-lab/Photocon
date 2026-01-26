@@ -36,7 +36,7 @@ export async function getPastContests() {
     const { data, error } = await supabase
         .from('contests')
         .select('*')
-        .in('status', ['closed', 'judging', 'finished'])
+        .eq('status', 'ended') // Corrected status to match DB schema
         .order('end_date', { ascending: false })
 
     if (error) {
@@ -45,6 +45,23 @@ export async function getPastContests() {
     }
 
     return (data as unknown as ContestRow[]) || []
+}
+
+export async function getContestById(id: string) {
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase
+        .from('contests')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error) {
+        console.error('Error fetching contest:', error)
+        return null
+    }
+
+    return (data as unknown as ContestRow) || null
 }
 
 export async function getEntriesForResult(contestId: string) {

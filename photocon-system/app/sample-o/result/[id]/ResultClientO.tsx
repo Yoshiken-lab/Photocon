@@ -34,7 +34,7 @@ const getPaginationItems = (current: number, total: number) => {
     return items
 }
 
-export default function ResultClientO({ entries }: { entries: Entry[] }) {
+export default function ResultClientO({ entries, isVotingOpen }: { entries: Entry[], isVotingOpen: boolean }) {
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
     const [isVoting, setIsVoting] = useState(false)
@@ -119,6 +119,7 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
                         onVote={() => handleVote(selectedEntry)}
                         isVoting={isVoting}
                         parseCaption={parseCaption}
+                        isVotingOpen={isVotingOpen}
                     />
                 )}
             </AnimatePresence>
@@ -234,14 +235,16 @@ const EntryModal = ({
     hasVoted,
     onVote,
     isVoting,
-    parseCaption
+    parseCaption,
+    isVotingOpen
 }: {
     entry: Entry,
     onClose: () => void,
     hasVoted: boolean,
     onVote: () => void,
     isVoting: boolean,
-    parseCaption: (caption: string | null) => { title: string, comment: string }
+    parseCaption: (caption: string | null) => { title: string, comment: string },
+    isVotingOpen: boolean
 }) => {
     const { title, comment } = parseCaption(entry.caption)
 
@@ -281,31 +284,33 @@ const EntryModal = ({
                     </div>
 
                     {/* Vote Button */}
-                    <div className="mt-auto pt-6 border-t border-gray-100">
-                        <button
-                            onClick={() => onVote()}
-                            disabled={isVoting}
-                            className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
-                                ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
-                                : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
-                                }`}
-                        >
-                            {isVoting ? (
-                                <span className="animate-pulse">処理中...</span>
-                            ) : hasVoted ? (
-                                <>
-                                    <Heart size={24} fill="currentColor" /> 投票済み (取り消す)
-                                </>
-                            ) : (
-                                <>
-                                    <Heart size={24} /> 投票する
-                                </>
-                            )}
-                        </button>
-                        <p className="text-center text-xs text-gray-400 mt-3">
-                            {hasVoted ? "もう一度押すと投票を取り消せます" : "ログイン不要で投票できます"}
-                        </p>
-                    </div>
+                    {isVotingOpen && (
+                        <div className="mt-auto pt-6 border-t border-gray-100">
+                            <button
+                                onClick={() => onVote()}
+                                disabled={isVoting}
+                                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
+                                    ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
+                                    : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
+                                    }`}
+                            >
+                                {isVoting ? (
+                                    <span className="animate-pulse">処理中...</span>
+                                ) : hasVoted ? (
+                                    <>
+                                        <Heart size={24} fill="currentColor" /> 投票済み (取り消す)
+                                    </>
+                                ) : (
+                                    <>
+                                        <Heart size={24} /> 投票する
+                                    </>
+                                )}
+                            </button>
+                            <p className="text-center text-xs text-gray-400 mt-3">
+                                {hasVoted ? "もう一度押すと投票を取り消せます" : "ログイン不要で投票できます"}
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         </motion.div>
