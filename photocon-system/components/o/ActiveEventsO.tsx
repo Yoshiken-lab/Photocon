@@ -4,7 +4,7 @@ import { ArrowRight, Calendar } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-const EventCard = ({ year, title, period, status, color = "brand", index }: { year: string, title: string, period: string, status: "Active" | "Closed", color?: "brand" | "gray", index: number }) => {
+const EventCard = ({ year, title, period, status, color = "brand", index, id }: { year: string, title: string, period: string, status: "Active" | "Closed", color?: "brand" | "gray", index: number, id?: string }) => {
     const isBrand = color === "brand"
     const bgColor = isBrand ? "bg-red-50" : "bg-gray-50"
     const borderColor = isBrand ? "border-brand-200" : "border-gray-200"
@@ -50,7 +50,7 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
                 </Link>
             ) : (
                 <Link
-                    href="/sample-o/result/1" // Mock ID for now
+                    href={`/sample-o/result/${id}`}
                     className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors block ${isBrand
                         ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
                         : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
@@ -64,7 +64,25 @@ const EventCard = ({ year, title, period, status, color = "brand", index }: { ye
     )
 }
 
-export const ActiveEventsO = () => {
+interface Contest {
+    id: string
+    name: string
+    start_date: string
+    end_date: string
+    status: string
+}
+
+export const ActiveEventsO = ({ activeContests, pastContests }: { activeContests: Contest[], pastContests: Contest[] }) => {
+
+    // Helper to format date "YYYY.M.D"
+    const formatDatePeriod = (start: string, end: string) => {
+        const s = new Date(start)
+        const e = new Date(end)
+        return `${s.getFullYear()}.${s.getMonth() + 1}.${s.getDate()} - ${e.getMonth() + 1}.${e.getDate()}`
+    }
+
+    const getYear = (dateStr: string) => new Date(dateStr).getFullYear() + "年"
+
     return (
         <div id="events" className="w-full bg-[#FFF5F0] py-24 px-6 relative overflow-hidden">
             {/* Diagonal Header Decoration - Matching HowToApply Background (White) */}
@@ -82,34 +100,38 @@ export const ActiveEventsO = () => {
             </motion.div>
 
             <div className="space-y-6 max-w-sm mx-auto">
-                <EventCard
-                    index={0}
-                    year="2026年"
-                    title="春のフォトコンテスト"
-                    period="2026.4.10 - 4.24"
-                    status="Active"
-                    color="brand"
-                />
+                {activeContests.length > 0 ? (
+                    activeContests.map((contest, i) => (
+                        <EventCard
+                            key={contest.id}
+                            index={i}
+                            year={getYear(contest.start_date)}
+                            title={contest.name}
+                            period={formatDatePeriod(contest.start_date, contest.end_date)}
+                            status="Active"
+                            color="brand"
+                            id={contest.id}
+                        />
+                    ))
+                ) : (
+                    <div className="text-center text-gray-400 font-bold py-4">現在開催中のイベントはありません</div>
+                )}
 
                 <div className="pt-8">
                     <h3 className="text-center text-gray-400 font-bold mb-6 text-sm">過去のイベント</h3>
                     <div className="space-y-4 opacity-80 hover:opacity-100 transition-opacity">
-                        <EventCard
-                            index={1}
-                            year="2025年"
-                            title="冬のフォトコンテスト"
-                            period="2025.12.1 - 12.15"
-                            status="Closed"
-                            color="gray"
-                        />
-                        <EventCard
-                            index={2}
-                            year="2025年"
-                            title="夏のフォトコンテスト"
-                            period="2025.8.1 - 8.15"
-                            status="Closed"
-                            color="gray"
-                        />
+                        {pastContests.slice(0, 3).map((contest, i) => (
+                            <EventCard
+                                key={contest.id}
+                                index={i}
+                                year={getYear(contest.start_date)}
+                                title={contest.name}
+                                period={formatDatePeriod(contest.start_date, contest.end_date)}
+                                status="Closed"
+                                color="gray"
+                                id={contest.id}
+                            />
+                        ))}
                     </div>
 
                     <div className="mt-8 text-center">

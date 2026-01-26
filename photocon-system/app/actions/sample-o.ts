@@ -21,6 +21,24 @@ export async function getActiveContests() {
     return contests || []
 }
 
+export async function getPastContests() {
+    const supabase = createAdminClient()
+
+    // Fetch closed contests
+    const { data: contests, error } = await supabase
+        .from('contests')
+        .select('*')
+        .in('status', ['closed', 'judging', 'finished']) // Assuming these are past statuses
+        .order('end_date', { ascending: false })
+
+    if (error) {
+        console.error('Error fetching past contests:', error)
+        return []
+    }
+
+    return contests || []
+}
+
 export async function getEntriesForResult(contestId: string) {
     const supabase = createAdminClient()
 
