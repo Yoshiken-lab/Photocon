@@ -68,7 +68,7 @@ export const HeaderO = () => {
 
                     <div className="w-16 h-1 bg-[#ffdbc7] rounded-full my-2"></div>
 
-                    <Link href="#contact" onClick={() => setIsOpen(false)} className="text-lg font-bold text-white bg-[#E84D1C] px-10 py-3 rounded-full shadow-lg hover:bg-[#D63E0F] transition-colors">
+                    <Link href="/sample-o/contact" onClick={() => setIsOpen(false)} className="text-lg font-bold text-white bg-[#E84D1C] px-10 py-3 rounded-full shadow-lg hover:bg-[#D63E0F] transition-colors">
                         お問い合わせ
                     </Link>
                 </nav>

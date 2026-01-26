@@ -27,7 +27,7 @@ const LeftSidebar = () => (
                     { href: "#howto", label: "応募方法" },
                     { href: "#events", label: "開催イベント" },
                     { href: "#faq", label: "Q&A" },
-                    { href: "#contact", label: "お問い合わせ" }
+                    { href: "/sample-o/contact", label: "お問い合わせ" }
                 ].map((item, i) => (
                     <li key={item.href}>
                         <Link href={item.href} className="hover:text-brand-600 flex items-center gap-3 group transition-colors">
