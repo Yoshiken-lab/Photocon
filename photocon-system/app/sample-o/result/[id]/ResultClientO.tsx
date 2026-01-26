@@ -3,7 +3,8 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Heart } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Heart, X, Check } from 'lucide-react'
+import { voteForEntry } from '@/app/actions/sample-o'
 
 // Type definition based on real DB data
 export interface Entry {
@@ -11,8 +12,6 @@ export interface Entry {
     media_url: string
     username: string
     caption: string | null
-    // likes: number // To be added if real votes exist
-    // rank?: number
     collected_at: string
 }
 
@@ -37,6 +36,10 @@ const getPaginationItems = (current: number, total: number) => {
 
 export default function ResultClientO({ entries }: { entries: Entry[] }) {
     const [currentPage, setCurrentPage] = useState(1)
+    const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
+    const [isVoting, setIsVoting] = useState(false)
+    const [votedEntries, setVotedEntries] = useState<string[]>([]) // Track session votes
+
     const totalPages = Math.ceil(entries.length / ITEMS_PER_PAGE)
 
     const currentItems = entries.slice(
@@ -51,14 +54,117 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
 
     const paginationItems = getPaginationItems(currentPage, totalPages)
 
-    // Podium Logic (Simulated for now simply by taking the first 3 as winners if sorted by 'rank' or 'likes' - or just random for fun if no data? 
-    // Actually, let's just show standard grid if no explicit winners data, OR use the first 3 as a "Pickup" section)
-    // For this implementation, I will treat the first 3 as "Latest/Featured" to fill the podium visual if enough entries exist.
-    const podiumEntries = entries.length >= 3 ? entries.slice(0, 3) : []
-    const displayGridEntries = entries // Show all in grid? Or exclude podium? Usually grid shows all.
+    // Parse Title and Comment from Caption
+    const parseCaption = (rawCaption: string | null) => {
+        if (!rawCaption) return { title: 'No Title', comment: '' }
+        const parts = rawCaption.split('\n\n')
+        if (parts.length >= 2) {
+            return { title: parts[0], comment: parts.slice(1).join('\n\n') }
+        }
+        return { title: parts.length > 1 ? parts[0] : 'No Title', comment: parts.length > 1 ? parts.slice(1).join('\n') : rawCaption }
+    }
+
+    const handleVote = async (entry: Entry) => {
+        setIsVoting(true)
+        // Voter ID: Use localStorage
+        let voterId = localStorage.getItem('photocon_voter_id')
+        if (!voterId) {
+            voterId = Math.random().toString(36).substring(2) + Date.now().toString(36)
+            localStorage.setItem('photocon_voter_id', voterId)
+        }
+
+        const result = await voteForEntry(entry.id, voterId)
+
+        if (result.success) {
+            setVotedEntries(prev => [...prev, entry.id])
+        } else {
+            alert(result.message)
+        }
+        setIsVoting(false)
+    }
+
+    // Modal Content
+    const Modal = ({ entry, onClose }: { entry: Entry, onClose: () => void }) => {
+        const { title, comment } = parseCaption(entry.caption)
+        const hasVoted = votedEntries.includes(entry.id)
+
+        return (
+            <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                onClick={onClose}
+            >
+                <div
+                    className="bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+                    onClick={e => e.stopPropagation()}
+                >
+                    {/* Image Section */}
+                    <div className="w-full md:w-3/5 bg-gray-100 flex items-center justify-center">
+                        <img src={entry.media_url} alt={title} className="max-w-full max-h-[60vh] md:max-h-[90vh] object-contain" />
+                    </div>
+
+                    {/* Info Section */}
+                    <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col bg-white overflow-y-auto">
+                        <div className="flex justify-end mb-2">
+                            <button onClick={onClose} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                                <X size={20} className="text-gray-500" />
+                            </button>
+                        </div>
+
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-bold font-maru text-gray-800 mb-2 leading-tight">{title}</h2>
+                            <p className="text-sm font-bold text-gray-400 flex items-center gap-1">
+                                <span>Author:</span>
+                                <span className="text-brand-500 text-base">@{entry.username}</span>
+                            </p>
+                        </div>
+
+                        <div className="flex-grow mb-8 text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
+                            {comment}
+                        </div>
+
+                        {/* Vote Button */}
+                        <div className="mt-auto pt-6 border-t border-gray-100">
+                            <button
+                                onClick={() => !hasVoted && handleVote(entry)}
+                                disabled={isVoting || hasVoted}
+                                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
+                                        ? "bg-green-500 text-white cursor-default"
+                                        : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
+                                    }`}
+                            >
+                                {isVoting ? (
+                                    <span className="animate-pulse">投票中...</span>
+                                ) : hasVoted ? (
+                                    <>
+                                        <Check size={24} /> 投票済み
+                                    </>
+                                ) : (
+                                    <>
+                                        <Heart size={24} className={hasVoted ? "fill-current" : ""} />
+                                        投票する
+                                    </>
+                                )}
+                            </button>
+                            <p className="text-center text-xs text-gray-400 mt-3">
+                                {hasVoted ? "応援ありがとうございます！" : "ログイン不要で投票できます"}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-white font-sans pb-20">
+            {/* Modal */}
+            <AnimatePresence>
+                {selectedEntry && (
+                    <Modal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />
+                )}
+            </AnimatePresence>
+
             {/* Mobile Container (Max 600px) */}
             <div className="w-full md:max-w-[600px] mx-auto min-h-screen bg-[#FFF5F0] border-x border-brand-100/50 relative shadow-2xl shadow-brand-100/20">
 
@@ -68,72 +174,18 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         TOP
                     </Link>
-                    <div className="font-maru font-bold text-[#E84D1C] text-lg">結果発表</div>
+                    <div className="font-maru font-bold text-[#E84D1C] text-lg">みんなの作品</div>
                     <div className="w-12"></div>
                 </header>
 
                 <main className="px-4 py-8">
-
-                    {/* --- PODIUM SECTION (Only if we have entries) --- */}
-                    {podiumEntries.length === 3 && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="py-6 text-center mb-8 border-b-2 border-dashed border-gray-200"
-                        >
-                            <div className="inline-block bg-white px-6 py-2 rounded-full shadow-sm mb-8">
-                                <h1 className="text-xl font-extrabold font-maru text-gray-700 flex items-center gap-2">
-                                    <span>👑</span> ピックアップ
-                                </h1>
-                            </div>
-
-                            <div className="flex items-end justify-center gap-3 px-2">
-                                {/* 2nd (Left) = Index 1 */}
-                                <div className="w-1/3 flex flex-col items-center">
-                                    <motion.div
-                                        initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}
-                                        className="w-full aspect-square bg-white rounded-lg mb-2 relative border-4 border-gray-200 shadow-md overflow-hidden"
-                                    >
-                                        <img src={podiumEntries[1].media_url} alt="Pickup" className="w-full h-full object-cover" />
-                                    </motion.div>
-                                    <p className="font-bold text-xs text-gray-600 line-clamp-1">{podiumEntries[1].caption || 'No Title'}</p>
-                                    <p className="text-[10px] text-gray-400">@{podiumEntries[1].username}</p>
-                                </div>
-
-                                {/* 1st (Center) = Index 0 */}
-                                <div className="w-2/5 flex flex-col items-center pb-4 z-10">
-                                    <motion.div
-                                        initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.4, type: 'spring' }}
-                                        className="w-full aspect-square bg-yellow-50 rounded-2xl mb-2 relative border-4 border-yellow-400 shadow-xl transform scale-110 overflow-hidden"
-                                    >
-                                        <img src={podiumEntries[0].media_url} alt="Pickup" className="w-full h-full object-cover" />
-                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-4xl drop-shadow-sm z-10 filter">👑</div>
-                                    </motion.div>
-                                    <p className="font-bold text-base text-[#E84D1C] font-maru mt-1">{podiumEntries[0].caption || 'No Title'}</p>
-                                    <p className="text-xs text-gray-500 font-bold">@{podiumEntries[0].username}</p>
-                                </div>
-
-                                {/* 3rd (Right) = Index 2 */}
-                                <div className="w-1/3 flex flex-col items-center">
-                                    <motion.div
-                                        initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3 }}
-                                        className="w-full aspect-square bg-white rounded-lg mb-2 relative border-4 border-orange-200 shadow-md overflow-hidden"
-                                    >
-                                        <img src={podiumEntries[2].media_url} alt="Pickup" className="w-full h-full object-cover" />
-                                    </motion.div>
-                                    <p className="font-bold text-xs text-gray-600 line-clamp-1">{podiumEntries[2].caption || 'No Title'}</p>
-                                    <p className="text-[10px] text-gray-400">@{podiumEntries[2].username}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
 
                     {/* --- ALL ENTRIES SECTION --- */}
                     <div className="bg-white rounded-3xl p-5 shadow-sm min-h-[500px] flex flex-col">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="font-bold font-maru text-gray-700 text-lg flex items-center gap-2">
                                 <span className="w-1.5 h-5 bg-[#E84D1C] rounded-full"></span>
-                                みんなのアルバム
+                                一覧
                             </h2>
                             <span className="text-xs text-gray-400 font-bold bg-gray-50 px-2 py-1 rounded-md">
                                 {entries.length === 0 ? '0件' : (
@@ -158,14 +210,9 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
                                                 transition={{ duration: 0.2 }}
                                                 whileHover={{ scale: 1.05, zIndex: 10 }}
                                                 className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer"
+                                                onClick={() => setSelectedEntry(item)}
                                             >
                                                 <img src={item.media_url} alt={item.caption || 'Entry'} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                                                {/* Likes overlay (removed if no real like data, or keep mock?) -> Removing for now as we don't have real likes data passed yet */}
-                                                {/* 
-                                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 text-white font-bold text-xs">
-                                                    <Heart size={12} fill="currentColor" /> Like
-                                                </div>
-                                                */}
                                             </motion.div>
                                         ))}
                                     </AnimatePresence>

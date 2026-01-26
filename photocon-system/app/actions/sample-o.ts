@@ -129,3 +129,51 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
         caption: entry.nickname || 'Photographer'
     }))
 }
+
+// --- Voting Logic ---
+
+export async function voteForEntry(entryId: string, voterIdentifier: string) {
+    const supabase = createAdminClient()
+
+    // 1. Check if already voted (Simple duplicate check)
+    const { data: existingVote } = await supabase
+        .from('votes')
+        .select('id')
+        .eq('entry_id', entryId)
+        .eq('voter_identifier', voterIdentifier)
+        .single()
+
+    if (existingVote) {
+        return { success: false, message: 'すでに投票済みです' }
+    }
+
+    // 2. Insert Vote
+    const { error: voteError } = await supabase
+        .from('votes')
+        .insert({
+            entry_id: entryId,
+            voter_identifier: voterIdentifier
+        })
+
+    if (voteError) {
+        console.error('Vote Error:', voteError)
+        return { success: false, message: '投票に失敗しました' }
+    }
+
+    // 3. Increment like_count securely (using rpc is better, but simple update for now)
+    // We fetch current count first
+    const { data: entry } = await supabase
+        .from('entries')
+        .select('like_count')
+        .eq('id', entryId)
+        .single()
+
+    if (entry) {
+        await supabase
+            .from('entries')
+            .update({ like_count: (entry.like_count || 0) + 1 })
+            .eq('id', entryId)
+    }
+
+    return { success: true, message: '投票しました！' }
+}
