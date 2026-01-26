@@ -76,84 +76,15 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
         const result = await voteForEntry(entry.id, voterId)
 
         if (result.success) {
-            setVotedEntries(prev => [...prev, entry.id])
+            if (result.action === 'added') {
+                setVotedEntries(prev => [...prev, entry.id])
+            } else if (result.action === 'removed') {
+                setVotedEntries(prev => prev.filter(id => id !== entry.id))
+            }
         } else {
             alert(result.message)
         }
         setIsVoting(false)
-    }
-
-    // Modal Content
-    const Modal = ({ entry, onClose }: { entry: Entry, onClose: () => void }) => {
-        const { title, comment } = parseCaption(entry.caption)
-        const hasVoted = votedEntries.includes(entry.id)
-
-        return (
-            <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-                onClick={onClose}
-            >
-                <div
-                    className="bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
-                    onClick={e => e.stopPropagation()}
-                >
-                    {/* Image Section */}
-                    <div className="w-full md:w-3/5 bg-gray-100 flex items-center justify-center">
-                        <img src={entry.media_url} alt={title} className="max-w-full max-h-[60vh] md:max-h-[90vh] object-contain" />
-                    </div>
-
-                    {/* Info Section */}
-                    <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col bg-white overflow-y-auto">
-                        <div className="flex justify-end mb-2">
-                            <button onClick={onClose} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                                <X size={20} className="text-gray-500" />
-                            </button>
-                        </div>
-
-                        <div className="mb-6">
-                            <h2 className="text-2xl font-bold font-maru text-gray-800 mb-2 leading-tight">{title}</h2>
-                            <p className="text-sm font-bold text-gray-400 flex items-center gap-1">
-                                <span>Author:</span>
-                                <span className="text-brand-500 text-base">@{entry.username}</span>
-                            </p>
-                        </div>
-
-                        <div className="flex-grow mb-8 text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
-                            {comment}
-                        </div>
-
-                        {/* Vote Button */}
-                        <div className="mt-auto pt-6 border-t border-gray-100">
-                            <button
-                                onClick={() => !hasVoted && handleVote(entry)}
-                                disabled={isVoting || hasVoted}
-                                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
-                                        ? "bg-green-500 text-white cursor-default"
-                                        : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
-                                    }`}
-                            >
-                                {isVoting ? (
-                                    <span className="animate-pulse">投票中...</span>
-                                ) : hasVoted ? (
-                                    <>
-                                        <Check size={24} /> 投票済み
-                                    </>
-                                ) : (
-                                    <>
-                                        <Heart size={24} className={hasVoted ? "fill-current" : ""} />
-                                        投票する
-                                    </>
-                                )}
-                            </button>
-                            <p className="text-center text-xs text-gray-400 mt-3">
-                                {hasVoted ? "応援ありがとうございます！" : "ログイン不要で投票できます"}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-        )
     }
 
     return (
@@ -161,7 +92,14 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
             {/* Modal */}
             <AnimatePresence>
                 {selectedEntry && (
-                    <Modal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />
+                    <EntryModal
+                        entry={selectedEntry}
+                        onClose={() => setSelectedEntry(null)}
+                        hasVoted={votedEntries.includes(selectedEntry.id)}
+                        onVote={() => handleVote(selectedEntry)}
+                        isVoting={isVoting}
+                        parseCaption={parseCaption}
+                    />
                 )}
             </AnimatePresence>
 
@@ -266,5 +204,90 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
                 </main>
             </div>
         </div>
+    )
+}
+
+// Extracted Modal Component to prevent re-renders causing flicker
+const EntryModal = ({
+    entry,
+    onClose,
+    hasVoted,
+    onVote,
+    isVoting,
+    parseCaption
+}: {
+    entry: Entry,
+    onClose: () => void,
+    hasVoted: boolean,
+    onVote: () => void,
+    isVoting: boolean,
+    parseCaption: (caption: string | null) => { title: string, comment: string }
+}) => {
+    const { title, comment } = parseCaption(entry.caption)
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={onClose}
+        >
+            <div
+                className="bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Image Section */}
+                <div className="w-full md:w-3/5 bg-gray-100 flex items-center justify-center bg-black/5">
+                    <img src={entry.media_url} alt={title} className="max-w-full max-h-[60vh] md:max-h-[90vh] object-contain" />
+                </div>
+
+                {/* Info Section */}
+                <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col bg-white overflow-y-auto">
+                    <div className="flex justify-end mb-2">
+                        <button onClick={onClose} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                            <X size={20} className="text-gray-500" />
+                        </button>
+                    </div>
+
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold font-maru text-gray-800 mb-2 leading-tight">{title}</h2>
+                        <p className="text-sm font-bold text-gray-400 flex items-center gap-1">
+                            <span>Author:</span>
+                            <span className="text-brand-500 text-base">@{entry.username}</span>
+                        </p>
+                    </div>
+
+                    <div className="flex-grow mb-8 text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
+                        {comment}
+                    </div>
+
+                    {/* Vote Button */}
+                    <div className="mt-auto pt-6 border-t border-gray-100">
+                        <button
+                            onClick={() => onVote()}
+                            disabled={isVoting}
+                            className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
+                                    ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
+                                    : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
+                                }`}
+                        >
+                            {isVoting ? (
+                                <span className="animate-pulse">処理中...</span>
+                            ) : hasVoted ? (
+                                <>
+                                    <Heart size={24} fill="currentColor" /> 投票済み (取り消す)
+                                </>
+                            ) : (
+                                <>
+                                    <Heart size={24} /> 投票する
+                                </>
+                            )}
+                        </button>
+                        <p className="text-center text-xs text-gray-400 mt-3">
+                            {hasVoted ? "もう一度押すと投票を取り消せます" : "ログイン不要で投票できます"}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
     )
 }
