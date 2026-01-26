@@ -8,34 +8,13 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/autoplay'
 
-// --- CMS Integration Ready: Data Structure ---
-// In the future, this data can be fetched from an API or passed as props.
-const HERO_SLIDES = [
-    {
-        id: 1,
-        image: "bg-yellow-100", // Using color classes for placeholders, but this would be a URL
-        text: "Kids Running",
-        caption: "運動会のがんばった顔"
-    },
-    {
-        id: 2,
-        image: "bg-blue-100",
-        text: "Eating Lunch",
-        caption: "お弁当をほおばる笑顔"
-    },
-    {
-        id: 3,
-        image: "bg-pink-100",
-        text: "Family Portrait",
-        caption: "家族みんなの記念写真"
-    },
-    {
-        id: 4,
-        image: "bg-green-100",
-        text: "Baby Smile",
-        caption: "はじめての笑顔"
-    }
-]
+// --- Props Definition ---
+interface HeroSlide {
+    id: string
+    imageUrl: string
+    title: string
+    caption: string
+}
 
 // Placeholder for the "School Photo! Photo Contest" Logo/Badge
 const ContestLogoBadge = () => (
@@ -46,7 +25,10 @@ const ContestLogoBadge = () => (
     </div>
 )
 
-export const HeroO = () => {
+export const HeroO = ({ slides }: { slides: HeroSlide[] }) => {
+    // Fallback if empty (though logic handles it)
+    const effectiveSlides = slides.length > 0 ? slides : []
+
     return (
         <div className="w-full flex flex-col items-center pt-8 relative overflow-hidden">
 
@@ -70,17 +52,19 @@ export const HeroO = () => {
                         allowTouchMove={false} // Disable manual swiping for background effect feel
                         className="w-full h-full rounded-t-3xl md:rounded-3xl"
                     >
-                        {HERO_SLIDES.map((slide) => (
+                        {effectiveSlides.map((slide) => (
                             <SwiperSlide key={slide.id}>
-                                <div className={`w-full h-full ${slide.image} flex items-center justify-center relative overflwo-hidden`}>
-                                    {/* Placeholder Image Content */}
-                                    <div className="text-4xl font-bold text-black/10 select-none">
-                                        {slide.text}
-                                    </div>
+                                <div className="w-full h-full relative overflow-hidden">
+                                    {/* Image */}
+                                    <img
+                                        src={slide.imageUrl}
+                                        alt={slide.title}
+                                        className="w-full h-full object-cover animate-zoom-slow" // Add slow zoom effect if possible, or just cover
+                                    />
 
-                                    {/* Caption Overlay (Optional) */}
-                                    <div className="absolute bottom-10 left-0 w-full text-center opacity-0 animate-fade-in-up">
-                                        <span className="bg-white/80 px-4 py-2 rounded-full text-brand-600 font-bold font-maru shadow-sm text-sm md:text-base backdrop-blur-sm">
+                                    {/* Caption Overlay */}
+                                    <div className="absolute bottom-28 left-0 w-full text-center opacity-0 animate-fade-in-up">
+                                        <span className="bg-white/90 px-6 py-2 rounded-full text-brand-600 font-bold font-maru shadow-lg text-sm md:text-base backdrop-blur-md">
                                             {slide.caption}
                                         </span>
                                     </div>
@@ -158,6 +142,11 @@ export const HeroO = () => {
                 .animate-float { animation: float 6s ease-in-out infinite; }
                 .animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
                 .animate-shimmer { animation: shimmer 2s infinite; }
+                .animate-zoom-slow { animation: zoom-slow 20s linear infinite; }
+                @keyframes zoom-slow {
+                    0% { transform: scale(1); }
+                    100% { transform: scale(1.1); }
+                }
             `}</style>
         </div>
     )
