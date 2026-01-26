@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Heart, X, Check } from 'lucide-react'
-import { voteForEntry } from '@/app/actions/sample-o'
+import { voteForEntry, getMyVotes } from '@/app/actions/sample-o'
 
 // Type definition based on real DB data
 export interface Entry {
@@ -64,6 +64,26 @@ export default function ResultClientO({ entries }: { entries: Entry[] }) {
         return { title: parts.length > 1 ? parts[0] : 'No Title', comment: parts.length > 1 ? parts.slice(1).join('\n') : rawCaption }
     }
 
+    // Fetch initial votes on mount
+    React.useEffect(() => {
+        const fetchInitialVotes = async () => {
+            const voterId = localStorage.getItem('photocon_voter_id')
+            console.log('[ResultClientO] Mount. VoterID:', voterId)
+
+            if (voterId) {
+                try {
+                    const votes = await getMyVotes(voterId)
+                    console.log('[ResultClientO] Fetched votes:', votes)
+                    setVotedEntries(votes)
+                } catch (e) {
+                    console.error('[ResultClientO] Failed to fetch votes:', e)
+                }
+            } else {
+                console.log('[ResultClientO] No VoterID found in localStorage')
+            }
+        }
+        fetchInitialVotes()
+    }, [])
     const handleVote = async (entry: Entry) => {
         setIsVoting(true)
         // Voter ID: Use localStorage
@@ -266,8 +286,8 @@ const EntryModal = ({
                             onClick={() => onVote()}
                             disabled={isVoting}
                             className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
-                                    ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
-                                    : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
+                                ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
+                                : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
                                 }`}
                         >
                             {isVoting ? (
