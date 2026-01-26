@@ -6,8 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Heart } from 'lucide-react'
 
 // --- Mock Data Generation (Deterministic) ---
-// Total 152 items as per design mock
-// Top 3 are special, others are generated
 const TOTAL_ENTRIES = 152
 
 // Winners Data
@@ -21,7 +19,6 @@ const WINNERS = [
 const ENTRIES = Array.from({ length: TOTAL_ENTRIES }).map((_, i) => {
     const seeds = [123, 456, 789, 101]
     const seed = seeds[i % 4]
-    // Deterministic colors
     const bgColor = ['e2e8f0', 'fef3c7', 'e0f2fe', 'fce7f3', 'f3f4f6'][i % 5]
     const fgColor = ['94a3b8', 'd97706', '0ea5e9', 'db2777', '4b5563'][i % 5]
 
@@ -35,6 +32,45 @@ const ENTRIES = Array.from({ length: TOTAL_ENTRIES }).map((_, i) => {
 
 const ITEMS_PER_PAGE = 9
 
+// Pagination Logic Helper
+const getPaginationItems = (current: number, total: number) => {
+    // If pages are few, show all
+    if (total <= 6) return Array.from({ length: total }, (_, i) => i + 1)
+
+    const items: (number | string)[] = [1]
+
+    // If current is far from start, add '...'
+    if (current > 3) {
+        items.push('...')
+    }
+
+    // Window of pages around current
+    // If current is 1, show 2, 3
+    // If current is total, show total-2, total-1
+    let start = Math.max(2, current - 1)
+    let end = Math.min(total - 1, current + 1)
+
+    if (current === 1) end = 3
+    if (current === total) start = total - 2
+
+    // Clamp
+    start = Math.max(2, start)
+    end = Math.min(total - 1, end)
+
+    for (let i = start; i <= end; i++) {
+        items.push(i)
+    }
+
+    // If current is far from end, add '...'
+    if (current < total - 2) {
+        items.push('...')
+    }
+
+    items.push(total)
+
+    return items
+}
+
 export default function ResultPageO({ params }: { params: { id: string } }) {
     const [currentPage, setCurrentPage] = useState(1)
     const totalPages = Math.ceil(ENTRIES.length / ITEMS_PER_PAGE)
@@ -45,11 +81,12 @@ export default function ResultPageO({ params }: { params: { id: string } }) {
     )
 
     const handlePageChange = (page: number) => {
-        // Scroll to top of grid section, not top of page, to keep context? 
-        // Or top of page is safer. Let's do top of page for simplicity first.
         window.scrollTo({ top: 0, behavior: 'smooth' })
         setCurrentPage(page)
     }
+
+    // Generate pagination buttons
+    const paginationItems = getPaginationItems(currentPage, totalPages)
 
     return (
         <div className="min-h-screen bg-[#FFF5F0] font-sans pb-20">
@@ -158,36 +195,48 @@ export default function ResultPageO({ params }: { params: { id: string } }) {
                             </AnimatePresence>
                         </div>
 
-                        {/* Pagination UI */}
-                        <div className="flex justify-center items-center gap-2 mt-8 pt-6 border-t border-gray-100">
+                        {/* Pagination UI (Numeric) */}
+                        <div className="flex justify-center items-center gap-1 mt-8 pt-6 border-t border-gray-100 flex-wrap">
+
+                            {/* Prev */}
                             <button
                                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                                 disabled={currentPage === 1}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-300' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors mr-1 ${currentPage === 1 ? 'text-gray-300' : 'text-gray-500 hover:bg-gray-100'
                                     }`}
                             >
-                                <ArrowLeft size={18} />
+                                <ArrowLeft size={16} />
                             </button>
 
-                            {/* Simple Pagination: Current / Total */}
-                            <div className="flex items-center gap-1 font-bold font-maru mx-2">
-                                <span className="w-8 h-8 flex items-center justify-center rounded-full bg-[#E84D1C] text-white shadow-md">
-                                    {currentPage}
-                                </span>
-                                <span className="text-gray-300 text-xs px-1">/</span>
-                                <span className="text-gray-400 text-sm">
-                                    {totalPages}
-                                </span>
-                            </div>
+                            {/* Numbers */}
+                            {paginationItems.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    {item === '...' ? (
+                                        <span className="text-gray-300 px-1 text-xs">...</span>
+                                    ) : (
+                                        <button
+                                            onClick={() => handlePageChange(item as number)}
+                                            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold font-maru transition-all ${currentPage === item
+                                                    ? 'bg-[#E84D1C] text-white shadow-md scale-110'
+                                                    : 'text-gray-500 hover:bg-orange-50 hover:text-[#E84D1C]'
+                                                }`}
+                                        >
+                                            {item}
+                                        </button>
+                                    )}
+                                </React.Fragment>
+                            ))}
 
+                            {/* Next */}
                             <button
                                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                                 disabled={currentPage === totalPages}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-300' : 'bg-[#E84D1C] text-white shadow-md hover:bg-[#D63E0F]'
+                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ml-1 ${currentPage === totalPages ? 'text-gray-300' : 'text-gray-500 hover:bg-gray-100'
                                     }`}
                             >
-                                <ArrowRight size={18} />
+                                <ArrowRight size={16} />
                             </button>
+
                         </div>
 
                     </div>
