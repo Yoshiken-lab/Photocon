@@ -39,18 +39,9 @@ const HERO_SLIDES = [
 
 // Placeholder for the "School Photo! Photo Contest" Logo/Badge
 const ContestLogoBadge = () => (
-    <div className="bg-white rounded-full p-4 md:p-8 shadow-2xl flex flex-col items-center justify-center aspect-square w-48 h-48 md:w-64 md:h-64 mx-auto relative z-20 border-4 border-brand-500 transform rotate-[-5deg] animate-float">
-        <div className="text-center">
-            {/* Simple Text Logo approximation */}
-            <div className="text-brand-500 font-extrabold text-xl md:text-3xl leading-tight font-sans tracking-tighter">
-                スクールフォト！
-            </div>
-            <div className="text-gray-800 font-black text-2xl md:text-4xl mt-1 font-maru">
-                フォトコンテスト
-            </div>
-            <div className="text-gray-400 text-xs font-bold mt-2 tracking-widest">
-                スマホに眠る宝物を送ろう
-            </div>
+    <div className="bg-white rounded-full p-0 shadow-2xl flex flex-col items-center justify-center aspect-square w-48 h-48 md:w-64 md:h-64 mx-auto relative z-20 border-4 border-brand-500 transform rotate-[-5deg] animate-float">
+        <div className="w-full h-full overflow-hidden rounded-full">
+            <img src="/top_logo.png" alt="スクールフォト！フォトコンテスト" className="w-full h-full object-cover transform scale-110 drop-shadow-sm" />
         </div>
     </div>
 )
