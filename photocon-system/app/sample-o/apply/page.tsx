@@ -32,7 +32,7 @@ export default function SubmitPageO() {
             try {
                 // Use Server Action instead of fetch('/api/contests')
                 const { getActiveContests } = await import('@/app/actions/sample-o')
-                const data = await getActiveContests()
+                const data: Contest[] = await getActiveContests()
 
                 setContests(data)
                 if (data.length > 0) {
