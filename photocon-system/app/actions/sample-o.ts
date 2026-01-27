@@ -30,18 +30,27 @@ export async function getActiveContests() {
 }
 
 export async function getPastContests() {
+    // 1. Check Env
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('🔥 CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is missing in process.env!')
+    }
+
     const supabase = createAdminClient()
 
-    // Fetch closed contests
+    // 2. Fetch closed contests
     const { data, error } = await supabase
         .from('contests')
         .select('*')
-        .eq('status', 'ended') // Corrected status to match DB schema
+        .eq('status', 'ended')
         .order('end_date', { ascending: false })
 
     if (error) {
-        console.error('Error fetching past contests:', error)
+        console.error('🔥 Error fetching past contests:', JSON.stringify(error, null, 2))
         return []
+    }
+
+    if (!data || data.length === 0) {
+        console.warn('⚠️ [getPastContests] No contests with status "ended" found.')
     }
 
     return (data as unknown as ContestRow[]) || []

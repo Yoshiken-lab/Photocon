@@ -140,7 +140,15 @@ export default function ArchiveClientO({ contests }: { contests: Contest[] }) {
                                 })}
                             </AnimatePresence>
                         ) : (
-                            <div className="col-span-2 text-center text-gray-400 py-10">過去のイベントはありません</div>
+                            <div className="col-span-2 text-center py-20 opacity-80">
+                                <h3 className="text-2xl font-bold text-gray-400 mb-4 font-maru">
+                                    まだ見ぬ伝説を待て！！！！
+                                </h3>
+                                <p className="text-gray-500 text-sm">
+                                    現在、過去のイベントデータが表示されていません。<br />
+                                    システムログを確認してください。
+                                </p>
+                            </div>
                         )}
                     </div>
 
