@@ -17,6 +17,7 @@ type Contest = {
   voting_start: string | null
   voting_end: string | null
   status: string
+  settings?: { is_voting_enabled?: boolean }
 }
 
 type ContestFormProps = {
@@ -198,30 +199,56 @@ export default function ContestForm({ isOpen, onClose, contest }: ContestFormPro
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <Calendar className="w-4 h-4 inline mr-1" />
-                投票開始日
-              </label>
-              <input
-                type="date"
-                name="voting_start"
-                defaultValue={formatDate(contest?.voting_start || null)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
-              />
-            </div>
+            <div className="md:col-span-2 space-y-4 border-t border-gray-100 pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <input
+                  type="checkbox"
+                  id="is_voting_enabled"
+                  name="is_voting_enabled"
+                  defaultChecked={contest?.settings?.is_voting_enabled ?? true}
+                  className="w-5 h-5 text-brand border-gray-300 rounded focus:ring-brand"
+                  onChange={(e) => {
+                    const dateInputs = document.querySelectorAll('.voting-date-input')
+                    dateInputs.forEach((input: any) => {
+                      input.disabled = !e.target.checked
+                      if (!e.target.checked) input.value = ''
+                    })
+                  }}
+                />
+                <label htmlFor="is_voting_enabled" className="font-bold text-gray-800 cursor-pointer select-none">
+                  一般投票を受け付ける
+                </label>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <Calendar className="w-4 h-4 inline mr-1" />
-                投票終了日
-              </label>
-              <input
-                type="date"
-                name="voting_end"
-                defaultValue={formatDate(contest?.voting_end || null)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
-              />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Calendar className="w-4 h-4 inline mr-1" />
+                    投票開始日
+                  </label>
+                  <input
+                    type="date"
+                    name="voting_start"
+                    defaultValue={formatDate(contest?.voting_start || null)}
+                    className="voting-date-input w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all disabled:bg-gray-100 disabled:text-gray-400"
+                    disabled={contest?.settings?.is_voting_enabled === false}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Calendar className="w-4 h-4 inline mr-1" />
+                    投票終了日
+                  </label>
+                  <input
+                    type="date"
+                    name="voting_end"
+                    defaultValue={formatDate(contest?.voting_end || null)}
+                    className="voting-date-input w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all disabled:bg-gray-100 disabled:text-gray-400"
+                    disabled={contest?.settings?.is_voting_enabled === false}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="md:col-span-2">

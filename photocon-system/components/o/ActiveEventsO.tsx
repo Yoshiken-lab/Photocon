@@ -95,6 +95,7 @@ interface Contest {
     voting_start: string | null
     voting_end: string | null
     status: string
+    settings: any // Json type
 }
 
 export const ActiveEventsO = ({ activeContests, pastContests }: { activeContests: Contest[], pastContests: Contest[] }) => {
@@ -110,6 +111,9 @@ export const ActiveEventsO = ({ activeContests, pastContests }: { activeContests
 
     // Check if currently in voting period
     const isVotingPeriod = (contest: Contest) => {
+        // If voting is explicitly disabled in settings, return false immediately
+        if (contest.settings?.is_voting_enabled === false) return false
+
         if (!contest.voting_start || !contest.voting_end) return false
         const now = new Date()
         const start = new Date(contest.voting_start)
@@ -137,8 +141,8 @@ export const ActiveEventsO = ({ activeContests, pastContests }: { activeContests
                 {activeContests.length > 0 ? (
                     activeContests.map((contest, i) => {
                         const isVoting = isVotingPeriod(contest)
-                        // If status is specifically 'voting', also treat as voting
-                        const effectiveIsVoting = isVoting || contest.status === 'voting'
+                        // If status is specifically 'voting', also treat as voting ONLY IF enabled
+                        const effectiveIsVoting = (isVoting || contest.status === 'voting') && (contest.settings?.is_voting_enabled !== false)
 
                         return (
                             <EventCard

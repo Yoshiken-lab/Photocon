@@ -17,6 +17,7 @@ export async function createContest(formData: FormData) {
   const voting_start = formData.get('voting_start') as string
   const voting_end = formData.get('voting_end') as string
   const status = formData.get('status') as string
+  const is_voting_enabled = formData.get('is_voting_enabled') === 'on'
 
   // ハッシュタグを配列に変換
   const hashtags = hashtagsStr
@@ -37,6 +38,7 @@ export async function createContest(formData: FormData) {
       voting_start: voting_start ? new Date(voting_start).toISOString() : null,
       voting_end: voting_end ? new Date(voting_end).toISOString() : null,
       status: status || 'draft',
+      settings: { is_voting_enabled },
     })
     .select()
     .single()
@@ -64,10 +66,14 @@ export async function updateContest(id: string, formData: FormData) {
   const voting_start = formData.get('voting_start') as string
   const voting_end = formData.get('voting_end') as string
   const status = formData.get('status') as string
+  const is_voting_enabled = formData.get('is_voting_enabled') === 'on'
 
   const hashtags = hashtagsStr
     ? hashtagsStr.split(',').map((tag) => tag.trim()).filter(Boolean)
     : []
+
+  // Note: For now we overwrite settings. If more settings exist, we need to fetch -> merge -> update.
+  // Assuming currently only is_voting_enabled exists or overwriting is acceptable for this MVP.
 
   const { data, error } = await supabase
     .from('contests')
@@ -83,6 +89,7 @@ export async function updateContest(id: string, formData: FormData) {
       voting_start: voting_start ? new Date(voting_start).toISOString() : null,
       voting_end: voting_end ? new Date(voting_end).toISOString() : null,
       status: status || 'draft',
+      settings: { is_voting_enabled },
     })
     .eq('id', id)
     .select()

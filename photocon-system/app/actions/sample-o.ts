@@ -29,7 +29,10 @@ export async function getActiveContests() {
     return (data as unknown as ContestRow[]) || []
 }
 
-export async function getPastContests() {
+// Helper type for the return value
+export type ContestWithThumbnail = ContestRow & { thumbnail_url: string | null }
+
+export async function getPastContests(): Promise<ContestWithThumbnail[]> {
     // 1. Check Env
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.error('🔥 CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is missing in process.env!')
@@ -38,7 +41,7 @@ export async function getPastContests() {
     const supabase = createAdminClient()
 
     // 2. Fetch closed contests
-    const { data, error } = await supabase
+    const { data: contests, error } = await supabase
         .from('contests')
         .select('*')
         .eq('status', 'ended')
@@ -49,11 +52,37 @@ export async function getPastContests() {
         return []
     }
 
-    if (!data || data.length === 0) {
+    if (!contests || contests.length === 0) {
         console.warn('⚠️ [getPastContests] No contests with status "ended" found.')
+        return []
     }
 
-    return (data as unknown as ContestRow[]) || []
+    // Explicit cast to avoid 'never' inference
+    const typedContests = contests as unknown as ContestRow[]
+
+    // 3. Fetch thumbnails for each contest (Parallel)
+    const contestsWithThumbs = await Promise.all(typedContests.map(async (contest) => {
+        // Strategy: 'winner' > 'approved'. 'winner' starts with w, 'approved' with a.
+        // Descending order of status will put 'winner' before 'approved' (if we filter only these two).
+        const { data: entry } = await supabase
+            .from('entries')
+            .select('media_url')
+            .eq('contest_id', contest.id)
+            .in('status', ['winner', 'approved']) // Only winners or approved
+            .order('status', { ascending: false }) // 'winner' > 'approved'
+            .limit(1)
+            .single()
+
+        // Explicitly cast entry result
+        const typedEntry = entry as unknown as { media_url: string } | null
+
+        return {
+            ...contest,
+            thumbnail_url: typedEntry?.media_url || null
+        }
+    }))
+
+    return contestsWithThumbs
 }
 
 export async function getContestById(id: string) {
