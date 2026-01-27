@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { Calendar, Hash, Users, Search, Filter, ChevronDown, List, LayoutGrid, Trophy, CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { Calendar, Hash, Search, Filter, ChevronDown, ChevronLeft, ChevronRight, Trophy } from 'lucide-react'
 import ContestForm from './ContestForm'
 
 type Contest = {
@@ -18,14 +18,13 @@ type Contest = {
   voting_end: string | null
   status: string
   categories: { id: string; name: string; hashtag: string }[] | null
+  settings: any // Json
 }
 
 type Props = {
   contests: Contest[] | null
 }
 
-// viewType changed to 'list' (horizontal) vs 'grid' (square)
-type ViewType = 'list' | 'grid'
 type SortType = 'created_desc' | 'created_asc' | 'start_desc' | 'start_asc' | 'end_desc' | 'end_asc' | 'name_asc' | 'name_desc'
 
 const STATUS_OPTIONS = [
@@ -48,63 +47,23 @@ const SORT_OPTIONS = [
   { value: 'name_desc', label: '名前（逆順）' },
 ]
 
-function getContestProgress(contest: Contest) {
-  const now = new Date().getTime()
-  const start = new Date(contest.start_date).getTime()
-  const end = new Date(contest.end_date).getTime()
-  const votingStart = contest.voting_start ? new Date(contest.voting_start).getTime() : null
-  const votingEnd = contest.voting_end ? new Date(contest.voting_end).getTime() : null
-
-  let phases = [
-    { id: 'upcoming', label: '公開前', color: 'bg-yellow-500' },
-    { id: 'submission', label: '応募期間', color: 'bg-green-500' },
-    { id: 'voting', label: '投票期間', color: 'bg-blue-500' },
-    { id: 'ended', label: '終了', color: 'bg-gray-500' }
-  ]
-
-  let currentPhaseId = 'upcoming'
-  let progressInPhase = 0
-  let remainingDays = 0
-
-  if (now < start) {
-    currentPhaseId = 'upcoming'
-    remainingDays = Math.ceil((start - now) / (1000 * 60 * 60 * 24))
-  } else if (votingStart && now >= votingStart && votingEnd && now < votingEnd) {
-    currentPhaseId = 'voting'
-    const totalDuration = votingEnd - votingStart
-    const elapsed = now - votingStart
-    progressInPhase = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100))
-    remainingDays = Math.ceil((votingEnd - now) / (1000 * 60 * 60 * 24))
-  } else if (now >= end) {
-    currentPhaseId = 'ended'
-    progressInPhase = 100
-    remainingDays = 0
-  } else {
-    currentPhaseId = 'submission'
-    const phaseEnd = votingStart || end
-    const totalDuration = phaseEnd - start
-    const elapsed = now - start
-    progressInPhase = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100))
-    remainingDays = Math.ceil((phaseEnd - now) / (1000 * 60 * 60 * 24))
-  }
-
-  if (contest.status === 'draft') {
-    currentPhaseId = 'draft'
-  }
-
-  return { phases, currentPhaseId, progressInPhase, remainingDays }
-}
-
-
 export default function ContestsClient({ contests }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingContest, setEditingContest] = useState<Contest | null>(null)
 
-  // Default to horizontal list ('list')
+  // Hydration Fix: Use a mounted state to ensure consistent rendering
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Only calculate 'now' on the client side after mount
+  const now = mounted ? new Date().getTime() : null
+
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortType>('created_desc')
-  const [viewType, setViewType] = useState<ViewType>('list')
 
   const handleEdit = (contest: Contest) => {
     setEditingContest(contest)
@@ -118,6 +77,9 @@ export default function ContestsClient({ contests }: Props) {
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: 0 }
+    // Note: statusCounts relies on DB status. If we want dynamic counts, we'd need to calculate status for all contests here.
+    // For now, let's keep using DB status for filtering/counting to avoid complex re-calc logic affecting performance,
+    // but display the dynamic status on the card.
     contests?.forEach(c => {
       counts.all++
       counts[c.status] = (counts[c.status] || 0) + 1
@@ -129,16 +91,13 @@ export default function ContestsClient({ contests }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
-  // フィルタリング・ソート済みコンテスト
   const filteredContests = useMemo(() => {
     let result = [...(contests || [])]
 
-    // ステータスフィルター
     if (statusFilter) {
       result = result.filter(c => c.status === statusFilter)
     }
 
-    // テキスト検索
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(c =>
@@ -148,7 +107,6 @@ export default function ContestsClient({ contests }: Props) {
       )
     }
 
-    // ソート
     result.sort((a, b) => {
       switch (sortBy) {
         case 'created_desc': return new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
@@ -166,35 +124,20 @@ export default function ContestsClient({ contests }: Props) {
     return result
   }, [contests, statusFilter, searchQuery, sortBy])
 
-  // Reset page when filters change
-  // Note: we can use useEffect or just reset in handlers. useEffect is safer here to catch all changes.
-  // Using useMemo for displayedContests depends on filteredContests and currentPage.
-
-  // ページ変更時に検索条件が変わったら1ページ目に戻すためのエフェクトは、
-  // useMemoの依存配列に検索条件を入れているので、ここで明示的にsetCurrentPage(1)する必要があるか？
-  // 今回はハンドラーでセットするシンプルな方針にするか、useEffectを使うか。
-  // ここではuseEffectで reset するのが確実。
-
-  // However, cannot use useEffect inside this replace block easily if not imported.
-  // Assuming useEffect is not imported? I need to check imports.
-  // Previous file content showed `import { useState, useMemo } from 'react'`.
-  // I should update imports if I use useEffect. Or just set page to 1 in handlers.
-  // Let's modify handlers: setStatusFilter, setSearchQuery. 
-  // But wait, the handlers are inline in the JSX below.
-
-  // Better approach: Calculate displayed contests here.
   const totalPages = Math.ceil(filteredContests.length / itemsPerPage)
 
-  // Safe page check
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), Math.max(1, totalPages === 0 ? 1 : totalPages)) // Ensure at least 1 if no items
-  if (safeCurrentPage !== currentPage && totalPages > 0) {
-    // Avoid loop, but strictly, should be handled via effect or just using safeCurrentPage for slicing.
-    // We will use safeCurrentPage for calculation.
-  }
+  // Reset page safely if current page exceeds total pages
+  const safeCurrentPage = totalPages > 0 ? Math.min(Math.max(1, currentPage), totalPages) : 1
+
+  useEffect(() => {
+    if (currentPage !== safeCurrentPage) {
+      setCurrentPage(safeCurrentPage)
+    }
+  }, [currentPage, safeCurrentPage]);
 
   const paginatedContests = filteredContests.slice(
-    (safeCurrentPage - 1) * itemsPerPage,
-    safeCurrentPage * itemsPerPage
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   )
 
   const handlePageChange = (page: number) => {
@@ -216,6 +159,96 @@ export default function ContestsClient({ contests }: Props) {
       </span>
     )
   }
+
+  // --- Date/Timeline Helpers ---
+  const formatDate = (d: string) => {
+    const date = new Date(d)
+    const nowObj = new Date()
+    // Show year if it's not the current year
+    if (date.getFullYear() !== nowObj.getFullYear()) {
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    }
+    return `${date.getMonth() + 1}/${date.getDate()}`
+  }
+
+  const calculateStatus = (contest: Contest, currentTimestamp: number | null): string => {
+    // If hydration isn't complete (now is null), return DB status or a safe default
+    if (!currentTimestamp) return contest.status;
+
+    // Draft always overrides dates
+    if (contest.status === 'draft') return 'draft'
+
+    const start = new Date(contest.start_date).getTime()
+    const end = new Date(contest.end_date).getTime()
+    const votingStart = contest.voting_start ? new Date(contest.voting_start).getTime() : null
+    const votingEnd = contest.voting_end ? new Date(contest.voting_end).getTime() : null
+
+    if (currentTimestamp < start) return 'upcoming'
+    if (currentTimestamp > end) return 'ended'
+
+    // Between start and end
+    if (contest.settings?.is_voting_enabled !== false && votingStart && votingEnd) {
+      if (currentTimestamp >= votingStart && currentTimestamp <= votingEnd) return 'voting'
+    }
+
+    return 'active'
+  }
+
+  const getTimelineData = (contest: Contest, currentTimestamp: number | null) => {
+    if (!currentTimestamp) return null // Don't render complex timeline on server/first render
+
+    const start = new Date(contest.start_date).getTime()
+    const end = new Date(contest.end_date).getTime()
+    const votingStart = contest.voting_start ? new Date(contest.voting_start).getTime() : null
+    const votingEnd = contest.voting_end ? new Date(contest.voting_end).getTime() : null
+    const isVotingEnabled = contest.settings?.is_voting_enabled !== false
+
+    const totalDuration = end - start
+    if (totalDuration <= 0) return null
+
+    // Calculate Percentages
+    const currentPos = Math.min(100, Math.max(0, ((currentTimestamp - start) / totalDuration) * 100))
+
+    let submissionWidth, votingWidth, resultWidth
+
+    if (isVotingEnabled && votingStart && votingEnd) {
+      submissionWidth = Math.max(0, ((votingStart - start) / totalDuration) * 100)
+      votingWidth = Math.max(0, ((votingEnd - votingStart) / totalDuration) * 100)
+      resultWidth = Math.max(0, ((end - votingEnd) / totalDuration) * 100)
+    } else {
+      // If voting is disabled, Submission takes 100% effectively
+      submissionWidth = 100
+      votingWidth = 0
+      resultWidth = 0
+    }
+
+    // Remaining Days Calculation
+    let remainingDays = 0
+    let phaseLabel = ''
+
+    if (currentTimestamp < start) {
+      remainingDays = Math.ceil((start - currentTimestamp) / 86400000)
+      phaseLabel = `公開まで${remainingDays}日`
+    } else if (currentTimestamp > end) {
+      phaseLabel = '終了'
+    } else {
+      remainingDays = Math.ceil((end - currentTimestamp) / 86400000)
+      phaseLabel = `終了まで${remainingDays}日`
+
+      if (isVotingEnabled && votingStart && votingEnd) {
+        if (currentTimestamp >= votingStart && currentTimestamp <= votingEnd) {
+          const voteDays = Math.ceil((votingEnd - currentTimestamp) / 86400000)
+          phaseLabel = `投票終了まで${voteDays}日`
+        } else if (currentTimestamp < votingStart) {
+          const subDays = Math.ceil((votingStart - currentTimestamp) / 86400000)
+          phaseLabel = `投票開始まで${subDays}日`
+        }
+      }
+    }
+
+    return { currentPos, submissionWidth, votingWidth, resultWidth, phaseLabel, isVotingEnabled, votingStart, votingEnd }
+  }
+
 
   return (
     <div className="space-y-6">
@@ -289,57 +322,28 @@ export default function ContestsClient({ contests }: Props) {
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
-
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setViewType('list')}
-              className={`p-2 rounded-md transition-colors ${viewType === 'list' ? 'bg-white shadow-sm text-brand' : 'text-gray-500 hover:text-gray-700'
-                }`}
-              title="リスト表示"
-            >
-              <List className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewType('grid')}
-              className={`p-2 rounded-md transition-colors ${viewType === 'grid' ? 'bg-white shadow-sm text-brand' : 'text-gray-500 hover:text-gray-700'
-                }`}
-              title="グリッド表示"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className={
-        viewType === 'list'
-          ? 'flex flex-col gap-6'
-          : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start' // Grid layout
-      }>
+      {/* List View Only */}
+      <div className="flex flex-col gap-6">
         {paginatedContests.length > 0 ? (
           paginatedContests.map((contest) => {
-            const { phases, currentPhaseId, progressInPhase, remainingDays } = getContestProgress(contest)
+            const tl = getTimelineData(contest, now)
+            const computedStatus = calculateStatus(contest, now)
 
             return (
               <div
                 key={contest.id}
-                className={`bg-white rounded-xl shadow-sm border border-gray-100 ${viewType === 'list' ? 'p-6' : 'p-5 flex flex-col h-full' // Adjust padding for grid
-                  }`}
+                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
               >
-                {/* 
-                  Wrapper for Layout Switch:
-                  List: flex-row (horizontal)
-                  Grid: flex-col (vertical)
-                */}
-                <div className={`flex gap-6 ${viewType === 'grid' ? 'flex-col gap-4' : 'flex-col md:flex-row'}`}>
+                <div className="flex flex-col md:flex-row gap-6">
 
-                  {/* Part 1: Image & Meta */}
-                  <div className={viewType === 'list' ? 'md:w-1/3 min-w-[280px]' : 'w-full'}>
-                    <div className={`flex gap-4 ${viewType === 'grid' ? 'flex-col' : 'mb-4'}`}>
+                  {/* Part 1: Info */}
+                  <div className="md:w-1/3 min-w-[280px]">
+                    <div className="flex gap-4 mb-4">
                       {contest.image_url && (
-                        <div className={`flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden ${viewType === 'list' ? 'w-24 h-24' : 'w-full h-40' // Larger image in grid
-                          }`}>
+                        <div className="flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden w-24 h-24">
                           <img
                             src={contest.image_url}
                             alt={contest.name}
@@ -350,132 +354,126 @@ export default function ContestsClient({ contests }: Props) {
 
                       <div className="flex-1">
                         <div className="mb-2 flex items-center justify-between">
-                          {getStatusBadge(contest.status)}
-                          {viewType === 'grid' && (
-                            <button onClick={() => handleEdit(contest)} className="text-xs text-brand font-medium hover:underline">編集</button>
-                          )}
+                          {getStatusBadge(computedStatus)}
                         </div>
                         <div className="flex items-center gap-2 mb-1">
                           {contest.emoji && (
                             <span className="text-xl">{contest.emoji}</span>
                           )}
-                          <h2 className={`font-bold text-gray-800 ${viewType === 'grid' ? 'text-base' : 'text-lg'}`}>{contest.name}</h2>
+                          <h2 className="font-bold text-gray-800 text-lg">{contest.name}</h2>
                         </div>
                         <p className="text-xs text-gray-500 line-clamp-2">{contest.description}</p>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap gap-3 text-xs text-gray-600 mt-2">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                        <span>
-                          {new Date(contest.start_date).toLocaleDateString('ja-JP')} 〜 {new Date(contest.end_date).toLocaleDateString('ja-JP')}
-                        </span>
+                      {/* Basic Period Info just in case */}
+                      <div className="flex items-center gap-1.5 opacity-70">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>全体: {formatDate(contest.start_date)} - {formatDate(contest.end_date)}</span>
                       </div>
-                      {contest.hashtags && (
-                        <div className="flex items-center gap-1.5">
-                          <Hash className="w-3.5 h-3.5 text-gray-400" />
-                          <span>{contest.hashtags[0]}{contest.hashtags.length > 1 && ` +${contest.hashtags.length - 1}`}</span>
-                        </div>
-                      )}
                     </div>
                   </div>
 
-                  {/* Part 2: Stepper */}
-                  <div className={`flex-1 ${viewType === 'list'
-                    ? 'border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6'
-                    : 'border-t border-gray-100 pt-4 w-full'
-                    }`}>
-                    {viewType === 'list' && (
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-brand" />
-                          進捗状況
-                        </h3>
-                        <button
-                          onClick={() => handleEdit(contest)}
-                          className="text-sm text-brand hover:underline font-medium"
-                        >
-                          編集する
-                        </button>
-                      </div>
-                    )}
+                  {/* Part 2: Timeline */}
+                  <div className="flex-1 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6 flex flex-col justify-center">
 
-                    {viewType === 'grid' && (
-                      <h3 className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">進捗状況</h3>
-                    )}
-
-                    {/* Stepper UI */}
-                    <div className="relative">
-                      <div className="absolute top-3 left-0 right-0 h-1 bg-gray-100 rounded-full"></div>
-
-                      <div className="grid grid-cols-4 gap-1 relative">
-                        {phases.map((phase) => {
-                          const isActive = phase.id === currentPhaseId
-                          const isPast = phases.findIndex(p => p.id === phase.id) < phases.findIndex(p => p.id === currentPhaseId)
-
-                          const baseColor = isActive ? phase.color : (isPast ? 'bg-gray-300' : 'bg-gray-100')
-                          const textColor = isActive ? 'text-gray-800 font-bold' : (isPast ? 'text-gray-500' : 'text-gray-400')
-
-                          return (
-                            <div key={phase.id} className="flex flex-col items-center group">
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white z-10 transition-all ${isActive ? phase.color + ' scale-110 shadow-md ring-4 ring-white' : (isPast ? 'bg-gray-400' : 'bg-gray-200')
-                                }`}>
-                                {isPast ? <CheckCircle2 className="w-4 h-4" /> : (isActive ? <div className="w-2 h-2 bg-white rounded-full animate-pulse" /> : <div className="w-2 h-2 bg-white rounded-full opacity-0" />)}
-                              </div>
-
-                              {/* Shorter Labels for Grid View if needed, but text-xs usually fits */}
-                              <span className={`text-[10px] sm:text-xs mt-2 text-center leading-tight ${textColor} ${viewType === 'grid' ? 'w-full break-words' : 'whitespace-nowrap'}`}>
-                                {phase.label}
-                              </span>
-
-                              {isActive && remainingDays > 0 && (
-                                <div className="absolute top-10 left-0 right-0 mt-4 px-1 z-20">
-                                  <div className="bg-gray-50 rounded-lg p-2 border border-gray-100 text-center shadow-sm">
-                                    <div className="flex justify-between text-[10px] mb-1 font-bold">
-                                      <span className="text-brand">進行中</span>
-                                      <span className="text-red-500">残{remainingDays}日</span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                                      <div
-                                        className={`h-full rounded-full transition-all duration-1000 ${phase.color}`}
-                                        style={{ width: `${progressInPhase}%` }}
-                                      ></div>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4 text-sm">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-400">応募期間</span>
+                          <span className="font-bold text-gray-700">{formatDate(contest.start_date)} - {tl?.votingStart ? formatDate(new Date(tl.votingStart).toISOString()) : formatDate(contest.end_date)}</span>
+                        </div>
+                        {tl?.isVotingEnabled && tl?.votingStart && tl?.votingEnd && (
+                          <>
+                            <span className="text-gray-300">→</span>
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-400">投票期間</span>
+                              <span className="font-bold text-gray-700">{formatDate(new Date(tl.votingStart).toISOString())} - {formatDate(new Date(tl.votingEnd).toISOString())}</span>
                             </div>
-                          )
-                        })}
+                          </>
+                        )}
                       </div>
+                      <button
+                        onClick={() => handleEdit(contest)}
+                        className="text-sm text-brand hover:underline font-medium"
+                      >
+                        編集する
+                      </button>
                     </div>
 
-                    {currentPhaseId !== 'ended' && currentPhaseId !== 'draft' && <div className="h-16 md:h-12"></div>}
+                    {/* Timeline Bar */}
+                    {tl && (
+                      <div className="relative pt-6 pb-2">
+                        <div className="h-3 bg-gray-100 rounded-full w-full relative overflow-hidden">
+                          {/* Submission */}
+                          <div
+                            className="absolute left-0 h-full bg-green-500/30"
+                            style={{ width: `${tl.submissionWidth}%` }}
+                            title="応募期間"
+                          />
+                          {/* Voting */}
+                          {tl.isVotingEnabled && (
+                            <div
+                              className="absolute h-full bg-blue-500/30"
+                              style={{ left: `${tl.submissionWidth}%`, width: `${tl.votingWidth}%` }}
+                              title="投票期間"
+                            />
+                          )}
+                          {/* Result */}
+                          {tl.isVotingEnabled && (
+                            <div
+                              className="absolute h-full bg-gray-500/20"
+                              style={{ left: `${tl.submissionWidth + tl.votingWidth}%`, width: `${tl.resultWidth}%` }}
+                              title="結果発表"
+                            />
+                          )}
+                        </div>
+
+                        {/* Current Position Marker */}
+                        <div
+                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-brand border-2 border-white rounded-full shadow z-10 transition-all duration-500"
+                          style={{ left: `calc(${tl.currentPos}% - 0.5rem)` }}
+                        >
+                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-sm font-bold">
+                            {tl.phaseLabel}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-brand"></div>
+                          </div>
+                        </div>
+
+                        {/* Labels under bar */}
+                        <div className="flex justify-between text-[10px] text-gray-400 mt-2 relative">
+                          {/* Start */}
+                          <span>{formatDate(contest.start_date)}</span>
+
+                          {/* Middle labels could be added if space permits, but might overlap */}
+
+                          {/* End */}
+                          <span>{formatDate(contest.end_date)}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Footer / Categories */}
                 {contest.categories && contest.categories.length > 0 && (
                   <div className="mt-auto pt-4 border-t border-gray-100 flex flex-wrap gap-2">
-                    {contest.categories.slice(0, viewType === 'grid' ? 3 : 10).map((category) => (
+                    {contest.categories.slice(0, 10).map((category) => (
                       <span
                         key={category.id}
                         className="px-2 py-0.5 bg-gray-50 text-gray-500 rounded text-xs border border-gray-200"
                       >
-                        {category.name}
+                        # {category.name}
                       </span>
                     ))}
-                    {viewType === 'grid' && contest.categories.length > 3 && (
-                      <span className="text-xs text-gray-400">+{contest.categories.length - 3}</span>
-                    )}
                   </div>
                 )}
               </div>
             )
           })
         ) : (
-          <div className={`col-span-full bg-white rounded-xl p-12 text-center`}>
+          <div className="col-span-full bg-white rounded-xl p-12 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Trophy className="w-8 h-8 text-gray-400" />
             </div>
