@@ -13,6 +13,15 @@
     - エラーメッセージ: `Text content does not match server-rendered HTML.`
 - **原因**:
     - Next.js (App Router) はサーバーとクライアントの両方でレンダリングを行うが、`Math.random()` は毎回異なる値を返すため、両者の整合性が取れなくなる。
+- **2026-01-27: トップページの開催中イベントが更新されない不具合**
+    - **現象**: 管理画面ではステータスが正しく表示されているのに、トップページ（`getActiveContests`）では古いイベントが表示されたり、新しいイベントが表示されなかったりする。
+    - **原因**: `getActiveContests` がDBの `status` カラム（`eq('status', 'active')`）に依存していたため。管理画面は日付ベースで表示しているが、DBカラムの値自体はバッチ処理等で更新されていないため不整合が起きていた。
+    - **対応**: `getActiveContests` のクエリを修正し、`status` カラムではなく `start_date <= now` かつ `end_date >= now` という日付条件での抽出に変更。これにより動的に正しい「開催中」イベントが取得できるようになった。
+
+- **2026-01-27: 審査待ち一覧が表示されない（サイドバーの件数と不一致）**
+    - **現象**: サイドバーには「審査待ち 2件」と表示されているのに、審査画面（/admin/review）を開くと「全て完了しました！」と表示され、リストが空になっている。
+    - **原因**: Next.jsのApp Routerがページを静的（または古いキャッシュ）として扱い、DBの最新状態をフェッチしていなかったため。`entries` テーブルの更新がコンポーネントの再レンダリングをトリガーしていなかった。
+    - **対応**: `app/admin/review/page.tsx` に `export const dynamic = 'force-dynamic'` を追加し、リクエストごとに必ずサーバー側で最新データを取得するように強制した。
 - **解決策（魂の拳）**:
     - ランダムではなく、**決定的な計算式**を使用してデータを生成するように変更。
     - 例: `const entries = ((index * 1237 + 7) % 300) + 50`
@@ -199,6 +208,22 @@
 - **教訓**:
     - **「読み手への配慮こそが最大の熱意！！！！」**
     - どんなに熱い魂を持っていても、伝わらなければ意味がない。
+
+### 9. Server Actionsでの同期関数エラー
+- **発生日時**: 2026-01-27
+- **現象**: Next.js のビルドエラー: `Server actions must be async functions`
+- **原因**: `'use server'` ディレクティブが付いたファイル（`app/actions/sample-o.ts`）から、同期関数 `formatDisplayId` をexportしていた。Next.js のServer Actionsは **async関数のみ** をexportできるという制約がある。
+- **該当コード**:
+    ```typescript
+    // NG: 同期関数はexportできない
+    export function formatDisplayId(code: string, seq: number): string {
+        return `#${code}-${seq}`
+    }
+    ```
+- **解決策**: `sample-o.ts` から `formatDisplayId` を削除し、使用するクライアントコンポーネント（`ResultClientO.tsx`）内にヘルパー関数として定義した。
+- **教訓**:
+    - **`'use server'` ファイルからは async 関数だけをexportせよ！！！！**
+    - ユーティリティ関数はクライアントコンポーネントか、別の共有ファイル（`/lib/utils.ts` など）に配置する。
 
 ---
 

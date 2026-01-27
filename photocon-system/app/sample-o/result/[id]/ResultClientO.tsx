@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Heart, X, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Heart, X, Copy, Check } from 'lucide-react'
 import { voteForEntry, getMyVotes } from '@/app/actions/sample-o'
 
 // Type definition based on real DB data
@@ -13,6 +13,14 @@ export interface Entry {
     username: string
     caption: string | null
     collected_at: string
+    display_seq: number | null  // For structured ID display
+}
+
+// Helper: Format structured display ID
+const formatDisplayId = (contestCode: string | null, seq: number | null): string => {
+    const code = contestCode || '0000'
+    const seqStr = seq ? String(seq).padStart(4, '0') : '0000'
+    return `#${code}-${seqStr}`
 }
 
 const ITEMS_PER_PAGE = 9
@@ -34,7 +42,17 @@ const getPaginationItems = (current: number, total: number) => {
     return items
 }
 
-export default function ResultClientO({ entries, isVotingOpen }: { entries: Entry[], isVotingOpen: boolean }) {
+export default function ResultClientO({
+    entries,
+    isVotingOpen,
+    contestShortCode = null,
+    votingHint = null
+}: {
+    entries: Entry[],
+    isVotingOpen: boolean,
+    contestShortCode?: string | null,
+    votingHint?: string | null
+}) {
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
     const [isVoting, setIsVoting] = useState(false)
@@ -120,6 +138,8 @@ export default function ResultClientO({ entries, isVotingOpen }: { entries: Entr
                         isVoting={isVoting}
                         parseCaption={parseCaption}
                         isVotingOpen={isVotingOpen}
+                        contestShortCode={contestShortCode}
+                        votingHint={votingHint}
                     />
                 )}
             </AnimatePresence>
@@ -172,6 +192,10 @@ export default function ResultClientO({ entries, isVotingOpen }: { entries: Entr
                                                 onClick={() => setSelectedEntry(item)}
                                             >
                                                 <img src={item.media_url} alt={item.caption || 'Entry'} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                                {/* Entry ID Badge */}
+                                                <div className="absolute bottom-1 right-1 bg-black/50 text-white/90 text-[10px] px-1.5 py-0.5 rounded font-mono">
+                                                    {formatDisplayId(contestShortCode, item.display_seq)}
+                                                </div>
                                             </motion.div>
                                         ))}
                                     </AnimatePresence>
@@ -236,7 +260,9 @@ const EntryModal = ({
     onVote,
     isVoting,
     parseCaption,
-    isVotingOpen
+    isVotingOpen,
+    contestShortCode,
+    votingHint
 }: {
     entry: Entry,
     onClose: () => void,
@@ -244,9 +270,23 @@ const EntryModal = ({
     onVote: () => void,
     isVoting: boolean,
     parseCaption: (caption: string | null) => { title: string, comment: string },
-    isVotingOpen: boolean
+    isVotingOpen: boolean,
+    contestShortCode: string | null,
+    votingHint: string | null
 }) => {
     const { title, comment } = parseCaption(entry.caption)
+    const [copied, setCopied] = React.useState(false)
+    const displayId = formatDisplayId(contestShortCode, entry.display_seq)
+
+    const handleCopyId = async () => {
+        try {
+            await navigator.clipboard.writeText(displayId)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        } catch (err) {
+            console.error('Failed to copy:', err)
+        }
+    }
 
     return (
         <motion.div
@@ -279,18 +319,45 @@ const EntryModal = ({
                         </p>
                     </div>
 
+                    {/* Entry ID with Copy Button */}
+                    <div className="mb-4 p-3 bg-gray-50 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-400">ID:</span>
+                            <span className="font-mono font-bold text-gray-700">{displayId}</span>
+                        </div>
+                        <button
+                            onClick={handleCopyId}
+                            className={`px-3 py-1.5 text-xs rounded-lg flex items-center gap-1 transition-all ${copied
+                                    ? 'bg-green-100 text-green-600'
+                                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                }`}
+                        >
+                            {copied ? (
+                                <>
+                                    <Check size={14} />
+                                    コピー済
+                                </>
+                            ) : (
+                                <>
+                                    <Copy size={14} />
+                                    コピー
+                                </>
+                            )}
+                        </button>
+                    </div>
+
                     <div className="flex-grow mb-8 text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
                         {comment}
                     </div>
 
-                    {/* Vote Button */}
-                    {isVotingOpen && (
+                    {/* Vote Button or Voting Hint */}
+                    {isVotingOpen ? (
                         <div className="mt-auto pt-6 border-t border-gray-100">
                             <button
                                 onClick={() => onVote()}
                                 disabled={isVoting}
                                 className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all transform shadow-lg ${hasVoted
-                                    ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95" // Voted State: Pink/Red to cancel
+                                    ? "bg-pink-500 hover:bg-pink-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
                                     : "bg-blue-500 hover:bg-blue-600 text-white hover:-translate-y-1 hover:shadow-xl active:scale-95"
                                     }`}
                             >
@@ -310,7 +377,13 @@ const EntryModal = ({
                                 {hasVoted ? "もう一度押すと投票を取り消せます" : "ログイン不要で投票できます"}
                             </p>
                         </div>
-                    )}
+                    ) : votingHint ? (
+                        <div className="mt-auto pt-6 border-t border-gray-100">
+                            <div className="text-center py-4 bg-orange-50 rounded-xl text-[#E84D1C] font-bold">
+                                📸 {votingHint}
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </motion.div>

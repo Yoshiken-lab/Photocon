@@ -4,38 +4,50 @@ import ResultClientO from './ResultClientO'
 export const dynamic = 'force-dynamic'
 
 export default async function ResultPageO({ params }: { params: { id: string } }) {
-    // Fetch real data from Server Action
-    const entries = await getEntriesForResult(params.id)
     const contest = await getContestById(params.id)
 
-    // Determine if voting is open
-    // Voting is open if status is 'voting' OR 'active' (if concurrent)
-    // For safety, let's assume 'voting' is the main status, but maybe 'active' allows it too depending on requirements.
-    // However, the user specifically complained about "past" events (status='ended').
-    // So we definitely disable if status is 'ended' or 'draft'.
-
-    // Check dates if available?
-    const now = new Date()
-    let isVotingOpen = false
-
-    if (contest) {
-        if (contest.status === 'voting') {
-            isVotingOpen = true
-        } else if (contest.status === 'active') {
-            // If active usually means submission, maybe voting is not yet? 
-            // But let's assume voting might overlap.
-            // Safer check: voting_start <= now <= voting_end
-            if (contest.voting_start && contest.voting_end) {
-                const start = new Date(contest.voting_start)
-                const end = new Date(contest.voting_end)
-                isVotingOpen = now >= start && now <= end
-            }
-        }
-        // Explicitly closed for 'ended'
+    if (!contest) {
+        return <div className="min-h-screen flex items-center justify-center text-gray-500">コンテストが見つかりません</div>
     }
 
-    // Map the DB entry format to the Client Component's expected interface if necessary
-    // Currently they match closely: { id, media_url, username, caption, collected_at }
+    const now = new Date()
+    const startDate = new Date(contest.start_date)
+    const endDate = new Date(contest.end_date)
+    const votingStart = contest.voting_start ? new Date(contest.voting_start) : null
+    const votingEnd = contest.voting_end ? new Date(contest.voting_end) : null
 
-    return <ResultClientO entries={entries as any} isVotingOpen={isVotingOpen} />
+    // Determine period
+    const isBeforeStart = now < startDate
+    const isAfterEnd = now > endDate
+    const isSubmissionPeriod = now >= startDate && now <= endDate
+    const isVotingPeriod = votingStart && votingEnd && now >= votingStart && now <= votingEnd
+    const isVotingEnabled = (contest.settings as any)?.is_voting_enabled !== false
+
+    // Gallery visibility: Show during submission, voting, and after (but not before start, not draft)
+    const isGalleryVisible = !isBeforeStart && contest.status !== 'draft'
+
+    if (!isGalleryVisible) {
+        return <div className="min-h-screen flex items-center justify-center text-gray-500">ギャラリーはまだ公開されていません</div>
+    }
+
+    // Determine voting status
+    const isVotingOpen = isVotingEnabled && !!isVotingPeriod
+
+    // For submission period, include pending entries too (gallery mode)
+    const includeAllVisible = isSubmissionPeriod && !isVotingPeriod
+    const entries = await getEntriesForResult(params.id, includeAllVisible)
+
+    // Voting hint for submission period
+    const votingHint = isSubmissionPeriod && !isVotingPeriod && votingStart
+        ? `投票は ${votingStart.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' })} から開始！`
+        : null
+
+    return (
+        <ResultClientO
+            entries={entries as any}
+            isVotingOpen={isVotingOpen}
+            contestShortCode={contest.short_code || null}
+            votingHint={votingHint}
+        />
+    )
 }

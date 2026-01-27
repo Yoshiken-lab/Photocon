@@ -60,16 +60,25 @@ const EventCard = ({ year, title, period, status, color = "brand", index, id, is
                         <ArrowRight size={16} />
                     </Link>
                 ) : (
-                    <Link
-                        href="/sample-o/apply"
-                        className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors block ${isBrand
-                            ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
-                            : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
-                            }`}
-                    >
-                        応募する
-                        <ArrowRight size={16} />
-                    </Link>
+                    <div className="space-y-2">
+                        <Link
+                            href="/sample-o/apply"
+                            className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors block ${isBrand
+                                ? "bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]"
+                                : "bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200"
+                                }`}
+                        >
+                            応募する
+                            <ArrowRight size={16} />
+                        </Link>
+                        {/* View Photos Link during submission period */}
+                        <Link
+                            href={`/sample-o/result/${id}`}
+                            className="w-full py-2 text-sm text-gray-500 hover:text-[#E84D1C] flex items-center justify-center gap-1 transition-colors"
+                        >
+                            みんなの投稿を見る →
+                        </Link>
+                    </div>
                 )
             ) : (
                 <Link

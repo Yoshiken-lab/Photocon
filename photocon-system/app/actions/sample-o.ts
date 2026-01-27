@@ -12,12 +12,16 @@ type VoteRow = Database['public']['Tables']['votes']['Row']
 
 export async function getActiveContests() {
     const supabase = createAdminClient()
+    const now = new Date().toISOString()
 
-    // Fetch active contests sorted by end_date
+    // Fetch active contests based on DATE, ignoring the stale 'status' column
+    // Logic: Not draft AND start_date <= now AND end_date >= now
     const { data, error } = await supabase
         .from('contests')
         .select('*')
-        .eq('status', 'active')
+        .neq('status', 'draft')
+        .lte('start_date', now)
+        .gte('end_date', now)
         .order('end_date', { ascending: true })
 
     if (error) {
@@ -88,9 +92,10 @@ export async function getPastContests(): Promise<ContestWithThumbnail[]> {
 export async function getContestById(id: string) {
     const supabase = createAdminClient()
 
+    // Include short_code for structured ID display
     const { data, error } = await supabase
         .from('contests')
-        .select('*')
+        .select('*, short_code')
         .eq('id', id)
         .single()
 
@@ -99,18 +104,22 @@ export async function getContestById(id: string) {
         return null
     }
 
-    return (data as unknown as ContestRow) || null
+    return (data as unknown as (ContestRow & { short_code: string | null })) || null
 }
 
-export async function getEntriesForResult(contestId: string) {
+export async function getEntriesForResult(contestId: string, includeAllVisible: boolean = false) {
     const supabase = createAdminClient()
 
-    // Fetch approved entries
+    // includeAllVisible: true = Gallery mode (pending + approved for submission period)
+    // includeAllVisible: false = Result mode (approved only for voting/ended)
+    const statusFilter = includeAllVisible ? ['pending', 'approved'] : ['approved']
+
+    // Fetch entries with display_seq for structured ID
     const { data, error } = await supabase
         .from('entries')
-        .select('*')
+        .select('*, display_seq')
         .eq('contest_id', contestId)
-        .eq('status', 'approved')
+        .in('status', statusFilter)
         .order('collected_at', { ascending: false })
 
     if (error) {
@@ -118,7 +127,7 @@ export async function getEntriesForResult(contestId: string) {
         return []
     }
 
-    return (data as unknown as EntryRow[]) || []
+    return (data as unknown as (EntryRow & { display_seq: number | null })[]) || []
 }
 
 // --- Hero Slideshow Logic ---
