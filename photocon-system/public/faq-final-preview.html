@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Final Design - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0', 600: '#D63E0F' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        .bubble-tail-right::before {
+            content: "";
+            position: absolute;
+            top: 6px;
+            right: -6px;
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-left: 8px solid;
+            /* Color driven by parent text/bg color usually, handling manually below */
+            border-bottom: 6px solid transparent;
+        }
+
+        .bubble-tail-left::before {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: -6px;
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-right: 8px solid;
+            border-bottom: 6px solid transparent;
+        }
+
+        /* Specific Color Tails */
+        .tail-brand-solid::before {
+            border-left-color: #E84D1C;
+        }
+
+        .tail-brand-light::before {
+            border-left-color: #FFE8E0;
+        }
+
+        .tail-white::before {
+            border-right-color: #FFFFFF;
+        }
+
+        .tail-gray::before {
+            border-right-color: #F3F4F6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-700 font-sans pb-32">
+
+    <header class="bg-white py-6 border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h1 class="text-2xl font-bold font-maru text-gray-800">Final Design Concept</h1>
+            <p class="text-sm text-gray-500 mt-2">「ソフト・パステル（しっぽ付き吹き出し）」×「ブランドカラー」</p>
+        </div>
+    </header>
+
+    <!-- OPTION 1: HIGH CONTRAST (Brand Solid) -->
+    <section class="py-16 px-4">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span class="bg-orange-100 text-brand px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Option
+                    1</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">ハイコントラスト・ブランド</h2>
+                <p class="text-xs text-gray-500">質問（ユーザー）を目立たせるPOPなメリハリ</p>
+            </div>
+
+            <div class="bg-[#FFF5F0] rounded-[2rem] shadow-xl overflow-hidden border border-brand-100 p-4 space-y-6">
+                <!-- Q -->
+                <div class="flex gap-2 flex-row-reverse">
+                    <div
+                        class="bg-brand text-white text-sm py-3 px-4 rounded-xl shadow-sm max-w-[80%] relative bubble-tail-right tail-brand-solid">
+                        無料で参加できますか？
+                    </div>
+                    <span class="text-[9px] text-brand/50 self-end mb-1">Q.01</span>
+                </div>
+                <!-- A -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white border border-brand-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Scooter" class="w-6 h-6" alt="Admin">
+                    </div>
+                    <div
+                        class="bg-white text-gray-700 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[85%] relative bubble-tail-left tail-white border border-gray-100">
+                        <span class="block text-[10px] text-brand font-bold mb-1">Answer</span>
+                        はい！完全無料でご参加いただけます😆<br>気軽に応募してくださいね。
+                    </div>
+                </div>
+
+                <!-- Q -->
+                <div class="flex gap-2 flex-row-reverse">
+                    <div
+                        class="bg-brand text-white text-sm py-3 px-4 rounded-xl shadow-sm max-w-[80%] relative bubble-tail-right tail-brand-solid">
+                        ペットの写真でもいいですか？
+                    </div>
+                    <span class="text-[9px] text-brand/50 self-end mb-1">Q.02</span>
+                </div>
+                <!-- A -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white border border-brand-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Scooter" class="w-6 h-6" alt="Admin">
+                    </div>
+                    <div
+                        class="bg-white text-gray-700 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[85%] relative bubble-tail-left tail-white border border-gray-100">
+                        <span class="block text-[10px] text-brand font-bold mb-1">Answer</span>
+                        お子様が写っているお写真でお願いします🐶<br>一緒ならOKですよ！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPTION 2: SOFT BRAND (Pastel Orange) -->
+    <section class="py-16 px-4 bg-gray-100">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span class="bg-orange-100 text-brand px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Option
+                    2</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">ソフト・ブランド</h2>
+                <p class="text-xs text-gray-500">薄いオレンジを使い、目に優しい柔らかさを重視</p>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100 p-4 space-y-6">
+                <!-- Q -->
+                <div class="flex gap-2 flex-row-reverse">
+                    <!-- Text Color: Brand Dark or Gray? -->
+                    <div
+                        class="bg-brand-100 text-gray-800 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[80%] relative bubble-tail-right tail-brand-light">
+                        無料で参加できますか？
+                    </div>
+                </div>
+                <!-- A -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 border border-gray-100">
+                        <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <div
+                        class="bg-gray-100 text-gray-700 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[85%] relative bubble-tail-left tail-gray">
+                        はい！完全無料でご参加いただけます✨
+                    </div>
+                </div>
+
+                <!-- Q -->
+                <div class="flex gap-2 flex-row-reverse">
+                    <div
+                        class="bg-brand-100 text-gray-800 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[80%] relative bubble-tail-right tail-brand-light">
+                        ペットの写真でもいいですか？
+                    </div>
+                </div>
+                <!-- A -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 border border-gray-100">
+                        <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <div
+                        class="bg-gray-100 text-gray-700 text-sm py-3 px-4 rounded-xl shadow-sm max-w-[85%] relative bubble-tail-left tail-gray">
+                        お子様が写っているお写真でお願いします💦
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { createServerClient } from '@/lib/supabase/server'
+import { isAuthEnabled } from '@/lib/config'
 import type { Database } from '@/types/database'
 
 type EntryInsert = Database['public']['Tables']['entries']['Insert']
@@ -19,6 +21,22 @@ export async function POST(request: NextRequest) {
         { error: '必須項目が不足しています' },
         { status: 400 }
       )
+    }
+
+    // --- Authentication Check ---
+    let userId: string | null = null
+    if (isAuthEnabled()) {
+      const supabaseServer = createServerClient()
+      const { data: { session } } = await supabaseServer.auth.getSession()
+
+      if (!session) {
+        return NextResponse.json(
+          { error: 'ログインが必要です' },
+          { status: 401 }
+        )
+      }
+      userId = session.user.id
+      console.log('User ID resolved:', userId)
     }
 
     const supabase = createAdminClient()
@@ -75,6 +93,7 @@ export async function POST(request: NextRequest) {
       status: 'pending',
       instagram_timestamp: now,
       collected_at: now,
+      user_id: userId, // Add user_id
     }
 
     const { error: insertError } = await supabase
@@ -100,3 +119,4 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+

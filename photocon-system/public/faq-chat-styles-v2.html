@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Chat Styles V2 - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0', 600: '#D63E0F' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        /* Chat Bubble tails */
+        .bubble-left::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            bottom: 6px;
+            width: 8px;
+            height: 8px;
+            border-bottom-right-radius: 8px;
+            background: inherit;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-700 font-sans pb-32">
+
+    <header class="bg-white py-6 border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h1 class="text-2xl font-bold font-maru text-gray-800">FAQ Chat Styles V2</h1>
+            <p class="text-sm text-gray-500 mt-2">「チャット形式（タイムライン）」に特化した3つのデザイン案</p>
+        </div>
+    </header>
+
+    <!-- STYLE A: MODERN CLEAN (Like iMessage/Support) -->
+    <section class="py-16 px-4">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span class="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Style
+                    A</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">モダン・クリーン</h2>
+                <p class="text-xs text-gray-500">シンプルで情報の読みやすさを際立たせたデザイン</p>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100">
+                <!-- Header -->
+                <div class="bg-gray-50 px-6 py-4 border-b flex items-center justify-center relative">
+                    <div class="absolute left-6 text-blue-500"><i data-lucide="chevron-left" class="w-6 h-6"></i></div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-400">お問い合わせ</div>
+                        <div class="font-bold text-gray-800">サポート</div>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="bg-white p-6 space-y-6 h-[400px] overflow-y-auto">
+                    <!-- Q1 -->
+                    <div class="flex items-end gap-2 flex-row-reverse">
+                        <div
+                            class="bg-blue-500 text-white px-4 py-2 rounded-2xl rounded-br-sm text-sm max-w-[85%] shadow-sm">
+                            無料で応募できますか？
+                        </div>
+                    </div>
+                    <!-- A1 -->
+                    <div class="flex items-end gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="headphones" class="w-4 h-4 text-gray-500"></i>
+                        </div>
+                        <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm text-sm max-w-[85%]">
+                            はい、スマートフォンやパソコンがあれば<span class="font-bold">無料</span>でご応募いただけます。
+                        </div>
+                    </div>
+
+                    <div class="text-center text-[10px] text-gray-300 my-2">2026/01/19 14:30</div>
+
+                    <!-- Q2 -->
+                    <div class="flex items-end gap-2 flex-row-reverse">
+                        <div
+                            class="bg-blue-500 text-white px-4 py-2 rounded-2xl rounded-br-sm text-sm max-w-[85%] shadow-sm">
+                            子供以外の写真は？
+                        </div>
+                    </div>
+                    <!-- A2 -->
+                    <div class="flex items-end gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="headphones" class="w-4 h-4 text-gray-500"></i>
+                        </div>
+                        <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm text-sm max-w-[85%]">
+                            お子様が写っているお写真限定となります😌<br>風景のみやペットのみは対象外です。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Placeholder -->
+                <div class="p-4 border-t bg-gray-50 flex gap-2">
+                    <div class="flex-1 h-10 bg-white border rounded-full"></div>
+                    <div class="w-10 h-10 bg-blue-500 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STYLE B: POP & BRAND (Using Site Colors) -->
+    <section class="py-16 px-4 bg-brand-50">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span
+                    class="bg-brand-100 text-brand-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Style
+                    B</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">ポップ＆ブランドカラー</h2>
+                <p class="text-xs text-gray-500">サイトのテーマカラーを活かした元気なチャット</p>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border-4 border-white ring-4 ring-brand-100">
+                <!-- Header -->
+                <div class="bg-brand text-white px-6 py-4 flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border-2 border-white/40">
+                        <i data-lucide="camera" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold font-maru">スクールフォト運営局</div>
+                        <div class="text-[10px] opacity-80 flex items-center gap-1">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> オンライン
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Area with Pattern -->
+                <div class="bg-[#FFF5F0] p-6 space-y-6 h-[400px] overflow-y-auto relative">
+                    <div class="absolute inset-0 opacity-10 pointer-events-none"
+                        style="background-image: radial-gradient(#E84D1C 1px, transparent 1px); background-size: 20px 20px;">
+                    </div>
+
+                    <!-- Q1 -->
+                    <div class="flex items-start gap-2 flex-row-reverse relative z-10">
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                        </div>
+                        <div
+                            class="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-sm border border-brand-100">
+                            <p class="font-bold text-brand mb-1 text-xs">ユーザー</p>
+                            無料で応募できますか？
+                        </div>
+                    </div>
+
+                    <!-- A1 -->
+                    <div class="flex items-start gap-3 relative z-10">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand text-white border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Scooter" class="w-8 h-8" alt="Admin">
+                        </div>
+                        <div
+                            class="bg-brand-50 text-gray-800 px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[85%] shadow-sm border border-brand-200">
+                            <p class="font-bold text-brand mb-1 text-xs">運営スタッフ</p>
+                            はい！もちろん<span class="bg-yellow-200 px-1 rounded font-bold">完全無料</span>です✨<br>
+                            気軽に参加してくださいね！
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="flex items-start gap-2 flex-row-reverse mt-6 relative z-10">
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                        </div>
+                        <div
+                            class="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-sm border border-brand-100">
+                            <p class="font-bold text-brand mb-1 text-xs">ユーザー</p>
+                            ペットの写真でもいいですか？
+                        </div>
+                    </div>
+
+                    <!-- Sticker/Image Mock -->
+                    <div class="flex items-start gap-3 relative z-10">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand text-white border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Scooter" class="w-8 h-8" alt="Admin">
+                        </div>
+                        <div class="space-y-2">
+                            <div
+                                class="bg-brand-50 text-gray-800 px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[85%] shadow-sm border border-brand-200">
+                                <p class="font-bold text-brand mb-1 text-xs">運営スタッフ</p>
+                                お子様がメインでお願いします💦<br>一緒ならOKですよ！
+                            </div>
+                            <!-- "Sticker" -->
+                            <div
+                                class="w-24 h-24 bg-white rounded-xl border-2 border-brand-100 p-2 flex items-center justify-center shadow-sm">
+                                <div class="text-center">
+                                    <i data-lucide="image" class="w-8 h-8 text-brand mx-auto mb-1"></i>
+                                    <span class="text-[10px] font-bold text-brand">OK!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- STYLE C: SOFT PASTEL (LINE Themeish) -->
+    <section class="py-16 px-4 bg-[#E6F0F3]">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span
+                    class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Style
+                    C</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">ソフト・パステル</h2>
+                <p class="text-xs text-gray-500">LINEのような親しみやすさと柔らかい配色</p>
+            </div>
+
+            <div class="bg-[#8FACD3] rounded-[2rem] shadow-xl overflow-hidden border border-gray-300">
+                <!-- Header -->
+                <div class="bg-[#35485E] text-white px-4 py-3 flex items-center justify-between opacity-90">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    <span class="font-bold text-sm">よくあるご質問</span>
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="p-4 space-y-5 h-[400px] overflow-y-auto">
+
+                    <!-- Q1 -->
+                    <div class="flex gap-2 flex-row-reverse">
+                        <div
+                            class="bg-[#96E668] text-gray-800 text-xs py-2 px-3 rounded-md shadow-sm max-w-[80%] relative">
+                            無料で応募できますか？
+                            <div
+                                class="absolute top-[6px] right-[-6px] w-0 h-0 border-t-[6px] border-t-transparent border-l-[8px] border-l-[#96E668] border-b-[6px] border-b-transparent">
+                            </div>
+                        </div>
+                        <span class="text-[9px] text-white self-end mb-1">既読<br>14:02</span>
+                    </div>
+
+                    <!-- A1 -->
+                    <div class="flex gap-2">
+                        <div class="w-8 h-8 rounded-full bg-white border border-gray-300 overflow-hidden flex-shrink-0">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper" alt="Admin" />
+                        </div>
+                        <div class="bg-white text-gray-800 text-xs py-2 px-3 rounded-md shadow-sm max-w-[80%] relative">
+                            <span class="block text-[10px] text-gray-400 mb-1">運営事務局</span>
+                            はい、すべて無料でご参加いただけます😌
+                            <div
+                                class="absolute top-[6px] left-[-6px] w-0 h-0 border-t-[6px] border-t-transparent border-r-[8px] border-r-white border-b-[6px] border-b-transparent">
+                            </div>
+                        </div>
+                        <span class="text-[9px] text-white self-end mb-1">14:02</span>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="flex gap-2 flex-row-reverse">
+                        <div
+                            class="bg-[#96E668] text-gray-800 text-xs py-2 px-3 rounded-md shadow-sm max-w-[80%] relative">
+                            写真のサイズ制限はありますか？
+                            <div
+                                class="absolute top-[6px] right-[-6px] w-0 h-0 border-t-[6px] border-t-transparent border-l-[8px] border-l-[#96E668] border-b-[6px] border-b-transparent">
+                            </div>
+                        </div>
+                        <span class="text-[9px] text-white self-end mb-1">既読<br>14:05</span>
+                    </div>
+
+                    <!-- A2 -->
+                    <div class="flex gap-2">
+                        <div class="w-8 h-8 rounded-full bg-white border border-gray-300 overflow-hidden flex-shrink-0">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper" alt="Admin" />
+                        </div>
+                        <div class="bg-white text-gray-800 text-xs py-2 px-3 rounded-md shadow-sm max-w-[80%] relative">
+                            <span class="block text-[10px] text-gray-400 mb-1">運営事務局</span>
+                            1枚15MBまでとなります！<br>
+                            JPEGかPNG形式でお願いします📷
+                            <div
+                                class="absolute top-[6px] left-[-6px] w-0 h-0 border-t-[6px] border-t-transparent border-r-[8px] border-r-white border-b-[6px] border-b-transparent">
+                            </div>
+                        </div>
+                        <span class="text-[9px] text-white self-end mb-1">14:06</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

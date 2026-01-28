@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample O - スクールフォト！</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#E84D1C',
+                            50: '#FFF5F2',
+                            100: '#FFE8E0',
+                            200: '#FFD4C4',
+                            500: '#E84D1C',
+                            600: '#D63E0F',
+                        },
+                        text: {
+                            main: '#4A4A4A',
+                            light: '#888888'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Yu Gothic"', '"Meiryo"', 'sans-serif'],
+                        maru: ['"Kiwi Maru"', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-slow': 'float-slow 8s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'stamp': 'stamp 0.5s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap');
+
+        body {
+            font-family: "Yu Gothic", "Meiryo", sans-serif;
+            color: #4A4A4A;
+            background-color: #FFF5F0;
+            /* Layout Background */
+        }
+
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(-5deg);
+            }
+        }
+
+        @keyframes float-slow {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Scroll Animation Utility Classes */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal-left.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal-right.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Mobile Menu */
+        body.mobile-menu-open {
+            overflow: hidden;
+        }
+    </style>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body class="antialiased">
+
+    <!-- HeaderO (For Mobile / Global Nav) -->
+    <header
+        class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none py-4 px-6 flex justify-between items-center h-16 md:h-20 max-w-[1920px] mx-auto pointer-events-none md:pointer-events-auto">
+        <div class="relative z-50 pointer-events-auto md:hidden">
+            <a href="#" class="block w-40 hover:opacity-80 transition-opacity">
+                <img src="logo.png" alt="スクールフォト！" class="w-full h-auto" />
+            </a>
+        </div>
+        <!-- MD+ Logo handled in Sidebar or generally hidden in layout per Design -->
+        <div class="hidden md:block"></div>
+
+        <!-- Hamburger Trigger -->
+        <button id="menu-toggle" class="relative z-50 p-2 text-brand-600 md:hidden pointer-events-auto">
+            <svg id="icon-menu" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+            <svg id="icon-close" class="hidden w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-40 transition-all duration-300 opacity-0 pointer-events-none md:hidden">
+        <div class="absolute inset-0 bg-white/70 backdrop-blur-md"></div>
+        <button id="menu-close-btn" class="absolute top-4 right-6 p-2 text-gray-500 hover:text-gray-800 z-50">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <nav class="relative z-50 flex flex-col items-center justify-center h-full gap-8">
+            <a href="#"
+                class="mobile-link text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">トップ</a>
+            <a href="#howto"
+                class="mobile-link text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">応募方法</a>
+            <a href="#events"
+                class="mobile-link text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">開催イベント</a>
+            <a href="#faq"
+                class="mobile-link text-3xl font-maru font-bold text-gray-800 hover:text-brand-500 transition-colors">Q&A</a>
+            <div class="w-16 h-1 bg-[#ffdbc7] rounded-full my-2"></div>
+            <a href="#contact"
+                class="mobile-link text-lg font-bold text-white bg-[#E84D1C] px-10 py-3 rounded-full shadow-lg hover:bg-[#D63E0F] transition-colors">お問い合わせ</a>
+        </nav>
+    </div>
+
+    <!-- MAIN LAYOUT CONTAINER -->
+    <div class="relative w-full min-h-screen flex justify-center pt-20 pb-20">
+        <div class="relative w-full max-w-[1600px] flex justify-center md:justify-between items-start px-4 md:px-12">
+
+            <!-- LEFT SIDEBAR (MD+) -->
+            <div class="hidden md:block w-64 pt-10 sticky top-28 self-start h-fit z-20">
+                <div class="w-full pl-4">
+                    <!-- Logo (Hidden in sidebar per LayoutO code comments/request, but structure kept) -->
+                    <div class="mb-8 relative z-10 w-40">
+                        <a href="#" class="block hover:opacity-80 transition-opacity">
+                            <img src="logo.png" alt="スクールフォト！" class="w-full h-auto" />
+                        </a>
+                    </div>
+
+                    <ul class="space-y-5 font-bold text-gray-800 text-sm tracking-wide">
+                        <li>
+                            <a href="#howto"
+                                class="hover:text-brand-600 flex items-center gap-3 group transition-colors">
+                                <span
+                                    class="bg-gray-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-gray-800">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                        class="group-hover:translate-x-0.5 transition-transform">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+                                応募方法
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#events"
+                                class="hover:text-brand-600 flex items-center gap-3 group transition-colors">
+                                <span
+                                    class="bg-gray-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-gray-800">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                        class="group-hover:translate-x-0.5 transition-transform">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+                                開催イベント
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#faq" class="hover:text-brand-600 flex items-center gap-3 group transition-colors">
+                                <span
+                                    class="bg-gray-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-gray-800">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                        class="group-hover:translate-x-0.5 transition-transform">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+                                Q&A
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contact"
+                                class="hover:text-brand-600 flex items-center gap-3 group transition-colors">
+                                <span
+                                    class="bg-gray-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-gray-800">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                        class="group-hover:translate-x-0.5 transition-transform">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+                                お問い合わせ
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="mt-12 flex justify-start opacity-60 pl-2">
+                        <!-- Stamp Icon -->
+                        <div class="border-4 border-gray-800/20 rounded-full p-2 rotate-12">
+                            <svg class="text-gray-800/40 w-12 h-12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 22h14"></path>
+                                <path
+                                    d="M19.27 13.73A2.665 2.665 0 0 0 17.5 13h-11A2.665 2.665 0 0 0 4.73 13.73L2.5 18h19l-2.23-4.27Z">
+                                </path>
+                                <path d="M12 13V2"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Photo Decor Left -->
+                <div
+                    class="absolute top-[400px] left-[-20px] w-40 bg-white p-2 shadow-lg hidden lg:block animate-[float_6s_ease-in-out_infinite]">
+                    <div class="aspect-[4/3] bg-gray-200 relative overflow-hidden flex items-center justify-center">
+                        <span class="text-gray-400 font-bold text-xs">Family</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTRAL CONTENT COLUMN -->
+            <div class="w-full md:w-[600px] lg:w-[700px] relative z-10 flex flex-col items-center">
+
+                <!-- HeroO -->
+                <div
+                    class="w-full flex flex-col items-center mb-8 relative overflow-hidden rounded-[2rem] bg-white shadow-sm">
+                    <div class="relative w-full h-[450px] md:h-[600px]">
+                        <!-- Swiper Container -->
+                        <div class="absolute inset-0 z-0">
+                            <div class="swiper mySwiper w-full h-full rounded-[2rem]">
+                                <div class="swiper-wrapper">
+                                    <!-- Slide 1 -->
+                                    <div class="swiper-slide">
+                                        <div
+                                            class="w-full h-full bg-yellow-100 flex items-center justify-center relative overflow-hidden">
+                                            <div class="text-4xl font-bold text-black/10 select-none">Kids Running</div>
+                                            <div class="absolute bottom-24 left-0 w-full text-center">
+                                                <span
+                                                    class="bg-white/80 px-4 py-2 rounded-full text-brand-600 font-bold font-maru shadow-sm text-sm md:text-base backdrop-blur-sm">運動会のがんばった顔</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Slide 2 -->
+                                    <div class="swiper-slide">
+                                        <div
+                                            class="w-full h-full bg-blue-100 flex items-center justify-center relative overflow-hidden">
+                                            <div class="text-4xl font-bold text-black/10 select-none">Eating Lunch</div>
+                                            <div class="absolute bottom-24 left-0 w-full text-center">
+                                                <span
+                                                    class="bg-white/80 px-4 py-2 rounded-full text-brand-600 font-bold font-maru shadow-sm text-sm md:text-base backdrop-blur-sm">お弁当をほおばる笑顔</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Slide 3 -->
+                                    <div class="swiper-slide">
+                                        <div
+                                            class="w-full h-full bg-pink-100 flex items-center justify-center relative overflow-hidden">
+                                            <div class="text-4xl font-bold text-black/10 select-none">Family Portrait
+                                            </div>
+                                            <div class="absolute bottom-24 left-0 w-full text-center">
+                                                <span
+                                                    class="bg-white/80 px-4 py-2 rounded-full text-brand-600 font-bold font-maru shadow-sm text-sm md:text-base backdrop-blur-sm">家族みんなの記念写真</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Slide 4 -->
+                                    <div class="swiper-slide">
+                                        <div
+                                            class="w-full h-full bg-green-100 flex items-center justify-center relative overflow-hidden">
+                                            <div class="text-4xl font-bold text-black/10 select-none">Baby Smile</div>
+                                            <div class="absolute bottom-24 left-0 w-full text-center">
+                                                <span
+                                                    class="bg-white/80 px-4 py-2 rounded-full text-brand-600 font-bold font-maru shadow-sm text-sm md:text-base backdrop-blur-sm">はじめての笑顔</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overlays -->
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none translate-y-6">
+                            <!-- Contest Logo Badge -->
+                            <div
+                                class="bg-white rounded-full p-4 md:p-8 shadow-2xl flex flex-col items-center justify-center aspect-square w-48 h-48 md:w-64 md:h-64 mx-auto relative z-20 border-4 border-brand-500 transform rotate-[-5deg] animate-float">
+                                <div class="text-center">
+                                    <div
+                                        class="text-brand-500 font-extrabold text-xl md:text-3xl leading-tight font-sans tracking-tighter">
+                                        スクールフォト！</div>
+                                    <div class="text-gray-800 font-black text-2xl md:text-4xl mt-1 font-maru">フォトコンテスト
+                                    </div>
+                                    <div class="text-gray-400 text-xs font-bold mt-2 tracking-widest">スマホに眠る宝物を送ろう</div>
+                                </div>
+                            </div>
+
+                            <!-- Scroll Indicator -->
+                            <div class="mt-12 flex flex-col items-center gap-2 opacity-80 animate-bounce">
+                                <span
+                                    class="text-[10px] font-bold tracking-[0.2em] text-white shadow-black drop-shadow-md">SCROLL</span>
+                                <div class="w-0.5 h-12 bg-white shadow-black drop-shadow-md"></div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Decorations -->
+                        <div class="absolute top-10 left-10 text-yellow-400 animate-float-slow z-30 opacity-80">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                <path
+                                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="absolute bottom-20 right-10 text-white animate-bounce-slow z-30 opacity-60">
+                            <div class="bg-brand-400 p-3 rounded-full shadow-lg">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z">
+                                    </path>
+                                    <circle cx="12" cy="13" r="3"></circle>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Section in Hero -->
+                    <div class="text-center pb-12 px-6 pt-8 relative z-30 w-full">
+                        <p class="text-gray-600 font-medium leading-relaxed font-maru mb-10">
+                            スマホの中に眠っている<br class="md:hidden" />お子さまのベストショット。<br />
+                            <span class="bg-yellow-100 px-1">未来の宝物</span> として残しませんか？
+                        </p>
+
+                        <div class="inline-block relative group">
+                            <button
+                                class="bg-[#E84D1C] text-white text-xl md:text-2xl font-bold py-5 px-16 rounded-full shadow-xl hover:bg-[#D63E0F] hover:scale-105 transition-all transform flex items-center gap-3 mx-auto border-4 border-white/30 relative z-10 overflow-hidden">
+                                <div
+                                    class="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-shimmer">
+                                </div>
+                                <svg class="animate-pulse" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z">
+                                    </path>
+                                    <circle cx="12" cy="13" r="3"></circle>
+                                </svg>
+                                <span>応募する</span>
+                            </button>
+                            <div
+                                class="absolute top-2 left-0 w-full h-full bg-brand-500 blur-xl opacity-40 group-hover:opacity-60 transition-opacity rounded-full z-0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full border-t-4 border-dotted border-gray-200"></div>
+                </div>
+
+                <!-- HowToApplyO -->
+                <div id="howto"
+                    class="w-full bg-white py-24 px-6 relative overflow-hidden rounded-[2rem] shadow-sm mb-4">
+                    <div
+                        class="absolute top-0 left-0 w-full h-[80px] bg-[#FFF5F0] skew-y-2 origin-top-right transform -translate-y-10 z-0">
+                    </div>
+
+                    <div class="text-center mb-12 relative z-10 reveal-on-scroll">
+                        <div class="inline-block bg-white px-8 py-2 rounded-full shadow-sm mb-4">
+                            <span class="text-brand-500 font-bold tracking-widest">STEP</span>
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 font-maru">
+                            かんたん3ステップ<br />
+                            <span class="text-brand-500">応募方法</span>
+                        </h2>
+                    </div>
+
+                    <div class="space-y-6 max-w-sm mx-auto relative z-10">
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform reveal-left">
+                            <div
+                                class="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">
+                                1</div>
+                            <div class="bg-orange-100 p-4 rounded-full text-brand-500">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z">
+                                    </path>
+                                    <circle cx="12" cy="13" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">写真を選ぶ</h3>
+                                <p class="text-xs text-gray-500 mt-1">スマホにある写真でOK!</p>
+                            </div>
+                        </div>
+                        <div class="w-0.5 h-6 bg-brand-200 mx-auto"></div>
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform reveal-right">
+                            <div
+                                class="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">
+                                2</div>
+                            <div class="bg-orange-100 p-4 rounded-full text-brand-500">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">アップロード</h3>
+                                <p class="text-xs text-gray-500 mt-1">応募フォームから送信</p>
+                            </div>
+                        </div>
+                        <div class="w-0.5 h-6 bg-brand-200 mx-auto"></div>
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-6 relative group hover:-translate-y-1 transition-transform reveal-left">
+                            <div
+                                class="absolute -top-3 -left-3 bg-[#E84D1C] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">
+                                3</div>
+                            <div class="bg-orange-100 p-4 rounded-full text-brand-500">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">公開・投票</h3>
+                                <p class="text-xs text-gray-500 mt-1">みんなの作品を楽しもう</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ActiveEventsO -->
+                <div id="events"
+                    class="w-full bg-[#FFF5F0] py-24 px-6 relative overflow-hidden rounded-[2rem] shadow-sm mb-4">
+                    <div
+                        class="absolute top-0 left-0 w-full h-[80px] bg-white skew-y-[-2] origin-top-left transform -translate-y-10 z-0">
+                    </div>
+
+                    <div class="text-center mb-12 reveal-on-scroll">
+                        <h2 class="text-3xl font-bold text-gray-800 font-maru mb-2">開催中のイベント</h2>
+                        <div class="h-1 w-16 bg-brand-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="space-y-6 max-w-sm mx-auto">
+                        <div
+                            class="w-full bg-red-50 border-2 border-brand-200 rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all reveal-on-scroll">
+                            <div
+                                class="absolute top-0 right-0 bg-yellow-400 text-brand-600 text-xs font-bold px-3 py-1 rounded-bl-xl">
+                                開催中</div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-sm font-bold opacity-60">2026年</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-600 mb-4 font-maru">春のフォトコンテスト</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span>2026.4.10 - 4.24</span>
+                            </div>
+                            <button
+                                class="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-[#E84D1C] text-white border-2 border-[#E84D1C] group-hover:bg-[#D63E0F]">
+                                応募する
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="pt-8">
+                            <h3 class="text-center text-gray-400 font-bold mb-6 text-sm">過去のイベント</h3>
+                            <div class="space-y-4 opacity-80 hover:opacity-100 transition-opacity">
+                                <div
+                                    class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all reveal-on-scroll">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="text-sm font-bold opacity-60">2025年</span>
+                                        <span class="text-xs bg-gray-200 text-gray-500 px-2 py-0.5 rounded">終了</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-600 mb-4 font-maru">冬のフォトコンテスト</h3>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        <span>2025.12.1 - 12.15</span>
+                                    </div>
+                                    <button
+                                        class="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200">
+                                        結果を見る
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div
+                                    class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all reveal-on-scroll">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="text-sm font-bold opacity-60">2025年</span>
+                                        <span class="text-xs bg-gray-200 text-gray-500 px-2 py-0.5 rounded">終了</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-600 mb-4 font-maru">夏のフォトコンテスト</h3>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        <span>2025.8.1 - 8.15</span>
+                                    </div>
+                                    <button
+                                        class="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors bg-gray-100 border-2 border-gray-200 text-gray-600 group-hover:bg-gray-200">
+                                        結果を見る
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQO -->
+                <div id="faq" class="w-full bg-white py-24 px-6 relative overflow-hidden rounded-[2rem] shadow-sm mb-4">
+                    <div
+                        class="absolute top-0 left-0 w-full h-[80px] bg-[#FFF5F0] skew-y-2 origin-top-right transform -translate-y-10 z-0">
+                    </div>
+
+                    <div class="text-center mb-16 relative z-10 reveal-on-scroll">
+                        <div
+                            class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-100 text-brand-600 mb-4">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800 font-maru mb-2">よくあるご質問</h2>
+                        <div class="h-1 w-16 bg-brand-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="max-w-md mx-auto relative z-10 space-y-10">
+                        <!-- Q1 -->
+                        <div class="space-y-6">
+                            <div class="flex items-end reveal-left">
+                                <div
+                                    class="bg-brand-100 text-gray-800 text-sm py-4 px-5 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%] relative mt-2">
+                                    <span
+                                        class="absolute -top-4 -left-2 bg-white text-[#E84D1C] text-xs font-extrabold px-3 py-1 rounded-full border border-[#ffe8e0] shadow-sm z-10">Question</span>
+                                    無料で応募できますか？
+                                    <div
+                                        class="absolute bottom-[0px] left-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-r-[8px] border-r-brand-100 border-b-[8px] border-b-transparent">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-end items-end reveal-right">
+                                <div
+                                    class="bg-white border-2 border-brand-50 text-gray-700 text-sm py-4 px-5 rounded-2xl rounded-br-sm shadow-sm max-w-[85%] relative text-left">
+                                    <span
+                                        class="absolute -top-4 -right-2 bg-white text-[#E84D1C] text-xs font-extrabold px-3 py-1 rounded-full border border-[#E84D1C] shadow-sm z-10">Answer</span>
+                                    スマートフォンやパソコンがあれば無料で応募できます。テーマに沿ったお写真をご用意の上、ぜひご参加ください。
+                                    <div
+                                        class="absolute bottom-[-2px] right-[-10px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[10px] border-l-brand-50 border-b-[10px] border-b-transparent z-0">
+                                    </div>
+                                    <div
+                                        class="absolute bottom-[0px] right-[-8px] w-0 h-0 border-t-[0px] border-t-transparent border-l-[8px] border-l-white border-b-[8px] border-b-transparent z-10">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- More Qs can be added here -->
+                    </div>
+                </div>
+
+                <!-- FooterO -->
+                <footer
+                    class="w-full bg-white py-8 border-t border-gray-100 text-center text-xs text-gray-400 font-bold rounded-[2rem] shadow-sm">
+                    <div class="flex justify-center items-center gap-4 mb-4 opacity-50">
+                        <a href="#" class="hover:text-brand-500">運営会社</a>
+                        <a href="#" class="hover:text-brand-500">プライバシーポリシー</a>
+                        <a href="#" class="hover:text-brand-500">利用規約</a>
+                    </div>
+                    © 2026 School Photo!
+                </footer>
+
+            </div>
+
+            <!-- RIGHT SIDEBAR (MD+) -->
+            <div class="hidden md:block w-64 pt-20 sticky top-28 self-start h-fit z-20 pl-8 pointer-events-none">
+                <!-- Floating Polaroids Right -->
+                <div
+                    class="absolute top-[350px] right-[-20px] w-36 bg-white p-2 shadow-lg hidden lg:block animate-[float-slow_7s_ease-in-out_infinite]">
+                    <div class="aspect-square bg-gray-200 relative overflow-hidden flex items-center justify-center">
+                        <span class="text-gray-400 font-bold text-xs">Crying Baby</span>
+                    </div>
+                </div>
+
+                <div
+                    class="absolute top-[50px] right-[-40px] w-32 bg-white p-2 shadow-lg opacity-80 hidden lg:block animate-[float_8s_ease-in-out_infinite]">
+                    <div class="aspect-square bg-gray-200 relative overflow-hidden flex items-center justify-center">
+                        <span class="text-gray-400 font-bold text-xs">High Five</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll to Top Button -->
+        <button id="scroll-to-top"
+            class="fixed bottom-8 right-8 z-50 bg-white text-brand-500 p-4 rounded-full shadow-lg border-2 border-brand-100 hover:shadow-xl transition-all opacity-0 pointer-events-none scale-50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Swiper Init
+        var swiper = new Swiper(".mySwiper", {
+            spaceBetween: 0,
+            slidesPerView: 1,
+            loop: true,
+            speed: 1500,
+            effect: "fade",
+            fadeEffect: { crossFade: true },
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            allowTouchMove: false,
+        });
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuCloseBtn = document.getElementById('menu-close-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('icon-menu');
+        const closeIcon = document.getElementById('icon-close');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const body = document.body;
+
+        function toggleMenu() {
+            const isOpen = mobileMenu.classList.contains('pointer-events-auto');
+
+            if (isOpen) {
+                mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+                body.style.overflow = '';
+            } else {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+                body.style.overflow = 'hidden';
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        menuCloseBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Scroll Animation Observer
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll, .reveal-left, .reveal-right').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Scroll to Top Logic
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'scale-50');
+                scrollToTopBtn.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
+            } else {
+                scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'scale-50');
+                scrollToTopBtn.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+
+</html>

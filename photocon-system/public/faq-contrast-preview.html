@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Contrast Ideas - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0', 600: '#D63E0F' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        .bubble-tail-right::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: -6px;
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-left: 8px solid;
+            border-bottom: 6px solid transparent;
+        }
+
+        .bubble-tail-left::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: -6px;
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-right: 8px solid;
+            border-bottom: 6px solid transparent;
+        }
+
+        .tail-brand-light::before {
+            border-left-color: #FFE8E0;
+        }
+
+        .tail-brand-solid::before {
+            border-left-color: #E84D1C;
+        }
+
+        .tail-white::before {
+            border-right-color: #FFFFFF;
+        }
+
+        .tail-brand-reverse::before {
+            border-right-color: #E84D1C;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-700 font-sans pb-32">
+
+    <header class="bg-white py-6 border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h1 class="text-2xl font-bold font-maru text-gray-800">FAQ Visual Distinction</h1>
+            <p class="text-sm text-gray-500 mt-2">「どっちが質問でどっちが回答か」をより明確にするアイデア</p>
+        </div>
+    </header>
+
+    <!-- IDEA A: ICONS & BADGES -->
+    <section class="py-16 px-4">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Idea
+                    A</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">アイコン & バッジ強調</h2>
+                <p class="text-xs text-gray-500">アイコンと「Q」「A」のバッジを付けて役割を明確化</p>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100 p-6 space-y-8">
+                <!-- Q -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gray-200 border border-white flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="user" class="w-5 h-5 text-gray-500"></i>
+                    </div>
+                    <div
+                        class="bg-brand-50 text-gray-800 text-sm py-4 px-5 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] relative border border-brand-100">
+                        <span
+                            class="absolute -top-3 -left-2 bg-brand-100 text-brand-600 text-xs font-bold px-2 py-0.5 rounded-full border border-white shadow-sm">Question</span>
+                        無料で参加できますか？
+                    </div>
+                </div>
+                <!-- A -->
+                <div class="flex gap-3 flex-row-reverse">
+                    <div
+                        class="w-10 h-10 rounded-full bg-brand text-white border border-brand-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Scooter" class="w-6 h-6" alt="Admin">
+                    </div>
+                    <div
+                        class="bg-white text-gray-700 text-sm py-4 px-5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] relative border-2 border-brand-100 text-left">
+                        <span
+                            class="absolute -top-3 -right-2 bg-brand text-white text-xs font-bold px-2 py-0.5 rounded-full border border-white shadow-sm">Answer</span>
+                        はい！完全無料でご参加いただけます✨<br>入賞者には素敵なプレゼントもありますよ！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDEA B: COLOR REVERSE -->
+    <section class="py-16 px-4 bg-gray-200">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span class="bg-brand-100 text-brand px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Idea
+                    B</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">カラー・リバース</h2>
+                <p class="text-xs text-gray-500">「回答」側をブランドカラーにして徹底的に強調</p>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100 p-6 space-y-8">
+                <!-- Q (Gray/Subtle) -->
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mt-2">
+                        <span class="font-bold text-gray-400 text-xs">Q</span>
+                    </div>
+                    <div
+                        class="bg-gray-100 text-gray-600 text-sm py-3 px-4 rounded-2xl rounded-tl-none max-w-[85%] relative">
+                        無料で参加できますか？
+                    </div>
+                </div>
+                <!-- A (Brand/Strong) -->
+                <div class="flex gap-3 flex-row-reverse">
+                    <div
+                        class="w-10 h-10 rounded-full bg-brand text-white border border-white flex items-center justify-center flex-shrink-0 shadow-sm mt-2">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div
+                        class="bg-brand text-white text-sm py-4 px-5 rounded-2xl rounded-tr-none shadow-md max-w-[85%] relative bubble-tail-right tail-brand-solid">
+                        <p class="font-bold border-b border-white/20 pb-2 mb-2 text-xs opacity-90">Answer:</p>
+                        はい！完全無料でご参加いただけます✨
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDEA C: GROUPED BOX -->
+    <section class="py-16 px-4 bg-brand-50">
+        <div class="max-w-md mx-auto">
+            <div class="mb-6 text-center">
+                <span
+                    class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Idea
+                    C</span>
+                <h2 class="text-xl font-bold font-maru text-gray-800">会話セット化</h2>
+                <p class="text-xs text-gray-500">QとAを一つの枠で囲んで「一対の会話」として見せる</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Set 1 -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-brand-100 relative">
+                    <div class="absolute -left-2 top-6 w-1 h-12 bg-brand rounded-r-full"></div>
+
+                    <div class="space-y-4">
+                        <!-- Q -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand font-bold font-maru text-lg w-6">Q.</span>
+                            <p class="font-bold text-gray-800 text-sm">無料で参加できますか？</p>
+                        </div>
+
+                        <div class="border-t border-dashed border-gray-100"></div>
+
+                        <!-- A -->
+                        <div class="flex items-start gap-3 bg-brand-50 p-4 rounded-2xl">
+                            <span
+                                class="bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full mt-0.5">A</span>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                はい、完全無料です！<br>
+                                入賞者には素敵なプレゼントもありますよ🎁
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Set 2 -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-brand-100 relative">
+                    <div class="absolute -left-2 top-6 w-1 h-12 bg-brand rounded-r-full"></div>
+
+                    <div class="space-y-4">
+                        <!-- Q -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand font-bold font-maru text-lg w-6">Q.</span>
+                            <p class="font-bold text-gray-800 text-sm">写真のサイズ制限は？</p>
+                        </div>
+
+                        <div class="border-t border-dashed border-gray-100"></div>
+
+                        <!-- A -->
+                        <div class="flex items-start gap-3 bg-brand-50 p-4 rounded-2xl">
+                            <span
+                                class="bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full mt-0.5">A</span>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                1枚15MBまでとなります！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

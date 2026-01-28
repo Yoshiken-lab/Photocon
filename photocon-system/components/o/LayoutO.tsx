@@ -1,64 +1,122 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Stamp, ArrowUp } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { ArrowRight, Stamp, ArrowUp, User, LogIn, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import React, { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { isAuthEnabled } from '@/lib/config'
 
 // --- Side Content Components ---
 
-const LeftSidebar = () => (
-    <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        className="hidden md:block w-64 pt-10 sticky top-28 self-start h-fit z-20"
-    >
-        {/* Redesigned Sidebar: Blends into background */}
-        <div className="w-full pl-4">
-            {/* Logo */}
-            {/* Logo - Removed as per request */}
-            <div className="mb-8 relative z-10 w-40">
-                {/* Empty or removed */}
-            </div>
+const LeftSidebar = () => {
+    const [session, setSession] = useState<any>(null)
+    const router = useRouter()
+    const authEnabled = isAuthEnabled()
 
-            <ul className="space-y-5 font-bold text-stone-800 text-sm tracking-wide">
-                {[
-                    { href: "#howto", label: "応募方法" },
-                    { href: "#events", label: "開催イベント" },
-                    { href: "#faq", label: "Q&A" },
-                    { href: "/sample-o/contact", label: "お問い合わせ" }
-                ].map((item, i) => (
-                    <li key={item.href}>
-                        <Link href={item.href} className="hover:text-brand-600 flex items-center gap-3 group transition-colors">
-                            <span className="bg-stone-800/10 p-1.5 rounded-full group-hover:bg-brand-600 group-hover:text-white transition-all text-stone-800">
-                                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                            </span>
-                            {item.label}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-            <div className="mt-12 flex justify-start opacity-60 pl-2">
-                {/* Stamp Icon - Dark version */}
-                <div className="border-4 border-stone-800/20 rounded-full p-2 rotate-12">
-                    <Stamp className="text-stone-800/40 w-12 h-12" />
+    useEffect(() => {
+        if (authEnabled) {
+            const supabase = createClient()
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                setSession(session)
+            })
+
+            const {
+                data: { subscription },
+            } = supabase.auth.onAuthStateChange((_event, session) => {
+                setSession(session)
+            })
+
+            return () => subscription.unsubscribe()
+        }
+    }, [authEnabled])
+
+    const handleLogout = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        const supabase = createClient()
+        await supabase.auth.signOut()
+        router.refresh()
+    }
+
+    // Default items
+    const navItems = [
+        { href: "#howto", label: "応募方法" },
+        { href: "#events", label: "開催イベント" },
+        { href: "#faq", label: "Q&A" },
+        { href: "/sample-o/contact", label: "お問い合わせ" }
+    ]
+
+    // 熱血！Authリンク追加
+    if (authEnabled) {
+        if (session) {
+            navItems.unshift({ href: "/mypage", label: "マイページ" }) // Top of list
+        } else {
+            navItems.unshift({ href: "/login", label: "ログイン" }) // Top of list
+        }
+    }
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            className="hidden md:block w-64 pt-10 sticky top-28 self-start h-fit z-20"
+        >
+            {/* Redesigned Sidebar: Blends into background */}
+            <div className="w-full pl-4">
+                {/* Logo */}
+                {/* Logo - Removed as per request */}
+                <div className="mb-8 relative z-10 w-40">
+                    {/* Empty or removed */}
+                </div>
+
+                <ul className="space-y-5 font-bold text-stone-800 text-sm tracking-wide">
+                    {navItems.map((item, i) => (
+                        <li key={item.href}>
+                            <Link href={item.href} className={`flex items-center gap-3 group transition-colors ${item.href === '/mypage' ? 'text-brand' : 'hover:text-brand-600'}`}>
+                                <span className={`p-1.5 rounded-full transition-all flex items-center justify-center ${item.href === '/mypage' ? 'bg-brand text-white' : 'bg-stone-800/10 text-stone-800 group-hover:bg-brand-600 group-hover:text-white'}`}>
+                                    {item.href === '/mypage' ? <User size={14} /> :
+                                        item.href === '/login' ? <LogIn size={14} /> :
+                                            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />}
+                                </span>
+                                {item.label}
+                            </Link>
+                        </li>
+                    ))}
+                    {/* Logout Button */}
+                    {authEnabled && session && (
+                        <li>
+                            <button onClick={handleLogout} className="flex items-center gap-3 group transition-colors hover:text-gray-500 text-stone-600 w-full text-left">
+                                <span className="p-1.5 rounded-full transition-all flex items-center justify-center bg-gray-200 text-gray-500 group-hover:bg-gray-300">
+                                    <LogOut size={14} />
+                                </span>
+                                ログアウト
+                            </button>
+                        </li>
+                    )}
+                </ul>
+                <div className="mt-12 flex justify-start opacity-60 pl-2">
+                    {/* Stamp Icon - Dark version */}
+                    <div className="border-4 border-stone-800/20 rounded-full p-2 rotate-12">
+                        <Stamp className="text-stone-800/40 w-12 h-12" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {/* Floating Photo Decor Left */}
-        <motion.div
-            animate={{ y: [0, -10, 0], rotate: [-6, -4, -6] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[400px] left-[-20px] w-40 bg-white p-2 shadow-lg hidden lg:block"
-        >
-            <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-bold text-xs">Family</div>
-            </div>
+            {/* Floating Photo Decor Left */}
+            <motion.div
+                animate={{ y: [0, -10, 0], rotate: [-6, -4, -6] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-[400px] left-[-20px] w-40 bg-white p-2 shadow-lg hidden lg:block"
+            >
+                <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-bold text-xs">Family</div>
+                </div>
+            </motion.div>
         </motion.div>
-    </motion.div>
-)
+    )
+}
 
 const RightSidebar = () => (
     <motion.div

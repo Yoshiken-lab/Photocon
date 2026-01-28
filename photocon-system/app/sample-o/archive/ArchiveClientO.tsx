@@ -12,6 +12,7 @@ interface Contest {
     start_date: string
     end_date: string
     status: string
+    thumbnail_url: string | null
     // Add other fields if needed for display like entry_count if you fetch it
 }
 
@@ -84,8 +85,10 @@ export default function ArchiveClientO({ contests }: { contests: Contest[] }) {
                             <AnimatePresence mode="wait">
                                 {currentItems.map((contest, index) => {
                                     const style = getScrapbookStyle(contest.id)
-                                    // Placeholder image for now, ideally fetch a cover image from DB/Storage
-                                    const imageUrl = `https://placehold.co/400x400/${style.bgColor}/${style.fgColor}?text=${encodeURIComponent(contest.name.substring(0, 4))}`
+                                    // Use DB thumbnail if available, else placeholder
+                                    const imageUrl = contest.thumbnail_url
+                                        ? contest.thumbnail_url
+                                        : `https://placehold.co/400x400/${style.bgColor}/${style.fgColor}?text=${encodeURIComponent(contest.name.substring(0, 4))}`
 
                                     return (
                                         <motion.div

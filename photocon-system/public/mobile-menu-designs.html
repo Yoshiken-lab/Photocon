@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Variations - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0', 500: '#E84D1C', 600: '#D63E0F' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .menu-overlay {
+            transition: all 0.3s ease-out;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        /* Specific Transitions */
+        .drawer-content {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .menu-overlay.active .drawer-content {
+            transform: translateX(0);
+        }
+
+        .bottom-sheet-content {
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .menu-overlay.active .bottom-sheet-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div
+        class="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-800 relative h-[800px]">
+        <!-- Mock Phone Header -->
+        <header
+            class="bg-white/90 backdrop-blur-sm absolute top-0 w-full z-20 flex justify-between items-center p-4 border-b border-gray-100">
+            <span class="font-bold text-gray-800">Sample O</span>
+            <button id="menuTrigger" class="text-brand-500 hover:bg-brand-50 p-2 rounded-full transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </header>
+
+        <!-- Mock Content -->
+        <main class="pt-20 px-6 space-y-8 overflow-y-auto h-full bg-[#FFF5F0]">
+            <div
+                class="h-40 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-300 font-maru text-2xl">
+                Hero Image</div>
+            <div class="space-y-4">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-4 bg-gray-200 rounded w-full"></div>
+            </div>
+            <div class="h-32 bg-white rounded-xl shadow-sm"></div>
+            <div class="h-32 bg-white rounded-xl shadow-sm"></div>
+        </main>
+
+        <!-- CONTROLS (Floating outside phone) -->
+        <div
+            class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg border border-gray-200 text-center z-50">
+            <p class="text-xs font-bold text-gray-500 mb-2">Select Design Style:</p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="setMenu('A')"
+                    class="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 active:bg-brand active:text-white transition-colors">A:
+                    Clean White</button>
+                <button onclick="setMenu('B')"
+                    class="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 active:bg-brand active:text-white transition-colors">B:
+                    Glass Blur</button>
+                <button onclick="setMenu('C')"
+                    class="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 active:bg-brand active:text-white transition-colors">C:
+                    Side Drawer</button>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">Click hamburger menu inside phone to test</p>
+        </div>
+
+        <!-- === MENU OPTION A: CLEAN WHITE === -->
+        <div id="menu-A" class="menu-overlay fixed inset-0 z-40 bg-white flex flex-col items-center justify-center">
+            <button onclick="closeMenu()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <nav class="flex flex-col gap-6 text-center">
+                <p class="text-xs font-bold text-gray-400 mb-4 tracking-widest">MENU</p>
+                <a href="#" class="text-2xl font-bold text-gray-800 hover:text-brand-500 transition-colors">トップ</a>
+                <a href="#" class="text-2xl font-bold text-gray-800 hover:text-brand-500 transition-colors">応募方法</a>
+                <a href="#" class="text-2xl font-bold text-gray-800 hover:text-brand-500 transition-colors">開催イベント</a>
+                <a href="#" class="text-2xl font-bold text-gray-800 hover:text-brand-500 transition-colors">Q&A</a>
+                <a href="#"
+                    class="text-2xl font-bold text-brand-500 hover:text-brand-600 transition-colors mt-4">お問い合わせ</a>
+            </nav>
+        </div>
+
+        <!-- === MENU OPTION B: GLASS BLUR === -->
+        <div id="menu-B"
+            class="menu-overlay fixed inset-0 z-40 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center">
+            <button onclick="closeMenu()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 p-2 bg-white/50 rounded-full">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <nav class="flex flex-col gap-8 text-center">
+                <a href="#" class="text-3xl font-maru font-bold text-brand-600 drop-shadow-sm">Top</a>
+                <a href="#"
+                    class="text-3xl font-maru font-bold text-gray-700 hover:text-brand-600 transition-colors">How To</a>
+                <a href="#"
+                    class="text-3xl font-maru font-bold text-gray-700 hover:text-brand-600 transition-colors">Event</a>
+                <a href="#"
+                    class="text-3xl font-maru font-bold text-gray-700 hover:text-brand-600 transition-colors">FAQ</a>
+                <div class="w-16 h-1 bg-brand-500 mx-auto rounded-full"></div>
+                <a href="#"
+                    class="text-lg font-bold text-white bg-brand-500 px-8 py-3 rounded-full shadow-lg">Contact</a>
+            </nav>
+        </div>
+
+        <!-- === MENU OPTION C: SIDE DRAWER === -->
+        <div id="menu-C" class="menu-overlay absolute inset-0 z-40">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/30 backdrop-blur-[2px]" onclick="closeMenu()"></div>
+            <!-- Drawer -->
+            <div
+                class="drawer-content absolute top-2 right-2 bottom-2 w-64 bg-white rounded-2xl shadow-2xl p-6 flex flex-col">
+                <div class="flex justify-end mb-8">
+                    <button onclick="closeMenu()" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <nav class="flex flex-col gap-6 text-left pl-2">
+                    <a href="#" class="text-lg font-bold text-gray-700 flex items-center gap-3 group">
+                        <span
+                            class="w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                        </span>
+                        トップ
+                    </a>
+                    <a href="#" class="text-lg font-bold text-gray-700 flex items-center gap-3 group">
+                        <span
+                            class="w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                        </span>
+                        応募方法
+                    </a>
+                    <a href="#" class="text-lg font-bold text-gray-700 flex items-center gap-3 group">
+                        <span
+                            class="w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                        </span>
+                        イベント
+                    </a>
+                    <a href="#" class="text-lg font-bold text-gray-700 flex items-center gap-3 group">
+                        <span
+                            class="w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        </span>
+                        Q&A
+                    </a>
+                </nav>
+                <div class="mt-auto">
+                    <a href="#"
+                        class="block w-full py-3 bg-brand-500 text-white text-center font-bold rounded-xl shadow-md">お問い合わせ</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentStyle = 'A';
+        const phoneContainer = document.querySelector('.max-w-md'); // The mock phone
+
+        function setMenu(style) {
+            currentStyle = style;
+            closeMenu(); // Reset state
+
+            // Visual feedback for buttons
+            document.querySelectorAll('button[onclick^="setMenu"]').forEach(btn => {
+                if (btn.innerText.startsWith(style)) {
+                    btn.classList.add('bg-brand-50', 'text-brand-600', 'border-brand-200');
+                } else {
+                    btn.classList.remove('bg-brand-50', 'text-brand-600', 'border-brand-200');
+                }
+            });
+        }
+
+        document.getElementById('menuTrigger').addEventListener('click', () => {
+            // Find the active menu element strictly within the phone container if needed, 
+            // but IDs are unique here so global search is fine.
+            const menu = document.getElementById(`menu-${currentStyle}`);
+
+            // Move the menu into the phone container to ensure correct positioning (esp relative/absolute)
+            // Just ensuring it shows up correct place. The HTML structure puts them usually *after* controls, 
+            // but we want them inside the phone relative container.
+            // Actually, let's just show it.
+            if (menu) {
+                // To ensure "fixed inset-0" works relative to the phone, we might need absolute.
+                // But for this demo, let's treat the phone as the viewport if styled correctly?
+                // The phone uses "relative overflow-hidden".
+                // If we use 'fixed' it will cover the whole browser window.
+                // Let's modify classes on fly to 'absolute' if keeping inside phone.
+
+                menu.classList.remove('fixed');
+                menu.classList.add('absolute');
+                phoneContainer.appendChild(menu); // Move into phone DOM just in case
+
+                // Allow reflow
+                setTimeout(() => menu.classList.add('active'), 10);
+            }
+        });
+
+        function closeMenu() {
+            document.querySelectorAll('.menu-overlay').forEach(el => {
+                el.classList.remove('active');
+            });
+        }
+
+        lucide.createIcons();
+        setMenu('A'); // Init
+    </script>
+</body>
+
+</html>

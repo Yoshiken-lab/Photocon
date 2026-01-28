@@ -43,6 +43,18 @@ export default function SubmitPageO() {
             }
         }
         fetchContests()
+
+        // Auth: Check session and pre-fill email
+        // Note: isAuthEnabled check is better done via checking if we have a session, 
+        // as creating a client is cheap.
+        import('@/lib/supabase/client').then(({ createClient }) => {
+            const supabase = createClient()
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                if (session?.user?.email) {
+                    setEmail(session.user.email)
+                }
+            })
+        })
     }, [])
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

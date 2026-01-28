@@ -104,6 +104,7 @@ export interface Database {
           instagram_timestamp: string
           collected_at: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           id?: string
@@ -126,6 +127,7 @@ export interface Database {
           instagram_timestamp: string
           collected_at?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           id?: string
@@ -148,6 +150,7 @@ export interface Database {
           instagram_timestamp?: string
           collected_at?: string
           updated_at?: string
+          user_id?: string | null
         }
       }
       votes: {

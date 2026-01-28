@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design A: Letter - Sample O Contact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#FFF5F0', 100: '#FFE8E0', 500: '#E84D1C', 600: '#D63E0F' }
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #FFF5F0;
+        }
+
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        .bg-paper {
+            background-image: repeating-linear-gradient(#F0F0F0 0px, #F0F0F0 1px, transparent 1px, transparent 30px);
+            background-size: 100% 30px;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-50 text-gray-800 min-h-screen">
+
+    <div class="w-full md:max-w-[600px] mx-auto min-h-screen border-x border-brand-100/50 relative shadow-2xl pb-20">
+
+        <!-- Header -->
+        <header class="p-4 flex justify-between items-center">
+            <a href="#" class="font-bold text-gray-400 hover:text-brand-500">← TOP</a>
+            <div class="font-maru font-bold text-gray-700">お手紙（お問い合わせ）</div>
+            <div class="w-8"></div>
+        </header>
+
+        <main class="px-4 py-8">
+
+            <div class="text-center mb-8">
+                <div
+                    class="inline-block bg-white p-3 rounded-full shadow-md mb-4 transform -rotate-6 border-2 border-brand-100">
+                    <span class="text-3xl">✉️</span>
+                </div>
+                <h1 class="text-2xl font-bold font-maru text-brand-500">お問い合わせ</h1>
+                <p class="text-xs text-gray-500 mt-2">ご不明点やご感想をお聞かせください。</p>
+            </div>
+
+            <!-- Envelope Container -->
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden relative border-t-8 border-brand-200">
+                <div
+                    class="absolute top-0 left-0 w-full h-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PHBhdGggZD0iTTAgMEMxMCAxMCAxMCAxMCAyMCAwTDIwIDEwTDAgMTBaIiBmaWxsPSIjRkZFOEUwIi8+PC9zdmc+')] bg-repeat-x bg-[length:20px_10px] transform rotate-180 opacity-50">
+                </div>
+
+                <div class="p-8 pt-10">
+
+                    <!-- Form Content (Paper style) -->
+                    <div class="bg-yellow-50/50 p-6 rounded-sm shadow-inner bg-paper md:min-h-[400px]">
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-bold text-gray-400 mb-1">お名前</label>
+                            <input type="text" placeholder="山田 太郎"
+                                class="w-full bg-transparent border-b-2 border-gray-300 focus:border-brand-500 outline-none py-2 font-maru text-lg placeholder-gray-300">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-bold text-gray-400 mb-1">メールアドレス</label>
+                            <input type="email" placeholder="example@email.com"
+                                class="w-full bg-transparent border-b-2 border-gray-300 focus:border-brand-500 outline-none py-2 font-sans placeholder-gray-300">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-bold text-gray-400 mb-1">メッセージ</label>
+                            <textarea rows="4" placeholder="ここにメッセージを書いてください..."
+                                class="w-full bg-transparent border-none outline-none py-2 font-maru text-gray-700 resize-none placeholder-gray-300 leading-[30px]"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Submit Area -->
+                <div class="bg-gray-50 p-6 text-center border-t border-gray-100">
+                    <button
+                        class="bg-brand-500 text-white font-bold py-3 px-12 rounded-full shadow-lg hover:bg-brand-600 hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto">
+                        <span>ポストに入れる</span>
+                        <span class="text-xl">📮</span>
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</body>
+
+</html>

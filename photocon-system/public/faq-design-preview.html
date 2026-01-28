@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Design Concepts - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0', 500: '#E84D1C' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-700 font-sans pb-32">
+
+    <!-- Header -->
+    <header class="bg-white py-6 border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h1 class="text-2xl font-bold font-maru text-gray-800">FAQ Design Concepts</h1>
+            <p class="text-sm text-gray-500 mt-2">Sample O のテーマ「ポップで親しみやすい」に合わせた3つの提案</p>
+        </div>
+    </header>
+
+    <!-- CONTENT DATA -->
+    <script>
+        const faqs = [
+            { question: '無料で応募できますか？', answer: 'スマートフォンやパソコンがあれば無料で応募できます。お気軽にご参加ください！', icon: 'coins' },
+            { question: '子ども以外の写真もOK？', answer: 'お子様が写っているお写真限定となります。風景のみやペットのみはご遠慮ください。', icon: 'image' },
+            { question: '一人何枚まで応募可能？', answer: '何枚でも応募可能です！ベストショットをたくさん送ってくださいね。', icon: 'copy' },
+            { question: '写真のサイズ制限は？', answer: 'JPEG・PNG形式で、1枚15MBまで対応しています。', icon: 'file-check' }
+        ];
+    </script>
+
+    <!-- DESIGN A: COLORFUL GRID -->
+    <section class="py-20 px-4 bg-[#FFF5F0]">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-8 text-center">
+                <span
+                    class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Design
+                    A</span>
+                <h2 class="text-3xl font-bold font-maru text-gray-800">カラフル・グリッド</h2>
+                <p class="text-sm text-gray-500 mt-2">「おもちゃ箱」のような賑やかさと楽しさを重視</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div
+                    class="bg-white p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border-2 border-transparent hover:border-orange-200 group">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-500 flex items-center justify-center flex-shrink-0 group-hover:rotate-12 transition-transform">
+                            <i data-lucide="coins" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-bold text-lg mb-2 text-gray-800 group-hover:text-orange-500 transition-colors font-maru">
+                                無料で応募できる？</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">スマートフォンやパソコンがあれば無料で応募できます。お気軽にご参加ください！</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="bg-white p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border-2 border-transparent hover:border-blue-200 group">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0 group-hover:-rotate-12 transition-transform">
+                            <i data-lucide="image" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-bold text-lg mb-2 text-gray-800 group-hover:text-blue-500 transition-colors font-maru">
+                                子ども以外もOK？</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">お子様が写っているお写真限定となります。風景のみやペットのみはご遠慮ください。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="bg-white p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border-2 border-transparent hover:border-green-200 group">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-green-100 text-green-500 flex items-center justify-center flex-shrink-0 group-hover:rotate-12 transition-transform">
+                            <i data-lucide="copy" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-bold text-lg mb-2 text-gray-800 group-hover:text-green-500 transition-colors font-maru">
+                                何枚まで応募できる？</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">何枚でも応募可能です！ベストショットをたくさん送ってくださいね。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div
+                    class="bg-white p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border-2 border-transparent hover:border-purple-200 group">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-500 flex items-center justify-center flex-shrink-0 group-hover:-rotate-12 transition-transform">
+                            <i data-lucide="file-check" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-bold text-lg mb-2 text-gray-800 group-hover:text-purple-500 transition-colors font-maru">
+                                写真のサイズは？</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">JPEG・PNG形式で、1枚15MBまで対応しています。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN B: CHAT STYLE -->
+    <section class="py-20 px-4 bg-white border-t border-dashed border-gray-200">
+        <div class="max-w-3xl mx-auto">
+            <div class="mb-12 text-center">
+                <span
+                    class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Design
+                    B</span>
+                <h2 class="text-3xl font-bold font-maru text-gray-800">チャット・スタイル</h2>
+                <p class="text-sm text-gray-500 mt-2">会話形式で親しみやすさを最大化</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Q1 -->
+                <div class="space-y-3">
+                    <!-- User Question -->
+                    <div class="flex items-end gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 flex-shrink-0 border-2 border-white shadow-sm overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" />
+                        </div>
+                        <div
+                            class="bg-gray-100 text-gray-800 px-5 py-3 rounded-2xl rounded-bl-sm shadow-sm relative max-w-[80%]">
+                            <p class="font-bold text-sm">無料で応募できますか？</p>
+                        </div>
+                    </div>
+                    <!-- Admin Answer -->
+                    <div class="flex items-end gap-3 flex-row-reverse">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand flex-shrink-0 border-2 border-white shadow-sm">
+                            <i data-lucide="camera" class="w-5 h-5"></i>
+                        </div>
+                        <div
+                            class="bg-brand-50 text-gray-700 px-5 py-3 rounded-2xl rounded-br-sm shadow-sm border border-brand-100 max-w-[80%]">
+                            <p class="text-sm">はい、スマートフォンやパソコンがあれば<span
+                                    class="font-bold text-brand">完全無料</span>でご参加いただけます！</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="space-y-3">
+                    <!-- User Question -->
+                    <div class="flex items-end gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 flex-shrink-0 border-2 border-white shadow-sm overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" alt="User" />
+                        </div>
+                        <div
+                            class="bg-gray-100 text-gray-800 px-5 py-3 rounded-2xl rounded-bl-sm shadow-sm relative max-w-[80%]">
+                            <p class="font-bold text-sm">子ども以外の写真（ペットとか）でもいいですか？</p>
+                        </div>
+                    </div>
+                    <!-- Admin Answer -->
+                    <div class="flex items-end gap-3 flex-row-reverse">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand flex-shrink-0 border-2 border-white shadow-sm">
+                            <i data-lucide="camera" class="w-5 h-5"></i>
+                        </div>
+                        <div
+                            class="bg-brand-50 text-gray-700 px-5 py-3 rounded-2xl rounded-br-sm shadow-sm border border-brand-100 max-w-[80%]">
+                            <p class="text-sm">申し訳ありません、<span
+                                    class="font-bold text-brand">お子様が写っているお写真限定</span>となります。お子様とペットのツーショットならOKですよ！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN C: ACCORDION -->
+    <section class="py-20 px-4 bg-gray-100">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-8 text-center">
+                <span
+                    class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Design
+                    C</span>
+                <h2 class="text-3xl font-bold font-maru text-gray-800">モダン・アコーディオン</h2>
+                <p class="text-sm text-gray-500 mt-2">スッキリと整理された機能美デザイン</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Item 1 -->
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md"
+                    onclick="this.classList.toggle('active')">
+                    <div class="p-5 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold text-sm">
+                                Q</div>
+                            <h3 class="font-bold text-gray-800">無料で応募できますか？</h3>
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand group-hover:text-white transition-all transform duration-300 icon-plus">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 bg-gray-50 px-5 content-area">
+                        <div class="py-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            スマートフォンやパソコンがあれば無料で応募できます。お気軽にご参加ください！
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md"
+                    onclick="this.classList.toggle('active')">
+                    <div class="p-5 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold text-sm">
+                                Q</div>
+                            <h3 class="font-bold text-gray-800">一人何枚まで応募できますか？</h3>
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand group-hover:text-white transition-all transform duration-300 icon-plus">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 bg-gray-50 px-5 content-area">
+                        <div class="py-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            何枚でも応募可能です！ベストショットをたくさん送ってくださいね。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md"
+                    onclick="this.classList.toggle('active')">
+                    <div class="p-5 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold text-sm">
+                                Q</div>
+                            <h3 class="font-bold text-gray-800">写真の形式やサイズに制限はありますか？</h3>
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand group-hover:text-white transition-all transform duration-300 icon-plus">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 bg-gray-50 px-5 content-area">
+                        <div class="py-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            JPEG・PNG形式のみ対応しております。また、サイズに関しては1枚15MBまで受け付けております。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                .active .content-area {
+                    max-height: 200px;
+                }
+
+                .active .icon-plus {
+                    transform: rotate(45deg);
+                    background-color: #E84D1C;
+                    color: white;
+                }
+            </style>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

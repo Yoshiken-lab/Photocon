@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Chat Variations - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#E84D1C', 50: '#FFF5F0', 100: '#FFE8E0' },
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        /* Custom scrollbar for messenger view */
+        .messenger-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messenger-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .messenger-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-700 font-sans pb-32">
+
+    <header class="bg-white py-6 border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h1 class="text-2xl font-bold font-maru text-gray-800">FAQ Chat Variations</h1>
+            <p class="text-sm text-gray-500 mt-2">「チャット・会話形式」をベースにした3つのバリエーション</p>
+        </div>
+    </header>
+
+    <!-- VARIATION 1: SMARTPHONE MESSENGER -->
+    <section class="py-20 px-4 bg-gray-100">
+        <div class="max-w-md mx-auto">
+            <div class="mb-8 text-center">
+                <span
+                    class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Variation
+                    1</span>
+                <h2 class="text-2xl font-bold font-maru text-gray-800">スマホアプリ風</h2>
+                <p class="text-xs text-gray-500 mt-2">LINEのような馴染み深いUIで直感的</p>
+            </div>
+
+            <!-- Phone Frame -->
+            <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-[8px] border-gray-800 relative">
+                <!-- Status Bar Mock -->
+                <div class="bg-gray-800 text-white px-6 py-3 flex justify-between items-center text-[10px] font-bold">
+                    <span>14:00</span>
+                    <div class="flex gap-1">
+                        <i data-lucide="signal" class="w-3 h-3"></i>
+                        <i data-lucide="wifi" class="w-3 h-3"></i>
+                        <i data-lucide="battery" class="w-3 h-3"></i>
+                    </div>
+                </div>
+
+                <!-- Chat Header -->
+                <div class="bg-white/90 backdrop-blur border-b p-4 flex items-center gap-3 sticky top-0 z-10">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand">
+                        <i data-lucide="camera" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-800">運営サポート</h3>
+                        <p class="text-[10px] text-brand font-bold">● オンライン</p>
+                    </div>
+                </div>
+
+                <!-- Chat Body -->
+                <div class="bg-[#7494C0] h-[400px] overflow-y-auto p-4 space-y-4 messenger-scroll">
+                    <!-- Date Separator -->
+                    <div class="text-center">
+                        <span class="bg-black/10 text-white text-[10px] px-2 py-1 rounded-full">今日</span>
+                    </div>
+
+                    <!-- User Q -->
+                    <div class="flex items-end gap-2 flex-row-reverse">
+                        <div
+                            class="bg-[#8DE055] text-gray-800 text-xs py-2 px-3 rounded-2xl rounded-tr-sm shadow-sm max-w-[80%]">
+                            <p>無料で応募できますか？</p>
+                        </div>
+                        <span class="text-[10px] text-white/80">14:01</span>
+                    </div>
+
+                    <!-- Admin A -->
+                    <div class="flex items-end gap-2">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand text-xs border border-gray-200 overflow-hidden">
+                            <i data-lucide="camera" class="w-4 h-4"></i>
+                        </div>
+                        <div
+                            class="bg-white text-gray-800 text-xs py-2 px-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[80%]">
+                            <p>はい！スマホがあれば<span class="text-brand font-bold">完全無料</span>で参加できます✨</p>
+                        </div>
+                        <span class="text-[10px] text-white/80">14:01</span>
+                    </div>
+
+                    <!-- User Q -->
+                    <div class="flex items-end gap-2 flex-row-reverse mt-4">
+                        <div
+                            class="bg-[#8DE055] text-gray-800 text-xs py-2 px-3 rounded-2xl rounded-tr-sm shadow-sm max-w-[80%]">
+                            <p>ペットの写真でもいいですか？🐶</p>
+                        </div>
+                        <span class="text-[10px] text-white/80">14:05</span>
+                    </div>
+
+                    <!-- Admin A -->
+                    <div class="flex items-end gap-2">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand text-xs border border-gray-200 overflow-hidden">
+                            <i data-lucide="camera" class="w-4 h-4"></i>
+                        </div>
+                        <div
+                            class="bg-white text-gray-800 text-xs py-2 px-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[80%]">
+                            <p>お子様が写っているお写真でお願いします🙏
+                                <br>お子様とワンちゃんのツーショットならOKですよ！🙆‍♀️
+                            </p>
+                        </div>
+                        <span class="text-[10px] text-white/80">14:06</span>
+                    </div>
+                </div>
+
+                <!-- Input Area Mock -->
+                <div class="bg-white p-3 border-t flex items-center gap-2">
+                    <i data-lucide="plus" class="text-gray-400 w-5 h-5"></i>
+                    <div class="flex-1 bg-gray-100 rounded-full h-8 px-3 text-xs flex items-center text-gray-400">
+                        メッセージを入力...</div>
+                    <i data-lucide="send" class="text-brand w-5 h-5"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VARIATION 2: CARD / COMIC STYLE -->
+    <section class="py-20 px-4 bg-[#FFF8F0]">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-12 text-center">
+                <span
+                    class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Variation
+                    2</span>
+                <h2 class="text-2xl font-bold font-maru text-gray-800">コミック・カード形式</h2>
+                <p class="text-xs text-gray-500 mt-2">1つの質問を1つの「カード」にまとめた整理されたデザイン</p>
+            </div>
+
+            <div class="grid gap-6">
+                <!-- Card 1 -->
+                <div
+                    class="bg-white rounded-3xl p-6 shadow-sm border-2 border-brand-100 relative group hover:-translate-y-1 transition-transform">
+                    <div class="absolute -top-3 left-6 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full">Q.
+                        料金について</div>
+
+                    <div class="space-y-4 pt-2">
+                        <!-- Q -->
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-gray-300">
+                                <span class="font-bold text-gray-400 text-lg">?</span>
+                            </div>
+                            <div class="font-bold text-gray-800 font-maru text-lg">
+                                お金はかかりますか？
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="h-0.5 w-full bg-brand-50 border-t border-dashed border-brand-200"></div>
+
+                        <!-- A -->
+                        <div class="flex gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-brand-50 flex-shrink-0 flex items-center justify-center text-brand">
+                                <i data-lucide="smile" class="w-6 h-6"></i>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-2xl rounded-tl-none w-full">
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    いいえ、<span
+                                        class="font-bold text-brand bg-yellow-100 px-1">すべて無料</span>でご参加いただけます！<br>
+                                    撮影料や参加費などは一切かかりませんのでご安心ください。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="bg-white rounded-3xl p-6 shadow-sm border-2 border-brand-100 relative group hover:-translate-y-1 transition-transform">
+                    <div class="absolute -top-3 left-6 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full">Q.
+                        写真の内容</div>
+
+                    <div class="space-y-4 pt-2">
+                        <!-- Q -->
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-gray-300">
+                                <span class="font-bold text-gray-400 text-lg">?</span>
+                            </div>
+                            <div class="font-bold text-gray-800 font-maru text-lg">
+                                子ども以外の写真は？
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="h-0.5 w-full bg-brand-50 border-t border-dashed border-brand-200"></div>
+
+                        <!-- A -->
+                        <div class="flex gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-brand-50 flex-shrink-0 flex items-center justify-center text-brand">
+                                <i data-lucide="smile" class="w-6 h-6"></i>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-2xl rounded-tl-none w-full">
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    お子様が写っているお写真をお願いします。<br>
+                                    風景のみや、ペットのみのお写真は対象外となります🙇‍♂️
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VARIATION 3: INTERACTIVE BOT -->
+    <section class="py-20 px-4 bg-white">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-12 text-center">
+                <span
+                    class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">Variation
+                    3</span>
+                <h2 class="text-2xl font-bold font-maru text-gray-800">ボット対話スタイル</h2>
+                <p class="text-xs text-gray-500 mt-2">質問をタップすると、その場で回答が返ってくるようなインタラクション</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-[2rem] p-6 md:p-10 shadow-inner">
+                <!-- Bot Greeting -->
+                <div class="flex gap-4 mb-6">
+                    <div
+                        class="w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-md animate-bounce">
+                        <i data-lucide="bot" class="w-6 h-6"></i>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm max-w-[80%] animate-fade-in">
+                        <p class="text-sm text-gray-600">こんにちは！何か知りたいことはありますか？<br>以下のボタンから選んでください👇</p>
+                    </div>
+                </div>
+
+                <!-- Questions Grid -->
+                <div class="grid gap-3 mb-6" id="bot-options">
+                    <button onclick="showAnswer(this)"
+                        class="w-full text-left bg-white hover:bg-brand-50 border-2 border-brand-100 hover:border-brand p-4 rounded-xl font-bold text-gray-700 text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-between group">
+                        <span>💰 無料で応募できますか？</span>
+                        <i data-lucide="chevron-right"
+                            class="w-4 h-4 text-brand opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </button>
+                    <button onclick="showAnswer(this)"
+                        class="w-full text-left bg-white hover:bg-brand-50 border-2 border-brand-100 hover:border-brand p-4 rounded-xl font-bold text-gray-700 text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-between group">
+                        <span>🐶 ペットの写真でもいいですか？</span>
+                        <i data-lucide="chevron-right"
+                            class="w-4 h-4 text-brand opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </button>
+                    <button onclick="showAnswer(this)"
+                        class="w-full text-left bg-white hover:bg-brand-50 border-2 border-brand-100 hover:border-brand p-4 rounded-xl font-bold text-gray-700 text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-between group">
+                        <span>📸 画像サイズの制限は？</span>
+                        <i data-lucide="chevron-right"
+                            class="w-4 h-4 text-brand opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </button>
+                </div>
+
+                <!-- Hidden Answer Container -->
+                <div id="bot-answer-container" class="hidden">
+                    <div class="flex gap-4 flex-row-reverse mb-6">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" />
+                        </div>
+                        <div class="bg-brand text-white p-3 rounded-2xl rounded-tr-sm shadow-sm">
+                            <p class="text-sm" id="user-selected-text">無料で応募できますか？</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-md">
+                            <i data-lucide="bot" class="w-6 h-6"></i>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm max-w-[80%]">
+                            <p class="text-sm text-gray-600 typing-effect">はい、完全無料でご参加いただけます！🎉</p>
+                        </div>
+                    </div>
+
+                    <button onclick="resetBot()"
+                        class="mt-6 mx-auto block text-xs text-gray-400 underline hover:text-brand">他の質問を見る</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+
+        function showAnswer(btn) {
+            const text = btn.querySelector('span').innerText;
+            document.getElementById('bot-options').classList.add('hidden');
+            document.getElementById('bot-answer-container').classList.remove('hidden');
+            document.getElementById('user-selected-text').innerText = text;
+        }
+
+        function resetBot() {
+            document.getElementById('bot-options').classList.remove('hidden');
+            document.getElementById('bot-answer-container').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design B2: Podium + Load More - Sample O</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#FFF5F0', 100: '#FFE8E0', 500: '#E84D1C', 600: '#D63E0F' }
+                    },
+                    fontFamily: {
+                        maru: ['"Kiwi Maru"', 'serif'],
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #FFF5F0;
+        }
+
+        .font-maru {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        .masonry-grid {
+            column-count: 2;
+            column-gap: 12px;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-50 text-gray-800 min-h-screen">
+
+    <div
+        class="w-full md:max-w-[600px] mx-auto min-h-screen bg-[#FFF5F0] border-x border-brand-100/50 relative shadow-2xl">
+
+        <!-- Header -->
+        <header
+            class="p-4 sticky top-0 z-50 bg-[#FFF5F0]/95 backdrop-blur-sm border-b border-brand-100/50 flex justify-between items-center">
+            <a href="#" class="font-bold text-gray-400 hover:text-brand-500">← TOP</a>
+            <div class="font-maru font-bold text-brand-500">結果発表 (More)</div>
+            <div class="w-8"></div>
+        </header>
+
+        <main class="px-4 pb-20">
+
+            <!-- 1. PODIUM SECTION (Base) -->
+            <div
+                class="py-8 text-center bg-gradient-to-b from-white to-[#FFF5F0] rounded-b-3xl mb-8 -mx-4 px-4 shadow-sm border-b border-brand-100">
+                <h1
+                    class="text-2xl font-extrabold font-maru text-brand-500 mb-6 flex items-center justify-center gap-2">
+                    <span>🏆</span> 冬のフォトコン入賞
+                </h1>
+
+                <div class="flex items-end justify-center gap-3">
+                    <!-- 2nd -->
+                    <div class="w-1/3 flex flex-col items-center">
+                        <div class="w-full aspect-square bg-gray-200 rounded-lg mb-2 relative border-4 border-gray-300">
+                            <img src="https://placehold.co/300x300/e2e8f0/94a3b8?text=2nd"
+                                class="w-full h-full object-cover rounded-md">
+                            <div
+                                class="absolute -top-3 -left-2 bg-gray-400 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow">
+                                2</div>
+                        </div>
+                        <p class="text-xs font-bold text-gray-600 line-clamp-1">雪遊び</p>
+                    </div>
+                    <!-- 1st -->
+                    <div class="w-2/5 flex flex-col items-center pb-2 z-10">
+                        <div
+                            class="w-full aspect-square bg-yellow-100 rounded-xl mb-2 relative border-4 border-yellow-400 shadow-xl transform scale-110">
+                            <img src="https://placehold.co/400x400/fef3c7/d97706?text=1st"
+                                class="w-full h-full object-cover rounded-lg">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-3xl drop-shadow-sm">👑</div>
+                        </div>
+                        <p class="font-bold text-sm text-brand-500 font-maru">奇跡の瞬間</p>
+                    </div>
+                    <!-- 3rd -->
+                    <div class="w-1/3 flex flex-col items-center">
+                        <div
+                            class="w-full aspect-square bg-orange-100 rounded-lg mb-2 relative border-4 border-orange-300">
+                            <img src="https://placehold.co/300x300/ffedd5/c2410c?text=3rd"
+                                class="w-full h-full object-cover rounded-md">
+                            <div
+                                class="absolute -top-3 -right-2 bg-orange-400 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow">
+                                3</div>
+                        </div>
+                        <p class="text-xs font-bold text-gray-600 line-clamp-1">みかん</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ALL POSTS (Masonry + Load More) -->
+            <div class="mb-6 flex items-center justify-between">
+                <h2 class="font-bold text-gray-700 font-maru text-lg flex items-center gap-2">
+                    <span class="w-2 h-6 bg-brand-500 rounded-full"></span>
+                    すべての投稿
+                </h2>
+                <span class="text-xs font-bold text-gray-400 bg-white px-2 py-1 rounded-full border">New着順 ▼</span>
+            </div>
+
+            <!-- Masonry Grid for Dynamic Feel -->
+            <div class="masonry-grid">
+                <!-- Items -->
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x400/e2e8f0/94a3b8?text=P1" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">楽しい冬</p>
+                    </div>
+                </div>
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x300/fef3c7/d97706?text=P2" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">おいしい</p>
+                    </div>
+                </div>
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x500/e0f2fe/0ea5e9?text=P3" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">スキー</p>
+                    </div>
+                </div>
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x300/fce7f3/db2777?text=P4" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">さくら</p>
+                    </div>
+                </div>
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x350/f3f4f6/4b5563?text=P5" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">夜景</p>
+                    </div>
+                </div>
+                <div class="masonry-item bg-white rounded-xl overflow-hidden shadow-sm">
+                    <img src="https://placehold.co/300x300/e2e8f0/94a3b8?text=P6" class="w-full h-auto">
+                    <div class="p-2 pt-1">
+                        <p class="text-xs text-gray-600 font-bold">雪だるま2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="mt-8 relative text-center">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+                <button
+                    class="relative bg-white text-gray-500 font-bold py-3 px-8 rounded-full border border-gray-200 shadow-sm hover:bg-brand-50 hover:text-brand-500 hover:border-brand-200 transition-all text-sm group">
+                    <span class="group-hover:hidden">もっと見る (あと 142件)</span>
+                    <span class="hidden group-hover:inline">Loaaaaad More! code v</span>
+                </button>
+            </div>
+
+        </main>
+    </div>
+</body>
+
+</html>
