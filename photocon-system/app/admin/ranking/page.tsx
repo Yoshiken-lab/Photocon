@@ -28,16 +28,17 @@ export default async function RankingPage({
   const selectedContestId = searchParams.contest || contestList[0]?.id
 
   // ランキングデータを取得（承認済みのみ、投票数順）
-  let entries: { id: string; media_url: string; username: string; like_count: number; caption: string | null }[] = []
+  let entries: { id: string; media_url: string; username: string; like_count: number; caption: string | null; award_label: string | null }[] = []
 
   if (selectedContestId) {
     const { data } = await supabase
       .from('entries')
-      .select('id, media_url, username, like_count, caption')
+      .select('id, media_url, username, like_count, caption, award_label') // award_labelを追加
       .eq('contest_id', selectedContestId)
-      .eq('status', 'approved')
+      .in('status', ['approved', 'winner']) // winnerも表示対象に含める
+      .order('award_label', { ascending: true }) // 金銀銅で並ぶようにする (gold < silver < bronze? いや、文字列だと bronze < gold < silver になるので、クライアント側でソートが必要かも)
       .order('like_count', { ascending: false })
-      .limit(50)
+      .limit(100)
 
     entries = data || []
   }

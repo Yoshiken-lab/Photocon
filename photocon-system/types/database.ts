@@ -105,6 +105,7 @@ export interface Database {
           collected_at: string
           updated_at: string
           user_id: string | null
+          award_label: 'gold' | 'silver' | 'bronze' | null
         }
         Insert: {
           id?: string
@@ -128,6 +129,7 @@ export interface Database {
           collected_at?: string
           updated_at?: string
           user_id?: string | null
+          award_label?: 'gold' | 'silver' | 'bronze' | null
         }
         Update: {
           id?: string
@@ -151,6 +153,7 @@ export interface Database {
           collected_at?: string
           updated_at?: string
           user_id?: string | null
+          award_label?: 'gold' | 'silver' | 'bronze' | null
         }
       }
       votes: {
