@@ -42,6 +42,9 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
         setMounted(true)
     }, [])
 
+    // Success Modal State
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
+
     // Fetch existing deletion request status on mount
     useEffect(() => {
         getMyDeletionRequest().then(result => {
@@ -94,10 +97,10 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
         try {
             const result = await requestAccountDeletion(accountDeleteReason)
             if (result.success) {
-                alert('アカウント削除申請を送信しました。運営事務局での確認後、削除処理が行われます。')
                 setIsAccountDeleteModalOpen(false)
                 setAccountDeleteReason('')
                 setDeletionRequestStatus('pending')
+                setShowSuccessModal(true)
             } else {
                 alert('送信に失敗しました: ' + result.error)
             }
@@ -333,6 +336,29 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>,
+                document.body
+            )}
+
+            {/* Success Modal */}
+            {mounted && showSuccessModal && createPortal(
+                <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl animate-in fade-in zoom-in duration-200">
+                        <h3 className="text-xl font-maru font-bold text-green-600 mb-4 text-center">退会申請を送信しました</h3>
+
+                        <p className="text-sm text-gray-600 mb-6 leading-relaxed text-center">
+                            申請内容を確認次第、退会処理が行われます。
+                        </p>
+
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => setShowSuccessModal(false)}
+                                className="px-6 py-3 rounded-xl font-bold text-white bg-brand hover:bg-brand-dark transition-colors shadow-md"
+                            >
+                                閉じる
+                            </button>
+                        </div>
                     </div>
                 </div>,
                 document.body
