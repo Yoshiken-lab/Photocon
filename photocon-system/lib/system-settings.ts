@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/lib/supabase/server'
+import { createServiceRoleClient } from '@/lib/supabase/service'
 import { revalidatePath } from 'next/cache'
 
 /**
@@ -36,7 +37,9 @@ export async function getSystemSetting(key: string, defaultValue: string = ''): 
  * @param value 設定値
  */
 export async function updateSystemSetting(key: string, value: string) {
-    const supabase = createServerClient()
+    // 書き込みには特権クライアント（Service Role）を使用
+    // これにより、匿名ユーザー（管理者だがログインしていない状態）でも設定変更が可能になる
+    const supabase = createServiceRoleClient()
 
     const { error } = await supabase
         .from('system_settings')
