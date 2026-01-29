@@ -111,8 +111,8 @@ export async function getEntriesForResult(contestId: string, includeAllVisible: 
     const supabase = createAdminClient()
 
     // includeAllVisible: true = Gallery mode (pending + approved for submission period)
-    // includeAllVisible: false = Result mode (approved only for voting/ended)
-    const statusFilter = includeAllVisible ? ['pending', 'approved'] : ['approved']
+    // includeAllVisible: false = Result mode (approved + winner only for voting/ended)
+    const statusFilter = includeAllVisible ? ['pending', 'approved', 'winner'] : ['approved', 'winner']
 
     // Fetch entries with display_seq for structured ID
     const { data, error } = await supabase

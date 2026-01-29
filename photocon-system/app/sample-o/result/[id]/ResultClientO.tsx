@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Heart, X, Copy, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Heart, X, Copy, Check, Trophy, Medal, Award } from 'lucide-react'
 import { voteForEntry, getMyVotes } from '@/app/actions/sample-o'
 
 // Type definition based on real DB data
@@ -14,6 +14,7 @@ export interface Entry {
     caption: string | null
     collected_at: string
     display_seq: number | null  // For structured ID display
+    award_label: 'gold' | 'silver' | 'bronze' | null
 }
 
 // Helper: Format structured display ID
@@ -43,7 +44,7 @@ const getPaginationItems = (current: number, total: number) => {
 }
 
 export default function ResultClientO({
-    entries,
+    entries: initialEntries,
     isVotingOpen,
     contestShortCode = null,
     votingHint = null
@@ -53,14 +54,32 @@ export default function ResultClientO({
     contestShortCode?: string | null,
     votingHint?: string | null
 }) {
+    // Sort entries: Gold > Silver > Bronze > Others
+    // Note: This sorts ALL entries before pagination, so winners appear on page 1.
+    const sortedEntries = React.useMemo(() => {
+        const sorted = [...initialEntries]
+        sorted.sort((a, b) => {
+            const awardOrder = { gold: 3, silver: 2, bronze: 1, null: 0 }
+            const awardA = awardOrder[a.award_label || 'null'] || 0
+            const awardB = awardOrder[b.award_label || 'null'] || 0
+
+            if (awardA !== awardB) {
+                return awardB - awardA // Higher award first
+            }
+            // Secondary sort: display_seq (if available) or collected_at
+            return (a.display_seq || 0) - (b.display_seq || 0)
+        })
+        return sorted
+    }, [initialEntries])
+
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
     const [isVoting, setIsVoting] = useState(false)
     const [votedEntries, setVotedEntries] = useState<string[]>([]) // Track session votes
 
-    const totalPages = Math.ceil(entries.length / ITEMS_PER_PAGE)
+    const totalPages = Math.ceil(sortedEntries.length / ITEMS_PER_PAGE)
 
-    const currentItems = entries.slice(
+    const currentItems = sortedEntries.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     )
@@ -167,37 +186,64 @@ export default function ResultClientO({
                                 一覧
                             </h2>
                             <span className="text-xs text-gray-400 font-bold bg-gray-50 px-2 py-1 rounded-md">
-                                {entries.length === 0 ? '0件' : (
+                                {sortedEntries.length === 0 ? '0件' : (
                                     <>
-                                        {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, entries.length)} / {entries.length}件
+                                        {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, sortedEntries.length)} / {sortedEntries.length}件
                                     </>
                                 )}
                             </span>
                         </div>
 
-                        {entries.length > 0 ? (
+                        {sortedEntries.length > 0 ? (
                             <>
                                 {/* 3x3 Grid */}
                                 <div className="grid grid-cols-3 gap-2 md:gap-3 mb-auto">
                                     <AnimatePresence mode="wait">
-                                        {currentItems.map((item) => (
-                                            <motion.div
-                                                key={`${currentPage}-${item.id}`}
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                                whileHover={{ scale: 1.05, zIndex: 10 }}
-                                                className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer"
-                                                onClick={() => setSelectedEntry(item)}
-                                            >
-                                                <img src={item.media_url} alt={item.caption || 'Entry'} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                                                {/* Entry ID Badge */}
-                                                <div className="absolute bottom-1 right-1 bg-black/50 text-white/90 text-[10px] px-1.5 py-0.5 rounded font-mono">
-                                                    {formatDisplayId(contestShortCode, item.display_seq)}
-                                                </div>
-                                            </motion.div>
-                                        ))}
+                                        {currentItems.map((item) => {
+                                            const isGold = item.award_label === 'gold'
+                                            const isSilver = item.award_label === 'silver'
+                                            const isBronze = item.award_label === 'bronze'
+                                            const isWinner = isGold || isSilver || isBronze
+
+                                            // Dynamic styling for winners
+                                            let borderClass = 'border-transparent' // default
+                                            if (isGold) borderClass = 'border-yellow-400 ring-2 ring-yellow-400/30'
+                                            if (isSilver) borderClass = 'border-gray-300 ring-2 ring-gray-300/30'
+                                            if (isBronze) borderClass = 'border-amber-600 ring-2 ring-amber-600/30'
+
+                                            return (
+                                                <motion.div
+                                                    key={`${currentPage}-${item.id}`}
+                                                    initial={{ opacity: 0, scale: 0.9 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                    whileHover={{ scale: 1.05, zIndex: 10 }}
+                                                    className={`aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer border-2 ${borderClass}`}
+                                                    onClick={() => setSelectedEntry(item)}
+                                                >
+                                                    <img src={item.media_url} alt={item.caption || 'Entry'} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+
+                                                    {/* Award Badge */}
+                                                    {isWinner && (
+                                                        <div className={`absolute top-0 left-0 p-1 rounded-br-lg shadow-sm z-10
+                                                            ${isGold ? 'bg-gradient-to-br from-yellow-300 to-yellow-500' : ''}
+                                                            ${isSilver ? 'bg-gradient-to-br from-gray-200 to-gray-400' : ''}
+                                                            ${isBronze ? 'bg-gradient-to-br from-amber-600 to-amber-800' : ''}
+                                                        `}>
+                                                            {isGold && <Trophy className="w-3 h-3 text-yellow-900 fill-yellow-900" />}
+                                                            {isSilver && <Medal className="w-3 h-3 text-gray-700 fill-gray-700" />}
+                                                            {isBronze && <Award className="w-3 h-3 text-white" />}
+                                                        </div>
+                                                    )}
+
+                                                    {/* Entry ID Badge */}
+                                                    <div className="absolute bottom-1 right-1 bg-black/50 text-white/90 text-[10px] px-1.5 py-0.5 rounded font-mono">
+                                                        {formatDisplayId(contestShortCode, item.display_seq)}
+                                                    </div>
+                                                </motion.div>
+                                            )
+                                        })}
                                     </AnimatePresence>
                                 </div>
 
@@ -328,8 +374,8 @@ const EntryModal = ({
                         <button
                             onClick={handleCopyId}
                             className={`px-3 py-1.5 text-xs rounded-lg flex items-center gap-1 transition-all ${copied
-                                    ? 'bg-green-100 text-green-600'
-                                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                ? 'bg-green-100 text-green-600'
+                                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                                 }`}
                         >
                             {copied ? (

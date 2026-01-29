@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Trophy, Medal, Award, Heart, ChevronDown, CheckCircle, LayoutGrid, List, Filter, ArrowDownNarrowWide, ZoomIn, X, Loader2 } from 'lucide-react'
 import { updateEntryAward, type AwardLabel } from '@/app/actions/admin-ranking'
 
@@ -36,6 +36,11 @@ export function RankingClient({ contests, entries: initialEntries, selectedConte
   const [entries, setEntries] = useState(initialEntries)
   const [filter, setFilter] = useState<FilterType>('all')
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+
+  // プロップスが変更されたらステートを同期する
+  useEffect(() => {
+    setEntries(initialEntries)
+  }, [initialEntries])
 
   // 統計情報
   const stats = useMemo(() => {
