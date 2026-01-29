@@ -27,8 +27,8 @@ export default async function AdminSettingsPage() {
             <div className="text-sm text-yellow-800">
               <p className="font-bold mb-1">【注意】設定変更の影響について</p>
               <ul className="list-disc list-inside space-y-1 opacity-80">
-                <li>「匿名モード」にすると、誰でもログインなしで応募投稿が可能になります。</li>
-                <li>「ログイン必須モード」にすると、応募時にアカウント登録・ログインが必須になります。</li>
+                <li>「匿名利用」に設定すると、誰でもログインなしで応募投稿が可能になります。</li>
+                <li>「ログイン必須」に設定すると、応募時にアカウント登録およびログインが必須になります。</li>
                 <li>設定変更は即座にシステム全体に反映されます。</li>
               </ul>
             </div>
