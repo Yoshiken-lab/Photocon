@@ -158,8 +158,8 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                 {entries.length === 0 ? (
                     <div className="text-center py-10 bg-white rounded-2xl border border-dashed border-gray-300">
                         <p className="text-gray-500 mb-4">まだ応募履歴がありません。</p>
-                        <Link href="/sample-o#howto" className="text-brand font-bold hover:underline">
-                            👉 コンテストに応募してみる？
+                        <Link href="/sample-o#events" className="text-brand font-bold hover:underline">
+                            👉 コンテストに応募してみる
                         </Link>
                     </div>
                 ) : (
@@ -239,7 +239,7 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                                     <h3 className="font-bold text-gray-700 mb-2">退会について</h3>
                                     <p className="text-sm text-gray-500 leading-relaxed">
                                         サービスのご利用ありがとうございました。<br />
-                                        退会手続きを行うと、マイページへのログインができなくなります。<br />
+                                        退会手続きを行うと、マイページへログインできなくなり、今まで応募した履歴が消去されます。<br />
                                         <span className="text-gray-400 text-xs mt-1 block">※ ご投稿いただいた写真は「ゲスト投稿」としてギャラリーに残ります。</span>
                                     </p>
                                 </div>
@@ -300,8 +300,7 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                         <h3 className="text-xl font-maru font-bold text-gray-800 mb-4 text-center">退会手続き</h3>
 
                         <p className="text-sm text-gray-600 mb-6 leading-relaxed text-center">
-                            これまでのご利用、誠にありがとうございました。<br />
-                            本当に退会されますか？
+                            これまでのご利用、誠にありがとうございました。
                         </p>
 
                         <form onSubmit={handleAccountDeletionRequest}>
