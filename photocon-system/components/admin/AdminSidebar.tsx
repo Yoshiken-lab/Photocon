@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Link as LinkIcon, ChevronDown } from 'lucide-react'
-import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Settings, LogOut, Mail, UserX } from 'lucide-react'
+import { LayoutDashboard, ClipboardCheck, Images, Trophy, Award, BarChart3, Settings, LogOut, Mail } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 
@@ -19,7 +19,7 @@ const menuItems = [
     href: '#', // Parent, no link
     children: [
       { href: '/admin/inquiries', label: 'フォーム受信', showInquiryBadge: true },
-      { href: '/admin/account-deletions', label: 'アカウント削除申請', showDeletionBadge: true, icon: UserX, className: 'text-red-500' }
+      { href: '/admin/account-deletions', label: '退会申請', showDeletionBadge: true, className: 'text-red-500' }
     ]
   },
   { href: '/admin/ranking', icon: Award, label: 'ランキング', group: 'manage' },
@@ -151,6 +151,9 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                               : ('showDeletionBadge' in child && child.showDeletionBadge) ? deletionCount
                                 : 0
 
+                            // Icon type safety
+                            const IconComponent = 'icon' in child ? (child.icon as any) : null
+
                             return (
                               <li key={child.href}>
                                 <Link
@@ -158,7 +161,7 @@ export function AdminSidebar({ pendingCount }: AdminSidebarProps) {
                                   className={`flex items-center gap-2 pl-12 pr-4 py-2 text-sm transition-colors ${isChildActive ? 'text-brand font-bold bg-white shadow-sm' : 'text-gray-500 hover:text-gray-800'
                                     } ${child.className || ''}`}
                                 >
-                                  {child.icon ? <child.icon className="w-4 h-4" /> : null}
+                                  {IconComponent ? <IconComponent className="w-4 h-4" /> : null}
                                   <span className="flex-1">{child.label}</span>
                                   {childCount > 0 && (
                                     <span className={`min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold flex items-center justify-center ${'showDeletionBadge' in child ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-200 text-gray-600'
