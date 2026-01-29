@@ -10,6 +10,7 @@ export async function middleware(request: NextRequest) {
     const { supabase, response } = await createClient(request)
 
     // 1. Admin Security (Always Active)
+
     if (pathname.startsWith('/admin')) {
         const { data: { session } } = await supabase.auth.getSession()
 

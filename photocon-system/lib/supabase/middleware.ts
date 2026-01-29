@@ -15,18 +15,28 @@ export async function createClient(request: NextRequest) {
         {
             cookies: {
                 getAll() {
-                    return request.cookies.getAll()
+                    return request.cookies.getAll().map(({ name, value }) => ({
+                        name,
+                        value,
+                    }))
                 },
                 setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) => {
-                        request.cookies.set(name, value)
-                        response.cookies.set(name, value, options)
-                    })
+                    cookiesToSet.forEach(({ name, value, options }) =>
+                        request.cookies.set({
+                            name,
+                            value,
+                            ...options,
+                        })
+                    )
                     response = NextResponse.next({
                         request,
                     })
                     cookiesToSet.forEach(({ name, value, options }) =>
-                        response.cookies.set(name, value, options)
+                        response.cookies.set({
+                            name,
+                            value,
+                            ...options,
+                        })
                     )
                 },
             },
