@@ -14,11 +14,12 @@ export default async function MyPage() {
         redirect('/')
     }
 
-    // 2. Check Session
+    // 2. Check Session (Strict Check with getUser)
     const supabase = createServerClient()
-    const { data: { session } } = await supabase.auth.getSession()
+    // getSession() checks JWT only, getUser() validates against DB
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (!session) {
+    if (authError || !user) {
         redirect('/login?next=/mypage')
     }
 
@@ -26,19 +27,19 @@ export default async function MyPage() {
     const { data: entries, error } = await supabase
         .from('entries')
         .select('*, contests(name)')
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
     // 4. Calculate Stats
     const totalEntries = entries?.length || 0
-    const approvedEntries = entries?.filter(e => e.status === 'approved' || e.status === 'winner').length || 0
+    const approvedEntries = (entries as any[])?.filter(e => e.status === 'approved' || e.status === 'winner').length || 0
 
     return (
         <div className="bg-brand-50 min-h-screen">
             <HeaderO />
             <LayoutO>
                 <ClientMyPage
-                    user={session.user}
+                    user={user}
                     entries={entries || []}
                     stats={{ total: totalEntries, approved: approvedEntries }}
                 />
