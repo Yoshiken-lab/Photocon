@@ -1,4 +1,11 @@
-export default function AdminSettingsPage() {
+import { getSystemSetting } from '@/lib/system-settings'
+import AuthModeToggle from '@/components/admin/AuthModeToggle'
+
+export default async function AdminSettingsPage() {
+  // サーバーサイドで現在の設定値を取得
+  const isAuthEnabledStr = await getSystemSetting('is_auth_enabled', 'false')
+  const isAuthEnabled = isAuthEnabledStr === 'true'
+
   return (
     <div className="space-y-6">
       <div>
@@ -7,6 +14,27 @@ export default function AdminSettingsPage() {
       </div>
 
       <div className="grid gap-6">
+        {/* 認証設定 */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-lg font-bold text-gray-800">認証設定</h2>
+          </div>
+
+          <AuthModeToggle initialIsEnabled={isAuthEnabled} />
+
+          <div className="mt-4 bg-yellow-50 rounded-lg p-4 border border-yellow-100 flex gap-3 items-start">
+            <span className="text-xl">⚠️</span>
+            <div className="text-sm text-yellow-800">
+              <p className="font-bold mb-1">【注意】設定変更の影響について</p>
+              <ul className="list-disc list-inside space-y-1 opacity-80">
+                <li>「匿名モード」にすると、誰でもログインなしで応募投稿が可能になります。</li>
+                <li>「ログイン必須モード」にすると、応募時にアカウント登録・ログインが必須になります。</li>
+                <li>設定変更は即座にシステム全体に反映されます。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         {/* Instagram連携 */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Instagram連携</h2>
