@@ -32,10 +32,13 @@
 - **作成ファイル**:
     - `sql/add_account_deletion_requests.sql`: DBテーブル作成
     - `app/mypage/account-deletion/action.ts`: ユーザー側Server Action
-    - `app/mypage/ClientMyPage.tsx`: 「危険な操作」セクション追加
+    - `app/mypage/ClientMyPage.tsx`: 「アカウント設定」セクション追加
     - `app/admin/account-deletions/*`: 管理画面（一覧・承認・却下）
-    - `types/database.ts`: 新テーブル型追加
-- **手動メール運用**: 削除完了後、管理画面で「コピー」ボタンから宛先をコピーして手動送信。
+- **UI改善 (2026-01-29 追記)**:
+    - デザインガイドラインに基づき、当初の「危険な操作」から「アカウント設定（退会手続き）」へ変更。
+    - ユーザーに不安を与えないよう、警告色や強い言葉を避け、感謝と事実を伝えるトーンに統一。
+    - **最終調整**: プロフィールアイコン削除、メールアドレス表示位置の整理など、レイアウトを最適化。
+
 
 ### 🤜 次なる戦いへ
 認証周りの機能がひと通り揃った！！！！
