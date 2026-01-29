@@ -5,21 +5,8 @@ import { isAuthEnabled } from '@/lib/config'
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
-    // 1. Admin Security (Always Active)
-    // 管理画面へのアクセス制限。簡易的にセッションチェックを行う。
-    // 本格的な運用では「特定メールアドレスのみ許可」などのロジックを追加推奨。
-    if (pathname.startsWith('/admin')) {
-        const supabase = createServerClient()
-        const { data: { session } } = await supabase.auth.getSession()
-
-        if (!session) {
-            // セッションがない場合はログイン画面（管理用がもしあれば、あるいは一般の）へ
-            // 現状は一般ログインへ飛ばすが、本来はAdmin専用ログインが望ましい
-            // ここでは取り急ぎルートへのリダイレクトとする（または404/403）
-            // ※ユーザーのログイン画面と管理者のログイン画面が同じ場合は '/login' でOK
-            return NextResponse.redirect(new URL('/login', request.url))
-        }
-    }
+    // NOTE: /admin は認証不要（URLを知っている人だけがアクセスできる運用）
+    // 将来的に認証を追加したい場合は、ここにセッションチェックを実装
 
     // 2. Feature Flagged Routes (Login, MyPage)
     // 熱血ログイン機能がONの場合のみチェック
