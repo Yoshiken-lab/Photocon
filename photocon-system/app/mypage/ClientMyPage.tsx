@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
@@ -30,10 +31,16 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
     const [isLoading, setIsLoading] = useState(false)
 
     // Account Deletion States
+    // Account Deletion States
     const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false)
     const [accountDeleteReason, setAccountDeleteReason] = useState('')
     const [isAccountDeleteLoading, setIsAccountDeleteLoading] = useState(false)
     const [deletionRequestStatus, setDeletionRequestStatus] = useState<DeletionRequestStatus>(null)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     // Fetch existing deletion request status on mount
     useEffect(() => {
@@ -122,7 +129,7 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                 <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
                     <div className="text-center md:text-left flex-1">
                         <h1 className="text-2xl md:text-3xl font-maru font-bold text-gray-800 mb-2">
-                            ようこそ、<span className="text-brand">{user.email}</span>さん！
+                            ようこそ、<span className="text-brand">{user.email?.split('@')[0]}</span>さん！
                         </h1>
                         <p className="text-gray-500">あなたの投稿した写真の管理やステータス確認ができます。</p>
                     </div>
@@ -249,48 +256,46 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
             </div>
 
             {/* Entry Delete Modal */}
-            {isModalOpen && selectedEntry && (
-                <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+            {mounted && isModalOpen && selectedEntry && createPortal(
+                <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl animate-in fade-in zoom-in duration-200">
-                        <h3 className="text-xl font-maru font-bold text-gray-800 mb-4">写真の削除を依頼しますか？</h3>
-
-                        <div className="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-600">
-                            <p className="font-bold text-gray-800 mb-1">{selectedEntry.contests?.name}</p>
-                            <p>{selectedEntry.caption || '（タイトルなし）'}</p>
-                        </div>
-
-                        <p className="text-sm text-gray-500 mb-4">
-                            削除依頼を送信すると、運営事務局にて確認後、削除処理が行われます。
-                            <br /><span className="text-red-500 font-bold text-xs">※ この操作は取り消せません。</span>
-                        </p>
-
-                        <form onSubmit={handleSubmitDelete}>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">削除理由（任意）</label>
-                            <textarea
-                                className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
-                                rows={3}
-                                placeholder="例：間違えて投稿してしまったため"
-                                value={deleteReason}
-                                onChange={(e) => setDeleteReason(e.target.value)}
-                            ></textarea>
-
-                            <div className="flex gap-3 mt-6">
-                                <button type="button" onClick={closeDeleteModal} className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors">
-                                    キャンセル
-                                </button>
-                                <button type="submit" disabled={isLoading} className="flex-1 py-3 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-md transition-colors flex items-center justify-center gap-2">
-                                    {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                                    削除を依頼する
-                                </button>
+                        <h3 className="text-xl font-maru font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <AlertTriangle className="w-6 h-6 text-brand" />
+                            投稿の削除依頼
+                        </h3>
+                        <div className="mb-4">
+                            <p className="text-sm text-gray-600 mb-2">以下の投稿の削除を依頼しますか？</p>
+                            <div className="bg-gray-50 p-2 rounded flex items-center gap-3">
+                                <img src={selectedEntry.media_url} alt="Selected" className="w-16 h-16 object-cover rounded" />
+                                <div>
+                                    <p className="font-bold text-sm text-gray-800">{selectedEntry.contests?.name}</p>
+                                    <p className="text-xs text-gray-500">{new Date(selectedEntry.created_at).toLocaleDateString()}</p>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="px-4 py-2 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                キャンセル
+                            </button>
+                            <a
+                                href={`mailto:camera@shichigosan-honpo.com?subject=【削除依頼】投稿ID:${selectedEntry.id}&body=投稿の削除を依頼します。%0D%0A%0D%0A投稿ID: ${selectedEntry.id}%0D%0A理由:`}
+                                onClick={() => setIsModalOpen(false)}
+                                className="px-4 py-2 bg-brand text-white font-bold rounded-lg hover:bg-brand-dark transition-colors shadow-lg shadow-brand/30"
+                            >
+                                運営にメールを送る
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* Account Deletion Modal (Revised) */}
-            {isAccountDeleteModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+            {mounted && isAccountDeleteModalOpen && createPortal(
+                <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl animate-in fade-in zoom-in duration-200">
                         <h3 className="text-xl font-maru font-bold text-gray-800 mb-4 text-center">退会手続き</h3>
 
@@ -330,7 +335,8 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
         </div>
