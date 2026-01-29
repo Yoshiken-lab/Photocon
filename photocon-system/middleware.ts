@@ -10,12 +10,12 @@ export async function middleware(request: NextRequest) {
     const { supabase, response } = await createClient(request)
 
     // 1. Admin Security (Always Active)
-
+    // Use getClaims() instead of getSession() - getSession() doesn't validate JWT in middleware!
     if (pathname.startsWith('/admin')) {
-        const { data: { session } } = await supabase.auth.getSession()
+        const { data: claims, error } = await supabase.auth.getClaims()
 
-        if (!session) {
-            // セッションがない場合はログイン画面へ
+        if (error || !claims) {
+            // 認証情報が無効な場合はログイン画面へ
             return NextResponse.redirect(new URL('/login', request.url))
         }
     }
@@ -27,10 +27,10 @@ export async function middleware(request: NextRequest) {
         const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
         if (isProtectedRoute) {
-            // Note: Reuse the same supabase instance to minimize overhead
-            const { data: { session } } = await supabase.auth.getSession()
+            // Use getClaims() for proper JWT validation in middleware
+            const { data: claims, error } = await supabase.auth.getClaims()
 
-            if (!session) {
+            if (error || !claims) {
                 // 未ログインならログイン画面へ飛ばす！
                 const redirectUrl = new URL('/login', request.url)
                 redirectUrl.searchParams.set('next', pathname) // ログイン後の戻り先
