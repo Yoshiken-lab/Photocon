@@ -25,7 +25,14 @@ export async function POST(request: NextRequest) {
 
     // --- Authentication Check ---
     let userId: string | null = null
-    if (isAuthEnabled()) {
+
+    // Check dynamic system setting instead of static env var
+    // Default to 'false' if not found to prevent lockouts, but the SQL initializes it to 'true'.
+    // The Toggle UI saves 'true' or 'false' as strings.
+    const { getSystemSetting } = await import('@/lib/system-settings')
+    const authMode = await getSystemSetting('is_auth_enabled', 'true')
+
+    if (authMode === 'true') {
       const supabaseServer = createServerClient()
       const { data: { session } } = await supabaseServer.auth.getSession()
 
