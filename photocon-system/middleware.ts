@@ -1,22 +1,20 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/middleware'
 import { isAuthEnabled } from '@/lib/config'
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
+    // Create Supabase client designed for Middleware
+    // This returns the supabase instance AND a response object that handles cookie updates (refreshing sessions)
+    const { supabase, response } = await createClient(request)
+
     // 1. Admin Security (Always Active)
-    // 管理画面へのアクセス制限。簡易的にセッションチェックを行う。
-    // 本格的な運用では「特定メールアドレスのみ許可」などのロジックを追加推奨。
     if (pathname.startsWith('/admin')) {
-        const supabase = createServerClient()
         const { data: { session } } = await supabase.auth.getSession()
 
         if (!session) {
-            // セッションがない場合はログイン画面（管理用がもしあれば、あるいは一般の）へ
-            // 現状は一般ログインへ飛ばすが、本来はAdmin専用ログインが望ましい
-            // ここでは取り急ぎルートへのリダイレクトとする（または404/403）
-            // ※ユーザーのログイン画面と管理者のログイン画面が同じ場合は '/login' でOK
+            // セッションがない場合はログイン画面へ
             return NextResponse.redirect(new URL('/login', request.url))
         }
     }
@@ -28,7 +26,7 @@ export async function middleware(request: NextRequest) {
         const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
         if (isProtectedRoute) {
-            const supabase = createServerClient()
+            // Note: Reuse the same supabase instance to minimize overhead
             const { data: { session } } = await supabase.auth.getSession()
 
             if (!session) {
@@ -40,7 +38,8 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    return NextResponse.next()
+    // Return the response created by createClient to ensure cookies (session refresh) are applied
+    return response
 }
 
 export const config = {
