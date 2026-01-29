@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2 } from 'lucide-react'
+import { Loader2, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { requestDeletion } from './delete-request/action'
+import { requestAccountDeletion, getMyDeletionRequest, type DeletionRequestStatus } from './account-deletion/action'
 
 interface Entry {
     id: string
@@ -27,6 +28,19 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [deleteReason, setDeleteReason] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+
+    // Account Deletion States
+    const [isAccountDeleteModalOpen, setIsAccountDeleteModalOpen] = useState(false)
+    const [accountDeleteReason, setAccountDeleteReason] = useState('')
+    const [isAccountDeleteLoading, setIsAccountDeleteLoading] = useState(false)
+    const [deletionRequestStatus, setDeletionRequestStatus] = useState<DeletionRequestStatus>(null)
+
+    // Fetch existing deletion request status on mount
+    useEffect(() => {
+        getMyDeletionRequest().then(result => {
+            setDeletionRequestStatus(result.status)
+        })
+    }, [])
 
     const openDeleteModal = (entry: Entry) => {
         setSelectedEntry(entry)
@@ -67,8 +81,40 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
         }
     }
 
+    const handleAccountDeletionRequest = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsAccountDeleteLoading(true)
+        try {
+            const result = await requestAccountDeletion(accountDeleteReason)
+            if (result.success) {
+                alert('アカウント削除申請を送信しました。運営事務局での確認後、削除処理が行われます。')
+                setIsAccountDeleteModalOpen(false)
+                setAccountDeleteReason('')
+                setDeletionRequestStatus('pending')
+            } else {
+                alert('送信に失敗しました: ' + result.error)
+            }
+        } catch (error) {
+            console.error(error)
+            alert('エラーが発生しました。')
+        } finally {
+            setIsAccountDeleteLoading(false)
+        }
+    }
+
     return (
         <div className="w-full max-w-4xl mx-auto px-4 pt-10 pb-20">
+
+            {/* Deletion Request Pending Banner */}
+            {deletionRequestStatus === 'pending' && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6 flex items-center gap-3">
+                    <AlertTriangle className="w-6 h-6 text-yellow-600 shrink-0" />
+                    <div>
+                        <p className="font-bold text-yellow-800">アカウント削除を申請中です</p>
+                        <p className="text-sm text-yellow-700">運営事務局にて確認中です。しばらくお待ちください。</p>
+                    </div>
+                </div>
+            )}
 
             {/* Profile Section */}
             <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8 relative overflow-hidden">
@@ -128,8 +174,8 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                                     <div className="flex items-start justify-between mb-2">
                                         <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{entry.contests?.name || '不明なコンテスト'}</h3>
                                         <span className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ${entry.status === 'approved' || entry.status === 'winner' ? 'bg-green-100 text-green-700' :
-                                                entry.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                                                    'bg-yellow-100 text-yellow-800'
+                                            entry.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                                                'bg-yellow-100 text-yellow-800'
                                             }`}>
                                             {entry.status === 'approved' ? '承認済' :
                                                 entry.status === 'winner' ? '入賞！' :
@@ -164,7 +210,32 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                 )}
             </div>
 
-            {/* Delete Modal */}
+            {/* ========== Danger Zone: Account Deletion ========== */}
+            <section className="mt-16 border-t-2 border-dashed border-red-100 pt-10">
+                <h2 className="text-lg font-maru font-bold text-red-600 flex items-center gap-2 mb-4">
+                    <AlertTriangle className="w-5 h-5" />
+                    危険な操作
+                </h2>
+                <div className="bg-red-50 rounded-2xl p-6 border border-red-100">
+                    <h3 className="font-bold text-gray-800 mb-2">アカウントを削除する</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                        アカウントを削除すると、ログインできなくなります。<br />
+                        <span className="text-red-600">※ 投稿した写真はギャラリーに残りますが、マイページからの管理はできなくなります。</span>
+                    </p>
+                    {deletionRequestStatus === 'pending' ? (
+                        <p className="text-yellow-700 font-bold text-sm">⏳ 削除申請中です。運営の確認をお待ちください。</p>
+                    ) : (
+                        <button
+                            onClick={() => setIsAccountDeleteModalOpen(true)}
+                            className="bg-white text-red-600 border-2 border-red-200 hover:bg-red-100 hover:border-red-300 font-bold py-3 px-6 rounded-xl transition-colors"
+                        >
+                            アカウント削除を申請する
+                        </button>
+                    )}
+                </div>
+            </section>
+
+            {/* Entry Delete Modal */}
             {isModalOpen && selectedEntry && (
                 <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl animate-in fade-in zoom-in duration-200">
@@ -204,6 +275,57 @@ export default function ClientMyPage({ user, entries, stats }: Props) {
                 </div>
             )}
 
+            {/* Account Deletion Modal */}
+            {isAccountDeleteModalOpen && (
+                <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl animate-in fade-in zoom-in duration-200">
+                        <h3 className="text-xl font-maru font-bold text-red-600 mb-4 flex items-center gap-2">
+                            <AlertTriangle className="w-6 h-6" />
+                            アカウント削除の申請
+                        </h3>
+
+                        <div className="bg-red-50 rounded-xl p-4 mb-4 text-sm text-red-700 border border-red-100">
+                            <p className="font-bold mb-1">⚠️ この操作は取り消せません</p>
+                            <ul className="list-disc list-inside text-xs space-y-1">
+                                <li>アカウントが削除され、ログインできなくなります</li>
+                                <li>投稿した写真はギャラリーに残ります（匿名扱い）</li>
+                                <li>運営事務局の確認後に削除が実行されます</li>
+                            </ul>
+                        </div>
+
+                        <form onSubmit={handleAccountDeletionRequest}>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">削除理由（任意）</label>
+                            <textarea
+                                className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-300 outline-none transition-all"
+                                rows={3}
+                                placeholder="例：サービスを利用しなくなったため"
+                                value={accountDeleteReason}
+                                onChange={(e) => setAccountDeleteReason(e.target.value)}
+                            ></textarea>
+
+                            <div className="flex gap-3 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => { setIsAccountDeleteModalOpen(false); setAccountDeleteReason('') }}
+                                    className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                >
+                                    キャンセル
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isAccountDeleteLoading}
+                                    className="flex-1 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 shadow-md transition-colors flex items-center justify-center gap-2"
+                                >
+                                    {isAccountDeleteLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                                    削除を申請する
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
+

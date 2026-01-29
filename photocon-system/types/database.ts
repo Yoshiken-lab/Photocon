@@ -237,6 +237,38 @@ export interface Database {
           executed_at?: string
         }
       }
+      account_deletion_requests: {
+        Row: {
+          id: string
+          user_id: string
+          user_email: string
+          reason: string | null
+          status: 'pending' | 'approved' | 'rejected'
+          requested_at: string
+          processed_at: string | null
+          processed_by: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          user_email: string
+          reason?: string | null
+          status?: 'pending' | 'approved' | 'rejected'
+          requested_at?: string
+          processed_at?: string | null
+          processed_by?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          user_email?: string
+          reason?: string | null
+          status?: 'pending' | 'approved' | 'rejected'
+          requested_at?: string
+          processed_at?: string | null
+          processed_by?: string | null
+        }
+      }
     }
   }
 }
