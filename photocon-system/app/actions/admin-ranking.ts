@@ -24,7 +24,11 @@ export async function updateEntryAward(entryId: string, awardLabel: AwardLabel) 
             return { success: false, error: error.message }
         }
 
+        // Revalidate admin ranking page
         revalidatePath('/admin/ranking')
+        // 🔥 Revalidate PUBLIC pages so award badges appear immediately!
+        revalidatePath('/sample-o', 'layout') // Top page and all child routes
+        revalidatePath('/sample-o/result', 'layout') // All result pages
         return { success: true }
     } catch (err) {
         console.error('Unexpected error:', err)
