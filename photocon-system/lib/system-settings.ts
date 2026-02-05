@@ -24,11 +24,22 @@ export async function getSystemSetting(key: string, defaultValue: string = ''): 
             return defaultValue
         }
 
-        return data?.value ?? defaultValue
+        // Type assertion to bypass 'never' inference issue
+        const typedData = data as unknown as { value: string } | null
+        return typedData?.value ?? defaultValue
     } catch (e) {
         console.error(`[SystemSettings] Exception fetching key "${key}":`, e)
         return defaultValue
     }
+}
+
+/**
+ * 認証モードを取得する (Server Action)
+ * クライアントから直接呼び出し可能
+ */
+export async function getAuthMode(): Promise<boolean> {
+    const value = await getSystemSetting('is_auth_enabled', 'true')
+    return value === 'true'
 }
 
 /**
@@ -41,8 +52,9 @@ export async function updateSystemSetting(key: string, value: string) {
     // これにより、匿名ユーザー（管理者だがログインしていない状態）でも設定変更が可能になる
     const supabase = createServiceRoleClient()
 
-    const { error } = await supabase
-        .from('system_settings')
+    // Type assertion to bypass 'never' inference issue
+    const { error } = await (supabase
+        .from('system_settings') as any)
         .upsert({
             key,
             value,
@@ -58,3 +70,4 @@ export async function updateSystemSetting(key: string, value: string) {
 
     return { success: true }
 }
+

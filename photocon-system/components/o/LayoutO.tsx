@@ -6,17 +6,22 @@ import { ArrowRight, Stamp, ArrowUp, User, LogIn, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isAuthEnabled } from '@/lib/config'
+import { getAuthMode } from '@/lib/system-settings'
 
 // --- Side Content Components ---
 
 const LeftSidebar = () => {
     const [session, setSession] = useState<any>(null)
+    const [authEnabled, setAuthEnabled] = useState<boolean | null>(null)
     const router = useRouter()
-    const authEnabled = isAuthEnabled()
+
+    // DBから認証モードを取得
+    useEffect(() => {
+        getAuthMode().then(setAuthEnabled)
+    }, [])
 
     useEffect(() => {
-        if (authEnabled) {
+        if (authEnabled === true) {
             const supabase = createClient()
             supabase.auth.getSession().then(({ data: { session } }) => {
                 setSession(session)

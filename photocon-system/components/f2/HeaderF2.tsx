@@ -1,12 +1,19 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
+import { getAuthMode } from '@/lib/system-settings'
 
 export function HeaderF2() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [authEnabled, setAuthEnabled] = useState<boolean | null>(null)
+
+    // DBから認証モードを取得
+    useEffect(() => {
+        getAuthMode().then(setAuthEnabled)
+    }, [])
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -45,12 +52,14 @@ export function HeaderF2() {
                     <Link href="#" className="hover:text-[#E75D2E] transition-colors">写真ギャラリー</Link>
                 </nav>
 
-                {/* Desktop CTA (Visible on Large Screens) */}
-                <div className="hidden lg:flex gap-4">
-                    <button className="bg-[#E75D2E] text-white px-6 py-2 rounded-full font-bold hover:bg-[#c9451b] transition-colors shadow-md">
-                        ログイン | 応募
-                    </button>
-                </div>
+                {/* Desktop CTA (Visible on Large Screens) - Only show when auth is enabled */}
+                {authEnabled && (
+                    <div className="hidden lg:flex gap-4">
+                        <Link href="/login" className="bg-[#E75D2E] text-white px-6 py-2 rounded-full font-bold hover:bg-[#c9451b] transition-colors shadow-md">
+                            ログイン | 応募
+                        </Link>
+                    </div>
+                )}
 
                 {/* Hamburger Button (Mobile/Tablet) */}
                 <button
@@ -78,11 +87,14 @@ export function HeaderF2() {
                             {item.label}
                         </Link>
                     ))}
-                    <div className="mt-8">
-                        <button className="bg-[#E75D2E] text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-[#c9451b] transition-colors w-full">
-                            ログイン | 応募
-                        </button>
-                    </div>
+                    {/* Only show login button when auth is enabled */}
+                    {authEnabled && (
+                        <div className="mt-8">
+                            <Link href="/login" className="bg-[#E75D2E] text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-[#c9451b] transition-colors w-full inline-block">
+                                ログイン | 応募
+                            </Link>
+                        </div>
+                    )}
                 </nav>
             </div>
         </>

@@ -5,16 +5,21 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Menu, X, LogIn, User, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { isAuthEnabled } from '@/lib/config'
+import { getAuthMode } from '@/lib/system-settings'
 
 export const HeaderO = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [session, setSession] = useState<any>(null)
+    const [authEnabled, setAuthEnabled] = useState<boolean | null>(null)
     const router = useRouter()
-    const authEnabled = isAuthEnabled()
+
+    // DBから認証モードを取得
+    useEffect(() => {
+        getAuthMode().then(setAuthEnabled)
+    }, [])
 
     useEffect(() => {
-        if (authEnabled) {
+        if (authEnabled === true) {
             const supabase = createClient()
             supabase.auth.getSession().then(({ data: { session } }) => {
                 setSession(session)
