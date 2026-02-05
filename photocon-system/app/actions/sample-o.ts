@@ -43,12 +43,15 @@ export async function getPastContests(): Promise<ContestWithThumbnail[]> {
     }
 
     const supabase = createAdminClient()
+    const now = new Date().toISOString()
 
-    // 2. Fetch closed contests
+    // 2. Fetch past contests based on DATE, not stale status
+    // Logic: end_date < now AND not draft (draft should never be public)
     const { data: contests, error } = await supabase
         .from('contests')
         .select('*')
-        .eq('status', 'ended')
+        .lt('end_date', now)
+        .neq('status', 'draft')
         .order('end_date', { ascending: false })
 
     if (error) {
@@ -57,14 +60,33 @@ export async function getPastContests(): Promise<ContestWithThumbnail[]> {
     }
 
     if (!contests || contests.length === 0) {
-        console.warn('⚠️ [getPastContests] No contests with status "ended" found.')
+        console.warn('⚠️ [getPastContests] No past contests found (end_date < now).')
         return []
     }
 
     // Explicit cast to avoid 'never' inference
     const typedContests = contests as unknown as ContestRow[]
 
-    // 3. Fetch thumbnails for each contest (Parallel)
+    // 3. 🔥 SELF-HEALING: Fix zombie statuses (Fire and Forget)
+    // If a contest has ended but status is still 'active' or 'voting', correct it.
+    const zombies = typedContests.filter(c => c.status !== 'ended')
+    if (zombies.length > 0) {
+        console.log(`🧹 [Self-Healing] Found ${zombies.length} zombie contest(s). Auto-correcting status to 'ended'...`)
+        // Run updates in parallel, don't await (Fire and Forget)
+        Promise.all(
+            zombies.map(z =>
+                (supabase.from('contests') as any)
+                    .update({ status: 'ended', updated_at: new Date().toISOString() })
+                    .eq('id', z.id)
+            )
+        ).then(() => {
+            console.log('✅ [Self-Healing] Zombie statuses corrected.')
+        }).catch(err => {
+            console.error('❌ [Self-Healing] Failed to correct zombie statuses:', err)
+        })
+    }
+
+    // 4. Fetch thumbnails for each contest (Parallel)
     const contestsWithThumbs = await Promise.all(typedContests.map(async (contest) => {
         // Strategy: 'winner' > 'approved'. 'winner' starts with w, 'approved' with a.
         // Descending order of status will put 'winner' before 'approved' (if we filter only these two).

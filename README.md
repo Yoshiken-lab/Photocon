@@ -11,7 +11,11 @@ photocon/
 ├── top.png                 # トップ画像
 └── photocon-system/        # 管理システム（Next.js）
     ├── app/
-    │   ├── admin/          # 管理画面
+    │   ├── admin/          #- **管理画面 (Admin Dashboard)**
+  - コンテスト管理、応募作品の承認・非承認
+  - スクール別・マネージャー別売上分析
+  - **New!** システム設定（認証モード切替、Instagram連携）
+  - スクールマスタ、イベントマスタ管理
     │   ├── gallery/        # ギャラリーページ
     │   ├── ranking/        # ランキングページ
     │   └── submit/         # 投稿ページ
