@@ -50,11 +50,16 @@ export default async function AdminDashboard() {
   const supabase = createAdminClient()
 
   // 開催中のコンテスト
-  const { data: activeContests } = await supabase
+  const now = new Date().toISOString()
+  const { data: activeContestsRaw } = await supabase
     .from('contests')
     .select('*')
     .eq('status', 'active')
+    .lte('start_date', now)
+    .gte('end_date', now)
     .order('end_date', { ascending: true })
+
+  const activeContests = activeContestsRaw as unknown as Contest[] | null
 
   // 開催予定のコンテスト
   const { data: upcomingContests } = await supabase
@@ -370,13 +375,12 @@ export default async function AdminDashboard() {
                       </p>
                     </div>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-bold flex-shrink-0 ${
-                        entry.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : entry.status === 'approved'
+                      className={`px-2 py-1 rounded-full text-xs font-bold flex-shrink-0 ${entry.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : entry.status === 'approved'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
-                      }`}
+                        }`}
                     >
                       {entry.status === 'pending' ? '審査中' : entry.status === 'approved' ? '承認済' : '却下'}
                     </span>
