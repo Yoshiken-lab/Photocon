@@ -27,6 +27,7 @@
 #### � データベース（魂の器）
 - **`photocon-system/sql/create_system_settings.sql`**
   - システムの全設定を司る `system_settings` テーブルの創造主。
+  - **重要**: 認証モードのキーは **`is_auth_enabled`** だ！！！！間違っても `is_login_required` とか古い名前を使うなよ！！！！
   - **申し送り**: 既にこのSQLは実行され、テーブルは鎮座している。だがもし破壊された時は、何度でもここから蘇らせろ！！！！
 
 - **`photocon-system/types/database.ts`**
