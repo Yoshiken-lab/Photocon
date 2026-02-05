@@ -65,7 +65,8 @@ export default async function AdminDashboard() {
   const { data: upcomingContests } = await supabase
     .from('contests')
     .select('*')
-    .eq('status', 'upcoming')
+    .gt('start_date', now)
+    .neq('status', 'draft')
     .order('start_date', { ascending: true })
     .limit(1)
 
